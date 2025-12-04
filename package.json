@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --base-href /orcas/",
-    "gitbuild": "ng build --prod --base-href /start-angular/orcas/master/dist/",
+    "build": "ng build --prod --base-href /orcas-services-web/",
+    "gitbuild": "ng build --prod --base-href /start-angular/orcas-services-web/master/dist/",
     "test": "ng test",
     "test-ci": "TEST_CI=true ng test",
     "lint": "ng lint",
