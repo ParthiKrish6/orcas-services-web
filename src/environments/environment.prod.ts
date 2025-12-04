@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:8180/thangam-traders'
+    apiUrl: 'https://orcas-services.onrender.com/orcas-services-web/'
 };
