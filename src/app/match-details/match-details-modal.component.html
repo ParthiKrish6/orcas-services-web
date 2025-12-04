@@ -1,0 +1,94 @@
+<div>
+  <div class="header">
+    <div id="modal-title">Match Details</div>
+    <div id='modal-close'>
+      <span style="cursor: pointer;color:rgb(253, 251, 251);font-size: 35px;" class="material-icons"
+        (click)="closeModal()">cancel</span>
+    </div>
+  </div>
+
+  <div id="error-block" *ngIf=errorMsg>
+    {{errorMsg}}
+  </div>
+
+  <div>
+    <form class="form-style-9" ngNativeValidate #matchDetailsNew="ngForm">
+      <div class="form-row">
+        <div class="form-group col-md-5"  *ngIf=!addFlag>
+          <label for="matchId">Match ID</label>
+          <input type="number" [readonly]="true" autocomplete="off" class="form-control" id="matchId" name="matchId"
+            [(ngModel)]="matchDetails.matchId">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="matchDate">Match Date</label>
+          <input matInput [matDatepicker]="startpicker" type="text" readonly class="form-control" id="matchDate"
+            name="matchDate" [(ngModel)]="matchDetails.matchDate">
+        </div>
+        <div class="form-group col-md-1" style="padding-top: 25px;">
+          <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+          <mat-datepicker #startpicker></mat-datepicker>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="name">Team</label>
+          <select required class="form-control" [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" (change)="setTeam()">
+            <option *ngFor="let team of teamDetails" [ngValue]="team.teamId">{{team.teamName}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-5">
+          <label for="matchName">Team Score</label>
+          <input  type="text" class="form-control" id="teamScore" name="teamScore" [(ngModel)]="matchDetails.teamScore">
+        </div>
+      </div>
+     
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="matchName">Opponent</label>
+          <input  type="text" class="form-control" id="opponent" name="opponent" [(ngModel)]="matchDetails.opponent">
+        </div>
+        <div class="form-group col-md-5">
+          <label for="matchName">Opponent Score</label>
+          <input  type="text" class="form-control" id="opponentScore" name="opponentScore" [(ngModel)]="matchDetails.opponentScore">
+        </div>
+      </div>
+     
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="matchName">Result</label>
+          <input  type="text" class="form-control" id="matchResult" name="matchResult" [(ngModel)]="matchDetails.matchResult">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="matchName">Margin</label>
+          <input  type="text" class="form-control" id="margin" name="margin" [(ngModel)]="matchDetails.margin">
+        </div> 
+        <div class="form-group col-md-2">
+          <label for="batFirst">Bat First</label>
+          <input  type="text" class="form-control" id="batFirst" name="batFirst" [(ngModel)]="matchDetails.batFirst">
+        </div>
+      </div>
+     
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="matchName">Captain</label>
+          <input  type="text" class="form-control" id="captain" name="captain" [(ngModel)]="matchDetails.captain">
+        </div>
+        <div class="form-group col-md-5">
+          <label for="matchName">Vice Captain</label>
+          <input  type="text" class="form-control" id="viceCaptain" name="viceCaptain" [(ngModel)]="matchDetails.viceCaptain">
+        </div>
+      </div>
+     
+      <br>
+      <div *ngIf=addFlag>
+        <button (click)="addMatchDetails(matchDetailsNew.value)" type="submit" class="submit-button">Add</button>
+      </div>
+      <div *ngIf=!addFlag>
+        <button (click)="updateMatchDetails(matchDetails.matchId, matchDetailsNew.value)"
+          type="submit" class="submit-button">Update</button>
+      </div>
+      <br>
+    </form>
+  </div>
+
+</div>

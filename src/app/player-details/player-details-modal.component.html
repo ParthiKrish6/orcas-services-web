@@ -1,0 +1,52 @@
+<div>
+  <div class="header">
+    <div id="modal-title">Player Details</div>
+    <div id='modal-close'>
+      <span style="cursor: pointer;color:rgb(253, 251, 251);font-size: 35px;" class="material-icons"
+        (click)="closeModal()">cancel</span>
+    </div>
+  </div>
+
+  <div id="error-block" *ngIf=errorMsg>
+    {{errorMsg}}
+  </div>
+
+  <div>
+    <form class="form-style-9" ngNativeValidate #playerDetailsNew="ngForm">
+      <div class="form-row" *ngIf=!addFlag>
+        <div class="form-group col-md-10">
+          <label for="id">Player ID</label>
+          <input type="number" [readonly]="true" autocomplete="off" class="form-control" id="id" name="id"
+            [(ngModel)]="playerDetails.id">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="playerName">Player Name</label>
+          <input  type="text" class="form-control" id="playerName" name="playerName" [(ngModel)]="playerDetails.playerName">
+        </div>
+        <div class="form-group col-md-5">
+          <label for="nickName">Nick Name </label>
+          <input  type="text" class="form-control" id="nickName" name="nickName" [(ngModel)]="playerDetails.nickName">
+        </div>
+      </div>
+    
+      <div class="form-row">
+        <div class="form-group col-md-10">
+          <label for="image">Image</label>
+          <input type="file" class="form-control" id="imge" name="image" (change)="onFileSelected($event)" [(ngModel)]="playerDetails.image" />
+        </div>
+      </div>
+      <br>
+      <div *ngIf=addFlag>
+        <button (click)="addPlayerDetails(playerDetailsNew.value)" type="submit" class="submit-button">Add</button>
+      </div>
+      <div *ngIf=!addFlag>
+        <button (click)="updatePlayerDetails(playerDetails.id, playerDetailsNew.value)"
+          type="submit" class="submit-button">Update</button>
+      </div>
+      <br>
+    </form>
+  </div>
+
+</div>
