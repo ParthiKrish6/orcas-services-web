@@ -1,0 +1,166 @@
+<div [@routerTransition]>
+    <div style="text-align:right;margin-right: 35px;" class="text-box-light">
+        <label for="anniversaryOption">Anniversary</label>
+        &nbsp;&nbsp;
+        <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
+            <option value = "0" >All</option>
+            <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">{{anniversary.anniversary}} / {{anniversary.startDate}} to {{anniversary.endDate}}</option>
+        </select>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label for="teamOption">Team</label>
+        &nbsp;&nbsp;
+        <select #team (change)="filterTeamStats(team.value)">
+          <option value = "0" >All</option>
+          <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+        </select>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div>
+        <div class="header">
+            Batting Leaderboard
+        </div>
+        <div class="form-style-9">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Runs
+                    </div>
+                    <div class="content-box">
+                        <div class="text-box-light" *ngFor="let batting of battingStatsRuns">
+                             {{batting.player}} - <b>{{batting.runs}}</b> ({{batting.balls}})
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Average (Min {{this.minBalls}} Balls)
+                     </div>
+                     <div class="content-box">
+                        <div class="text-box-light" *ngFor="let batting of battingStatsAverage">
+                            {{batting.player}} - <b>{{batting.average | number: '1.2-2'}}</b> ({{batting.runs}} runs)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Strike Rate (Min {{this.minBalls}} Balls)
+                     </div>
+                     <div class="content-box">
+                        <div class="text-box-light" *ngFor="let batting of battingStatsStrikeRate">
+                            {{batting.player}} - <b>{{batting.strikeRate | number: '1.2-2'}}</b> ({{batting.runs}} runs)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="padding-top: 160px;">
+        <div class="header">
+            Bowling Leaderboard
+        </div>
+        <div class="form-style-9">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Wickets
+                    </div>
+                    <div class="content-box">
+                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsWickets">
+                            {{bowling.player}} - <b>{{bowling.wickets}}</b>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Average (Min {{minOvers}} Overs)
+                     </div>
+                     <div class="content-box">
+                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsAverage">
+                            {{bowling.player}} - <b>{{bowling.average | number: '1.2-2'}}</b>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Strike Rate (Min {{minOvers}} Overs)
+                     </div>
+                     <div class="content-box">
+                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsStrikeRate">
+                            {{bowling.player}} - <b>{{bowling.strikeRate | number: '1.2-2'}}</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Economy (Min {{minOvers}} Overs)
+                     </div>
+                     <div class="content-box">
+                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsEconomy">
+                            {{bowling.player}} - <b> {{bowling.economy | number: '1.2-2'}} </b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding-top: 160px;">
+        <div class="header">
+            Fielding Leaderboard
+        </div>
+        <div class="form-style-9">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="content-header">
+                         Catches
+                    </div>
+                    <div class="content-box">
+                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsCatches">
+                            {{fielding.player}} - <b>{{fielding.catches}}</b>
+                        </div>
+                    </div>
+                </div>
+				
+				<div class="col-md-3">
+                    <div class="content-header">
+                         Runs Saved
+                     </div>
+                     <div class="content-box">
+                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsRunsSaved">
+                            {{fielding.player}} - <b>{{fielding.saved}}</b>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="content-header-red">
+                         Dropped Catches
+                     </div>
+                     <div class="content-box-red">
+                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsDroppedCatches">
+                            {{fielding.player}} - <b>{{fielding.dropped}}</b>
+                        </div>
+                    </div>
+                </div>
+                
+               <div class="col-md-3">
+                    <div class="content-header-red">
+                         Runs Missed
+                     </div>
+                     <div class="content-box-red">
+                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsRunsMissed">
+                            {{fielding.player}} - <b>{{fielding.missed}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

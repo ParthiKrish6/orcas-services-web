@@ -1,0 +1,97 @@
+<div>
+  <div class="header">
+    <div id="modal-title">Bowling Details</div>
+    <div id='modal-close'>
+      <span style="cursor: pointer;color:rgb(253, 251, 251);font-size: 35px;" class="material-icons"
+        (click)="closeModal()">cancel</span>
+    </div>
+  </div>
+
+  <div id="error-block" *ngIf=errorMsg>
+    {{errorMsg}}
+  </div>
+
+  <div>
+    <form class="form-style-9" ngNativeValidate #bowlingDetailsNew="ngForm">
+      <div class="form-row">
+        <div class="form-group col-md-5" *ngIf=!addFlag>
+          <label for="id">ID</label>
+          <input type="number" [readonly]="true" autocomplete="off" class="form-control" id="id" name="id"
+            [(ngModel)]="bowlingDetails.id">
+        </div>
+        <div class="form-group col-md-5">
+          <label for="name">Match</label>
+          <select required class="form-control" [(ngModel)]="selectedMatch" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="matchDetail.matchId">{{matchDetail.matchId}} / {{matchDetail.matchDate}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="name">Player</label>
+          <select required class="form-control" [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" (change)="setPlayer()">
+            <option *ngFor="let player of playerDetails" [ngValue]="player.id">{{player.playerName}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="overs">Overs</label>
+          <input  type="text" class="form-control" id="overs" name="overs" [(ngModel)]="bowlingDetails.overs">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="balls">Runs</label>
+          <input  type="text" class="form-control" id="runs" name="runs" [(ngModel)]="bowlingDetails.runs">
+        </div>
+      </div>
+     
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="fours">Maidens</label>
+          <input  type="text" class="form-control" id="maidens" name="maidens" [(ngModel)]="bowlingDetails.maidens">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="fours">Fours</label>
+          <input  type="text" class="form-control" id="fours" name="fours" [(ngModel)]="bowlingDetails.fours">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="sixes">Sixes</label>
+          <input  type="text" class="form-control" id="sixes" name="sixes" [(ngModel)]="bowlingDetails.sixes">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="wickets">Wickets</label>
+          <input  type="text" class="form-control" id="wickets" name="wickets" [(ngModel)]="bowlingDetails.wickets">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="dots">Dots</label>
+          <input  type="text" class="form-control" id="dots" name="dots" [(ngModel)]="bowlingDetails.dots">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="wides">Wides</label>
+          <input  type="text" class="form-control" id="wides" name="wides" [(ngModel)]="bowlingDetails.wides">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="noballs">No Balls</label>
+          <input  type="text" class="form-control" id="noballs" name="noballs" [(ngModel)]="bowlingDetails.noballs">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="economy">Economy</label>
+          <input  type="text" class="form-control" id="economy" name="economy" [(ngModel)]="bowlingDetails.economy">
+        </div>
+      </div>
+      
+      <br>
+      <div *ngIf=addFlag>
+        <button (click)="addBowlingDetails(bowlingDetailsNew.value)" type="submit" class="submit-button">Add</button>
+      </div>
+      <div *ngIf=!addFlag>
+        <button (click)="updateBowlingDetails(bowlingDetails.id, bowlingDetailsNew.value)"
+          type="submit" class="submit-button">Update</button>
+      </div>
+      <br>
+    </form>
+  </div>
+
+</div>

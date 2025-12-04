@@ -1,0 +1,83 @@
+<h2>Batting Stats</h2>  
+
+<mat-form-field>  
+  <input autocomplete="off" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">  
+</mat-form-field>
+
+<div style="text-align:right;margin-top: -45px;margin-right: 35px;" class="text-box-light">
+  <label for="anniversaryOption">Anniversary</label>
+  &nbsp;&nbsp;
+  <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
+      <option value = "0" >All</option>
+      <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">{{anniversary.anniversary}} / {{anniversary.startDate}} to {{anniversary.endDate}}</option>
+  </select>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <label for="teamOption">Team</label>
+  &nbsp;&nbsp;
+  <select #team (change)="filterTeamStats(team.value)">
+    <option value = "0" >All</option>
+    <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+  </select>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+
+<div class="mat-elevation-z8">  
+
+  <table mat-table [dataSource]="dataSource" matSort>  
+
+    <ng-container matColumnDef="player">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Player </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.player}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="innings">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Innings </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.innings}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="runs">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Runs </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.runs}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="balls">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Balls </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.balls}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="fours">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fours </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.fours}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="sixes">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sixes </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.sixes}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="average">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Average </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.average | number: '1.2-2'}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="strikeRate">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SR </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.strikeRate | number: '1.2-2'}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="notOut">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Not Out </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.notOut}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="timeSpent">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Time Spent </th>  
+      <td mat-cell *matCellDef="let batting"> {{batting.timeSpent}} </td>  
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>  
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>  
+  </table>  
+  
+  <mat-paginator [pageSizeOptions]="[10,15]"></mat-paginator>  
+</div>  

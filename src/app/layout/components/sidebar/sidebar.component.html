@@ -1,0 +1,69 @@
+
+<nav [ngClass]="{ sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar">
+    <div class="list-group">
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/dashboard">
+            <i class="fa fa-fw fa-calendar"></i>&nbsp;
+            <span>Leaderboard</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/calendar-details">
+            <i class="fa fa-fw fa-calendar"></i>&nbsp;
+            <span>Anniversary Calendar</span>
+        </a>
+        
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/team-details">
+            <i class="fa fa-fw fa-users"></i>&nbsp;
+            <span>Team Details</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/player-details">
+            <i class="fa fa-fw fa-user-circle-o"></i>&nbsp;
+            <span>Player Details</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/upload-scorecard">
+            <i class="fa fa-fw fa-upload"></i>&nbsp;
+            <span>Upload Scorecard</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/match-details">
+            <i class="fa fa-fw fa-users"></i>&nbsp;
+            <span>Match Details</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/batting-details">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Batting Details</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/bowling-details">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Bowling Details</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/fielding-details">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Fielding Details</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/batting-stats">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Batting Stats</span>
+        </a>
+
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/bowling-stats">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Bowling Stats</span>
+        </a>
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/fielding-stats">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Fielding Stats</span>
+        </a>
+        
+    </div>
+    <div (click)="toggleCollapsed()" [ngClass]="{ collapsed: collapsed }" class="toggle-button">
+        <i class="fa fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>&nbsp;
+        <span>Collapse Sidebar</span>
+    </div>
+</nav>

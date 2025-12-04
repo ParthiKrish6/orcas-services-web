@@ -1,0 +1,29 @@
+table {
+    width: 100%;
+}
+
+#error-block {
+    color: red;
+}
+
+#add-button {
+    padding-top: 15px;
+    padding-right: 15px;
+    text-align: right;
+    font-size: 40px;
+    color:green;
+}
+
+#fetch-button {
+    text-align: center;
+    font-size: 15px;
+    color:white;
+    background-color: rgb(20, 107, 46);
+}
+
+.mat-header-cell {
+    color: rgb(46, 13, 13);
+    font-weight: bold;
+    font-size: 15px;
+    font-family: 'Calibri', sans-serif;
+}

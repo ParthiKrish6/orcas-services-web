@@ -1,0 +1,49 @@
+table {
+    width: 100%;
+}
+
+#error-block {
+    color: red;
+}
+
+#add-button {
+    padding-top: 15px;
+    padding-right: 15px;
+    text-align: right;
+    font-size: 40px;
+    color:green;
+}
+
+#fetch-button {
+    text-align: center;
+    font-size: 15px;
+    color:white;
+    background-color: rgb(20, 107, 46);
+}
+
+.mat-header-cell {
+    color: rgb(46, 13, 13);
+    font-weight: bold;
+    font-size: 15px;
+    font-family: 'Calibri', sans-serif;
+}
+
+/* Style the main select box */
+select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Style the options within the dropdown */
+  select option {
+    padding: 5px;
+  }
+  
+  /* Style on hover/focus */
+  select:hover,
+  select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }

@@ -1,0 +1,34 @@
+<h2>Team Details</h2>  
+<mat-form-field>  
+  <input autocomplete="off" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">  
+</mat-form-field>
+<div class="mat-elevation-z8">  
+  <div id="add-button">
+    <mat-icon [inline]="true" style="cursor: pointer;" class="material-icons" (click)="openAddUpdateTeamDetailsModal({})">add_circle</mat-icon>
+  </div>
+  <table mat-table [dataSource]="dataSource" matSort>  
+  
+    <ng-container matColumnDef="teamId">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Team ID </th>  
+      <td mat-cell *matCellDef="let team"> {{team.teamId}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="teamName">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Team Name </th>  
+      <td mat-cell *matCellDef="let team"> {{team.teamName}} </td>  
+    </ng-container>  
+
+    <ng-container matColumnDef="action">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>  
+      <td mat-cell *matCellDef="let team"> 
+        <span style="cursor: pointer;color:rgb(219, 171, 11);" class="material-icons" (click)="openAddUpdateTeamDetailsModal(team)">create</span>
+        &nbsp;<span style="cursor: pointer;color:rgb(172, 23, 23);" class="material-icons" (click)="deleteTeamDetails(team.teamId)">delete</span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>  
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>  
+  </table>  
+  
+  <mat-paginator [pageSizeOptions]="[10,15]"></mat-paginator>  
+</div>  

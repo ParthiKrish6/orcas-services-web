@@ -1,0 +1,108 @@
+.header{
+    padding-top: 1px;
+	height: 22px;
+	background: #305A72;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 10px 10px 0px 0px;
+    font-weight: normal;
+    font-size: 19px;
+    font-family: 'Calibri', sans-serif;
+    color: #FAFAFA;
+    width: 100%;
+    text-align: center;
+}
+
+.form-style-9{	
+    float: left;	
+	background: #FAFAFA;
+    padding: 20px;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+	border-radius: 0px 0px 10px 10px;
+    border: 2px solid #305A72;
+    width: 100%;
+}
+
+.content-header{
+	height: 17px;
+	background: #136864;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 10px 10px 0px 0px;
+    font-weight: normal;
+    font-size: 15px;
+    font-family: 'Calibri', sans-serif;
+    color: #faf9f9;
+    text-align: center;
+}
+
+.content-header-red{
+	height: 17px;
+	background: #e63c08;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 10px 10px 0px 0px;
+    font-weight: normal;
+    font-size: 15px;
+    font-family: 'Calibri', sans-serif;
+    color: #faf9f9;
+    text-align: center;
+}
+
+.content-box{	
+	background: #FAFAFA;
+	padding: 5px;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+	border-radius: 0px 0px 10px 10px;
+	border: 2px solid #136864;
+}
+
+.content-box-red{	
+	background: #FAFAFA;
+	padding: 5px;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+	border-radius: 0px 0px 10px 10px;
+	border: 2px solid #e63c08;
+}
+
+.content-title{	
+	font-size: 15px;
+    font-weight: bold;
+    font-family: 'Calibri', sans-serif;
+}
+
+.text-box{	
+	text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Calibri', sans-serif;
+}
+
+.text-box-light{
+    padding-top: 3px;	
+	text-align: center;
+    font-size: 16px;
+    font-family: 'Calibri', sans-serif;
+}
+
+/* Style the main select box */
+select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Style the options within the dropdown */
+  select option {
+    padding: 5px;
+  }
+  
+  /* Style on hover/focus */
+  select:hover,
+  select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+
+
+
+

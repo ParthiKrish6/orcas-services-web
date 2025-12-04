@@ -1,0 +1,13 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { NgbAlertModule, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { DashboardRoutingModule } from './dashboard-routing.module';
+import { DashboardComponent } from './dashboard.component';
+import { ChartsModule } from 'ng2-charts';
+
+@NgModule({
+    imports: [CommonModule, NgbCarouselModule, NgbAlertModule, DashboardRoutingModule],
+    declarations: [DashboardComponent]
+})
+export class DashboardModule {}

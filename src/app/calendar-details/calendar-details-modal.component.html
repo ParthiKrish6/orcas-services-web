@@ -1,0 +1,57 @@
+<div>
+  <div class="header">
+    <div id="modal-title">Anniversary Calendar Details</div>
+    <div id='modal-close'>
+      <span style="cursor: pointer;color:rgb(253, 251, 251);font-size: 35px;" class="material-icons"
+        (click)="closeModal()">cancel</span>
+    </div>
+  </div>
+
+  <div id="error-block" *ngIf=errorMsg>
+    {{errorMsg}}
+  </div>
+
+  <div>
+    <form class="form-style-9" ngNativeValidate #calendarDetailsNew="ngForm">
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label for="name">Anniversary</label>
+          <input type="number" [readonly]="!addFlag" autocomplete="off" class="form-control" id="anniversary" name="anniversary"
+            [(ngModel)]="calendarDetails.anniversary">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label for="startDate">Start Date</label>
+          <input matInput [matDatepicker]="startpicker" type="text" readonly class="form-control" id="startDate"
+            name="startDate" [(ngModel)]="calendarDetails.startDate">
+        </div>
+        <div class="form-group col-md-1" style="padding-top: 25px;">
+          <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+          <mat-datepicker #startpicker></mat-datepicker>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label for="endDate">End Date</label>
+          <input matInput [matDatepicker]="endpicker" type="text" readonly class="form-control" id="endDate"
+            name="endDate" [(ngModel)]="calendarDetails.endDate">
+        </div>
+        <div class="form-group col-md-1" style="padding-top: 25px;">
+          <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+          <mat-datepicker #endpicker></mat-datepicker>
+        </div>
+      </div>
+      <br>
+      <div *ngIf=addFlag>
+        <button (click)="addCalendarDetails(calendarDetailsNew.value)" type="submit" class="submit-button">Add</button>
+      </div>
+      <div *ngIf=!addFlag>
+        <button (click)="updateCalendarDetails(calendarDetails.anniversary, calendarDetailsNew.value)"
+          type="submit" class="submit-button">Update</button>
+      </div>
+      <br>
+    </form>
+  </div>
+
+</div>

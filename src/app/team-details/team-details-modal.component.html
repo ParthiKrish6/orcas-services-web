@@ -1,0 +1,41 @@
+<div>
+  <div class="header">
+    <div id="modal-title">Team Details</div>
+    <div id='modal-close'>
+      <span style="cursor: pointer;color:rgb(253, 251, 251);font-size: 35px;" class="material-icons"
+        (click)="closeModal()">cancel</span>
+    </div>
+  </div>
+
+  <div id="error-block" *ngIf=errorMsg>
+    {{errorMsg}}
+  </div>
+
+  <div>
+    <form class="form-style-9" ngNativeValidate #teamDetailsNew="ngForm">
+      <div class="form-row" *ngIf=!addFlag>
+        <div class="form-group col-md-8">
+          <label for="teamId">Team ID</label>
+          <input type="number" [readonly]="true" autocomplete="off" class="form-control" id="teamId" name="teamId"
+            [(ngModel)]="teamDetails.teamId">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label for="teamName">Team Name</label>
+          <input  type="text" class="form-control" id="teamName" name="teamName" [(ngModel)]="teamDetails.teamName">
+        </div>
+      </div>
+      <br>
+      <div *ngIf=addFlag>
+        <button (click)="addTeamDetails(teamDetailsNew.value)" type="submit" class="submit-button">Add</button>
+      </div>
+      <div *ngIf=!addFlag>
+        <button (click)="updateTeamDetails(teamDetails.teamId, teamDetailsNew.value)"
+          type="submit" class="submit-button">Update</button>
+      </div>
+      <br>
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,14 @@
+<h2>Upload Scorecard</h2>  
+
+
+<input enctype="multipart/form-data" type="file" (change)="onFileSelected($event)" accept="application/pdf">
+<button (click)="uploadFile()">Upload PDF</button>
+
+<div *ngIf="uploadSuccess" class="success message">
+    PDF uploaded successfully!
+  </div>
+  
+  <div *ngIf="uploadError" class="error message">
+    Error uploading PDF: {{ errorMessage }}
+  </div>
+

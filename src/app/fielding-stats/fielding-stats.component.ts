@@ -1,0 +1,101 @@
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FieldingStatsService } from './fielding-stats.service';
+import { FieldingStats } from './fielding-stats';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
+import { CalendarDetailsService } from '../calendar-details/calendar-details.service';
+import { CalendarDetails } from '../calendar-details/calendar-details';
+import { TeamDetailsService } from '../team-details/team-details.service';
+import { TeamDetails } from '../team-details/team-details';
+import * as moment from 'moment';
+
+@Component({
+  selector: 'app-fielding-stats-list',
+  templateUrl: './fielding-stats.component.html',
+  styleUrls: ['./fielding-stats.component.css']
+})
+export class FieldingStatsComponent implements OnInit {
+
+  dataSource: MatTableDataSource<FieldingStats>;  
+  displayedColumns: string[] = ['player','innings','catches', 'runOuts', 'saved', 'missed'];  
+  @ViewChild(MatPaginator) paginator: MatPaginator;  
+  @ViewChild(MatSort) sort: MatSort; 
+  @ViewChild('anniversary') anniversaryDropdownElement!: ElementRef;
+  @ViewChild('team') teamDropdownElement!: ElementRef;
+  
+  errorMsg: string;
+  anniversaryOptions: CalendarDetails[];
+  teamOptions: TeamDetails[];
+  
+  constructor(
+    private fieldingStatsService: FieldingStatsService,
+    private calendarDetailsService: CalendarDetailsService,
+    private teamDetailsService: TeamDetailsService,
+    public matDialog: MatDialog,
+  ) { }
+
+  ngOnInit(): void {
+    this.reloadData();
+  }
+
+  reloadData() {
+    this.teamDetailsService.getTeamDetailsList().subscribe(data => {
+      this.teamOptions = data;
+      this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
+        this.anniversaryOptions = data;
+        this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
+        this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
+          this.setFieldingStats(data);
+        });
+      });
+    });
+  }
+
+  filterStats(anniversary, teamId) {
+    if(anniversary == "0" && teamId == "0") {
+      this.reloadData();
+    } else if(anniversary != "0" && teamId == "0") {
+      this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
+        this.fieldingStatsService.getFieldingStatsBetweenDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
+          this.setFieldingStats(data);
+        });
+      });
+    } else if(anniversary == "0" && teamId != "0") {
+      this.fieldingStatsService.getFieldingStatsForTeam(teamId).subscribe(data => {
+        this.setFieldingStats(data);
+      });
+    } else if(anniversary != "0" && teamId != "0") {
+      this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
+        this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+          this.setFieldingStats(data);
+        });
+      });
+    }
+  }
+
+  filterAnniversaryStats(anniversary) {
+    this.filterStats(anniversary, this.teamDropdownElement.nativeElement.value);
+  }
+
+  filterTeamStats(id) {
+    this.filterStats(this.anniversaryDropdownElement.nativeElement.value, id);
+  }
+
+  setFieldingStats(data) {
+    this.dataSource = new MatTableDataSource(data);  
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const searchString = filter.trim().toLowerCase();
+      return JSON.stringify(data).toLowerCase().includes(searchString);
+    };
+    this.dataSource.paginator = this.paginator;  
+    this.dataSource.sort = this.sort; 
+  }
+
+  applyFilter(filterValue: string) {  
+    this.dataSource.filter = filterValue.trim().toLowerCase();  
+  
+    if (this.dataSource.paginator) {  
+      this.dataSource.paginator.firstPage();  
+    }  
+  }  
+
+}

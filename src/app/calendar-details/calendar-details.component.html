@@ -1,0 +1,39 @@
+<h2>Anniversary Calendar Details</h2>  
+<mat-form-field>  
+  <input autocomplete="off" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">  
+</mat-form-field>
+<div class="mat-elevation-z8">  
+  <div id="add-button">
+    <mat-icon [inline]="true" style="cursor: pointer;" class="material-icons" (click)="openAddUpdateCalendarDetailsModal({})">add_circle</mat-icon>
+  </div>
+  <table mat-table [dataSource]="dataSource" matSort>  
+  
+    <ng-container matColumnDef="anniversary">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Anniversry </th>  
+      <td mat-cell *matCellDef="let calendar"> {{calendar.anniversary}} </td>  
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>  
+      <td mat-cell *matCellDef="let calendar"> {{calendar.startDate}} </td>  
+    </ng-container>  
+
+    <ng-container matColumnDef="endDate">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>  
+      <td mat-cell *matCellDef="let calendar"> {{calendar.endDate}} </td>  
+    </ng-container> 
+    
+    <ng-container matColumnDef="action">  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>  
+      <td mat-cell *matCellDef="let calendar"> 
+        <span style="cursor: pointer;color:rgb(219, 171, 11);" class="material-icons" (click)="openAddUpdateCalendarDetailsModal(calendar)">create</span>
+        &nbsp;<span style="cursor: pointer;color:rgb(172, 23, 23);" class="material-icons" (click)="deleteCalendarDetails(calendar.anniversary)">delete</span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>  
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>  
+  </table>  
+  
+  <mat-paginator [pageSizeOptions]="[10,15]"></mat-paginator>  
+</div>  

@@ -1,0 +1,17 @@
+
+  <div style="text-align:center" class="text-box-light">
+      <select #chartOption (change)="setBarChartOption(chartOption.value)">
+          <option *ngFor="let chartOption of chartOptions" [value]="chartOption">{{chartOption}}</option>
+      </select>
+  </div>
+  <div class="chart-wrapper">
+      <canvas baseChart 
+      *ngIf="barChartData"
+      [datasets]="barChartData"
+      [labels]="barChartLabels"
+      [options]="barChartOptions"
+      [plugins]="barChartPlugins"
+      [legend]="barChartLegend"
+      [chartType]="barChartType">
+    </canvas>
+  </div>
