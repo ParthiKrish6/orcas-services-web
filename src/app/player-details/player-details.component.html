@@ -27,7 +27,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>  
       <td mat-cell *matCellDef="let player"> 
         <span style="cursor: pointer;color:rgb(219, 171, 11);" class="material-icons" (click)="openAddUpdatePlayerDetailsModal(player)">create</span>
-        &nbsp;<span style="cursor: pointer;color:rgb(172, 23, 23);" class="material-icons" (click)="deletePlayerDetails(player.id)">delete</span>
+        &nbsp;<span style="cursor: pointer;color:rgb(172, 23, 23);" class="material-icons" (click)="deletePlayerDetails(player.playerId)">delete</span>
       </td>
     </ng-container>
 

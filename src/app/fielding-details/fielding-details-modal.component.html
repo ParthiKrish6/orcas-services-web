@@ -31,7 +31,7 @@
         <div class="form-group col-md-4">
           <label for="name">Player</label>
           <select required class="form-control" [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" (change)="setPlayer()">
-            <option *ngFor="let player of playerDetails" [ngValue]="player.id">{{player.playerName}}</option>
+            <option *ngFor="let player of playerDetails" [ngValue]="player.playerId">{{player.playerName}}</option>
           </select>
         </div>
         <div class="form-group col-md-3">

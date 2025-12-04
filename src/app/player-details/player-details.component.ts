@@ -50,7 +50,7 @@ export class PlayerDetailsComponent implements OnInit {
   }  
 
   openAddUpdatePlayerDetailsModal(playerDetails : PlayerDetails): void {
-    let flag = playerDetails.id !== undefined ? false : true;
+    let flag = playerDetails.playerId !== undefined ? false : true;
     let height = flag ? '370px' : '450px';
     const dialogRef = this.matDialog.open(ModalComponent, {
       disableClose: true,

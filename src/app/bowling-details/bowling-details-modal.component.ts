@@ -38,7 +38,7 @@ export class ModalComponent implements OnInit {
     this.bowlingDetails = this.data.bowlingDetails;
 
     if(this.bowlingDetails.playerDetails) {
-      this.selectedValue = this.bowlingDetails.playerDetails.id;
+      this.selectedValue = this.bowlingDetails.playerDetails.playerId;
       this.setPlayer();
     } 
 
@@ -54,6 +54,7 @@ export class ModalComponent implements OnInit {
       this.playerDetails = data;
     });
     this.addFlag = this.data.addFlag;
+    alert(this.matchDetail);
   }
 
   closeModal() {
@@ -69,6 +70,7 @@ export class ModalComponent implements OnInit {
   setMatch() {
     this.matchDetailsService.getMatchDetails(this.selectedMatch).subscribe(data =>{  
       this.matchDetail = data;
+      
     });
   }
 

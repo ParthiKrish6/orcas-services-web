@@ -38,7 +38,7 @@ export class ModalComponent implements OnInit {
     this.fieldingDetails = this.data.fieldingDetails;
 
     if(this.fieldingDetails.playerDetails) {
-      this.selectedValue = this.fieldingDetails.playerDetails.id;
+      this.selectedValue = this.fieldingDetails.playerDetails.playerId;
       this.setPlayer();
     } 
 

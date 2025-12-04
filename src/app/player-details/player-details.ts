@@ -1,5 +1,5 @@
 export class PlayerDetails {
-    id: number;
+    playerId: number;
     playerName: string;
     nickName: string;
     image: File;
