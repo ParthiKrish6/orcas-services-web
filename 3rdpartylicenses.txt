@@ -313,6 +313,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 ng2-charts
 ISC
 
+ngx-spinner
+MIT
+
 regenerator-runtime
 MIT
 MIT License
