@@ -4,10 +4,10 @@ import { NgbAlertModule, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
-import { ChartsModule } from 'ng2-charts';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
-    imports: [CommonModule, NgbCarouselModule, NgbAlertModule, DashboardRoutingModule],
+    imports: [CommonModule, NgbCarouselModule, NgbAlertModule, DashboardRoutingModule,  NgxSpinnerModule],
     declarations: [DashboardComponent]
 })
 export class DashboardModule {}

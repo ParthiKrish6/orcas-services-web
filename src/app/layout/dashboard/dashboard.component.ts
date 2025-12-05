@@ -19,6 +19,7 @@ import { BowlingStats } from '../../bowling-stats/bowling-stats';
 import { BowlingStatsService } from '../../bowling-stats/bowling-stats.service';
 import { FieldingStats } from '../../fielding-stats/fielding-stats';
 import { FieldingStatsService } from '../../fielding-stats/fielding-stats.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-dashboard',
@@ -35,6 +36,7 @@ export class DashboardComponent implements OnInit {
     teamOptions: TeamDetails[];
     minBalls: number = 50;
     minOvers: number = 5;
+    typeSelected: string;
 
     battingStatsRuns: BattingStats[];
     battingStatsAverage: BattingStats[];
@@ -55,15 +57,16 @@ export class DashboardComponent implements OnInit {
         private bowlingStatsService: BowlingStatsService,
         private fieldingStatsService: FieldingStatsService,
         private calendarDetailsService: CalendarDetailsService,
-        private teamDetailsService: TeamDetailsService,) {
-
+        private teamDetailsService: TeamDetailsService,
+        private spinnerService: NgxSpinnerService) {
     }
 
     ngOnInit(): void {
-        this.reloadData();
+      this.reloadData();
     }
 
     reloadData() {
+      this.spinnerService.show();
         this.teamDetailsService.getTeamDetailsList().subscribe(data => {
             this.teamOptions = data;
             this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
@@ -77,12 +80,15 @@ export class DashboardComponent implements OnInit {
                 });
                 this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
                   this.setFieldingStats(data);
+                  this.spinnerService.hide();
                 });
+                
             });
         });
     }
 
     filterStats(anniversary, teamId) {
+      this.spinnerService.show();
         if(anniversary == "0" && teamId == "0") {
           this.reloadData();
         } else if(anniversary != "0" && teamId == "0") {
@@ -95,6 +101,7 @@ export class DashboardComponent implements OnInit {
             });
             this.fieldingStatsService.getFieldingStatsBetweenDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
               this.setFieldingStats(data);
+              this.spinnerService.hide();
             });
           });
         } else if(anniversary == "0" && teamId != "0") {
@@ -106,6 +113,7 @@ export class DashboardComponent implements OnInit {
           });
           this.fieldingStatsService.getFieldingStatsForTeam(teamId).subscribe(data => {
             this.setFieldingStats(data);
+            this.spinnerService.hide();
           });
         } else if(anniversary != "0" && teamId != "0") {
           this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
@@ -117,6 +125,7 @@ export class DashboardComponent implements OnInit {
             });
             this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
               this.setFieldingStats(data);
+              this.spinnerService.hide();
             });
           });
         }
