@@ -13,7 +13,7 @@ import { FormGroup } from '@angular/forms';
 export class PlayerDetailsComponent implements OnInit {
 
   dataSource: MatTableDataSource<PlayerDetails>;  
-  displayedColumns: string[] = ['playerName', 'nickName', 'image', 'action'];  
+  displayedColumns: string[] = ['playerId', 'playerName', 'nickName', 'image', 'action'];  
   @ViewChild(MatPaginator) paginator: MatPaginator;  
   @ViewChild(MatSort) sort: MatSort; 
   

@@ -15,9 +15,9 @@
     <form class="form-style-9" ngNativeValidate #playerDetailsNew="ngForm">
       <div class="form-row" *ngIf=!addFlag>
         <div class="form-group col-md-10">
-          <label for="id">Player ID</label>
-          <input type="number" [readonly]="true" autocomplete="off" class="form-control" id="id" name="id"
-            [(ngModel)]="playerDetails.id">
+          <label for="playerId">Player ID</label>
+          <input type="number" [readonly]="true" autocomplete="off" class="form-control" id="playerId" name="playerId"
+            [(ngModel)]="playerDetails.playerId">
         </div>
       </div>
       <div class="form-row">
