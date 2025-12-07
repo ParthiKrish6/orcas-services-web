@@ -4,6 +4,8 @@ import { CalendarDetails } from './calendar-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { ModalComponent } from './calendar-details-modal.component';
 import { FormGroup } from '@angular/forms';
+import { AuthService } from '../login/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-details-list',
@@ -23,6 +25,8 @@ export class CalendarDetailsComponent implements OnInit {
   constructor(
     private calendarDetailsService: CalendarDetailsService,
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -30,6 +34,14 @@ export class CalendarDetailsComponent implements OnInit {
   }
 
   reloadData() {
+    if('Y' !== this.authService.getToken()) {
+      this.router.navigate(['/login'],{
+        queryParams: {
+          errMsg: 'Login to Proceed'
+        },
+      }); 
+      return;
+    }
     this.calendarDetailsService.getCalendarDetailsList().subscribe(data =>{  
       this.setCalendarDetails(data);
     });

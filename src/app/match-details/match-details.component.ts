@@ -8,6 +8,8 @@ import { TeamDetailsService } from '../team-details/team-details.service';
 import { CalendarDetailsService } from '../calendar-details/calendar-details.service';
 import { CalendarDetails } from '../calendar-details/calendar-details';
 import { TeamDetails } from '../team-details/team-details';
+import { AuthService } from '../login/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-match-details-list',
@@ -43,6 +45,8 @@ export class MatchDetailsComponent implements OnInit {
     private calendarDetailsService: CalendarDetailsService,
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -50,6 +54,14 @@ export class MatchDetailsComponent implements OnInit {
   }
 
   reloadData() {
+    if('Y' !== this.authService.getToken()) {
+      this.router.navigate(['/login'],{
+        queryParams: {
+          errMsg: 'Login to Proceed'
+        },
+      }); 
+      return;
+    }
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {

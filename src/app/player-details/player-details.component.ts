@@ -4,6 +4,8 @@ import { PlayerDetails } from './player-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { ModalComponent } from './player-details-modal.component';
 import { FormGroup } from '@angular/forms';
+import { AuthService } from '../login/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-player-details-list',
@@ -23,6 +25,8 @@ export class PlayerDetailsComponent implements OnInit {
   constructor(
     private playerDetailsService: PlayerDetailsService,
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -30,6 +34,14 @@ export class PlayerDetailsComponent implements OnInit {
   }
 
   reloadData() {
+    if('Y' !== this.authService.getToken()) {
+      this.router.navigate(['/login'],{
+        queryParams: {
+          errMsg: 'Login to Proceed'
+        },
+      }); 
+      return;
+    }
     this.playerDetailsService.getPlayerDetailsList().subscribe(data =>{  
       this.setPlayerDetails(data);
     });

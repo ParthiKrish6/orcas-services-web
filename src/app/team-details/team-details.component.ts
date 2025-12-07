@@ -4,6 +4,8 @@ import { TeamDetails } from './team-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { ModalComponent } from './team-details-modal.component';
 import { FormGroup } from '@angular/forms';
+import { AuthService } from '../login/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team-details-list',
@@ -23,6 +25,8 @@ export class TeamDetailsComponent implements OnInit {
   constructor(
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -30,6 +34,14 @@ export class TeamDetailsComponent implements OnInit {
   }
 
   reloadData() {
+    if('Y' !== this.authService.getToken()) {
+      this.router.navigate(['/login'],{
+        queryParams: {
+          errMsg: 'Login to Proceed'
+        },
+      }); 
+      return;
+    }
     this.teamDetailsService.getTeamDetailsList().subscribe(data =>{  
       this.setTeamDetails(data);
     });

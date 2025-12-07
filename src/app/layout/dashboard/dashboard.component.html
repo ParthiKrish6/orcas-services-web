@@ -1,21 +1,27 @@
 
 <div [@routerTransition]>
-    <div style="text-align:right;margin-right: 35px;" class="text-box-light">
-        <label for="anniversaryOption">Anniversary</label>
-        &nbsp;&nbsp;
-        <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
-            <option value = "0" >All</option>
-            <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">{{anniversary.anniversary}} / {{anniversary.startDate}} to {{anniversary.endDate}}</option>
-        </select>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <label for="teamOption">Team</label>
-        &nbsp;&nbsp;
-        <select #team (change)="filterTeamStats(team.value)">
-          <option value = "0" >All</option>
-          <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
-        </select>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div style="text-align:left;margin-right: 35px;" class="text-box-light">
+        <div>
+            <label for="anniversaryOption">Anniversary</label></div>
+        <div>
+            <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
+                <option value = "0" >All</option>
+                <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">{{anniversary.anniversary}} / {{anniversary.startDate}} to {{anniversary.endDate}}</option>
+            </select>
+        </div>
     </div>
+    <div style="text-align:left;margin-right: 35px;" class="text-box-light">
+        <div>
+            <label for="teamOption">Team</label>
+        </div>
+        <div>
+            <select #team (change)="filterTeamStats(team.value)">
+            <option value = "0" >All</option>
+            <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+            </select>
+        </div>
+    </div>
+    &nbsp;
     <div>
         <div class="header">
             Batting Leaderboard
@@ -32,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-               
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
                          Average (Min {{this.minBalls}} Balls)
@@ -43,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
                          Strike Rate (Min {{this.minBalls}} Balls)
@@ -57,8 +63,8 @@
             </div>
         </div>
     </div>
-    
-    <div style="padding-top: 160px;">
+    &nbsp;
+    <div>
         <div class="header">
             Bowling Leaderboard
         </div>
@@ -74,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-                
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
                          Average (Min {{minOvers}} Overs)
@@ -85,7 +91,7 @@
                         </div>
                     </div>
                 </div>
-                
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
                          Strike Rate (Min {{minOvers}} Overs)
@@ -96,8 +102,8 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3">
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                <div class="col-md-3" style="padding-top:20px;">
                     <div class="content-header">
                          Economy (Min {{minOvers}} Overs)
                      </div>
@@ -110,8 +116,8 @@
             </div>
         </div>
     </div>
-
-    <div style="padding-top: 160px;">
+    &nbsp;
+    <div>
         <div class="header">
             Fielding Leaderboard
         </div>
@@ -127,7 +133,7 @@
                         </div>
                     </div>
                 </div>
-				
+				&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
 				<div class="col-md-3">
                     <div class="content-header">
                          Runs Saved
@@ -138,7 +144,7 @@
                         </div>
                     </div>
                 </div>
-                
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header-red">
                          Dropped Catches
@@ -149,8 +155,8 @@
                         </div>
                     </div>
                 </div>
-                
-               <div class="col-md-3">
+                &nbsp; 
+               <div class="col-md-3" style="padding-top:20px;">
                     <div class="content-header-red">
                          Runs Missed
                      </div>
