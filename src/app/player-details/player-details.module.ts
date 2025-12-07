@@ -48,6 +48,7 @@ import { CommonModule } from '@angular/common';
 import { PlayerDetailsRoutingModule } from './player-details-routing.module';
 import { PlayerDetailsComponent } from './player-details.component';
 import { ModalComponent as ModalComponent } from './player-details-modal.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
   
 const modules = [
   CommonModule, 
@@ -96,6 +97,7 @@ const modules = [
   ScrollingModule,  
   FormsModule,
   ReactiveFormsModule,
+  NgxSpinnerModule
 ];
 
 @NgModule({

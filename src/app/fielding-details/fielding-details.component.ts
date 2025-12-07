@@ -12,6 +12,7 @@ import { MatchDetailsService } from '../match-details/match-details.service';
 import * as moment from 'moment';
 import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-fielding-details-list',
@@ -43,7 +44,8 @@ export class FieldingDetailsComponent implements OnInit {
     private matchDetailsService: MatchDetailsService,
     public matDialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -59,6 +61,7 @@ export class FieldingDetailsComponent implements OnInit {
       }); 
       return;
     }
+    this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
       this.selectedTeam = this.teamOptions[0].teamId;
@@ -86,6 +89,7 @@ export class FieldingDetailsComponent implements OnInit {
   }
 
   filterMatches(matchId) {
+    this.spinnerService.show();
     this.selectedMatch = matchId;
     this.fieldingDetailsService.getFieldingDetailsForMatch(matchId).subscribe(data =>{  
       this.setFieldingDetails(data);
@@ -93,6 +97,7 @@ export class FieldingDetailsComponent implements OnInit {
   }
 
   filterTeamMatches(teamId) {
+    this.spinnerService.show();
     this.calendarDetailsService.getCalendarDetails(this.anniversaryDropdownElement.nativeElement.value).subscribe(data => {
       this.matchDetailsService.getMatchDetailsForDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
         let filteredData ;
@@ -115,6 +120,7 @@ export class FieldingDetailsComponent implements OnInit {
   }
 
   filterAnniversaryMatches(anniversary) {
+    this.spinnerService.show();
     let filteredData 
     let teamId = this.teamDropdownElement.nativeElement.value;
     this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
@@ -145,6 +151,7 @@ export class FieldingDetailsComponent implements OnInit {
     };
     this.dataSource.paginator = this.paginator;  
     this.dataSource.sort = this.sort; 
+    this.spinnerService.hide();
   }
 
   applyFilter(filterValue: string) {  

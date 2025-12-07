@@ -10,6 +10,7 @@ import { CalendarDetails } from '../calendar-details/calendar-details';
 import { TeamDetails } from '../team-details/team-details';
 import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-match-details-list',
@@ -46,7 +47,8 @@ export class MatchDetailsComponent implements OnInit {
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -62,6 +64,7 @@ export class MatchDetailsComponent implements OnInit {
       }); 
       return;
     }
+    this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
@@ -75,6 +78,7 @@ export class MatchDetailsComponent implements OnInit {
   }
 
   filterTeamMatches(teamId) {
+    this.spinnerService.show();
     this.calendarDetailsService.getCalendarDetails(this.anniversaryDropdownElement.nativeElement.value).subscribe(data => {
       this.matchDetailsService.getMatchDetailsForDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
         let filteredData ;
@@ -91,6 +95,7 @@ export class MatchDetailsComponent implements OnInit {
   }
 
   filterAnniversaryMatches(anniversary) {
+    this.spinnerService.show();
     let filteredData;
     let teamId = this.teamDropdownElement.nativeElement.value;
     this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
@@ -152,7 +157,7 @@ export class MatchDetailsComponent implements OnInit {
         item.teamId == this.teamDropdownElement.nativeElement.value
       )[0].teamName;
     }
-    
+    this.spinnerService.hide();
   }
 
   applyFilter(filterValue: string) { 

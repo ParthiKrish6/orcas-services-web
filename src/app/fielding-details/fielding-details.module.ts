@@ -48,6 +48,7 @@ import { CommonModule } from '@angular/common';
 import { FieldingDetailsRoutingModule } from './fielding-details-routing.module';
 import { FieldingDetailsComponent } from './fielding-details.component';
 import { ModalComponent as ModalComponent } from './fielding-details-modal.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
   
 const modules = [
   CommonModule, 
@@ -96,6 +97,7 @@ const modules = [
   ScrollingModule,  
   FormsModule,
   ReactiveFormsModule,
+  NgxSpinnerModule
 ];
 
 @NgModule({

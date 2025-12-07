@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { UploadScoreCardService } from './upload-scorecard.service';
 import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-upload-scorecard',
@@ -19,7 +20,9 @@ export class UploadScoreCardComponent {
   constructor(private http: HttpClient,
     private uploadScoreCardService: UploadScoreCardService,
     private authService: AuthService,
-    private router: Router) { }
+    private spinnerService: NgxSpinnerService,
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
     if('Y' !== this.authService.getToken()) {
@@ -42,6 +45,7 @@ export class UploadScoreCardComponent {
   }
 
   uploadFile(): void {
+    this.spinnerService.show();
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('file', this.selectedFile, this.selectedFile.name);
@@ -64,7 +68,7 @@ export class UploadScoreCardComponent {
            
             this.uploadSuccess = false;
           });
-
+          this.spinnerService.hide();
     }
   }
 

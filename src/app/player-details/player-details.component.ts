@@ -6,6 +6,7 @@ import { ModalComponent } from './player-details-modal.component';
 import { FormGroup } from '@angular/forms';
 import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-player-details-list',
@@ -26,7 +27,8 @@ export class PlayerDetailsComponent implements OnInit {
     private playerDetailsService: PlayerDetailsService,
     public matDialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -42,8 +44,10 @@ export class PlayerDetailsComponent implements OnInit {
       }); 
       return;
     }
+    this.spinnerService.show();
     this.playerDetailsService.getPlayerDetailsList().subscribe(data =>{  
       this.setPlayerDetails(data);
+      
     });
   }
 
@@ -51,6 +55,7 @@ export class PlayerDetailsComponent implements OnInit {
     this.dataSource = new MatTableDataSource(data);  
     this.dataSource.paginator = this.paginator;  
     this.dataSource.sort = this.sort; 
+    this.spinnerService.hide();
   }
 
   applyFilter(filterValue: string) {  

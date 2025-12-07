@@ -47,6 +47,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { BowlingStatsRoutingModule } from './bowling-stats-routing.module';
 import { BowlingStatsComponent } from './bowling-stats.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
   
 const modules = [
   CommonModule, 
@@ -95,6 +96,7 @@ const modules = [
   ScrollingModule,  
   FormsModule,
   ReactiveFormsModule,
+  NgxSpinnerModule
 ];
 
 @NgModule({

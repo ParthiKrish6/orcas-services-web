@@ -6,6 +6,7 @@ import { ModalComponent } from './team-details-modal.component';
 import { FormGroup } from '@angular/forms';
 import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-team-details-list',
@@ -26,7 +27,8 @@ export class TeamDetailsComponent implements OnInit {
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -42,8 +44,10 @@ export class TeamDetailsComponent implements OnInit {
       }); 
       return;
     }
+    this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data =>{  
       this.setTeamDetails(data);
+      
     });
   }
 
@@ -51,6 +55,7 @@ export class TeamDetailsComponent implements OnInit {
     this.dataSource = new MatTableDataSource(data);  
     this.dataSource.paginator = this.paginator;  
     this.dataSource.sort = this.sort; 
+    this.spinnerService.hide();
   }
 
   applyFilter(filterValue: string) {  

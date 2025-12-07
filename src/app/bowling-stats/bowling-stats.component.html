@@ -57,7 +57,7 @@
 
     <ng-container matColumnDef="economy">  
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Economy </th>  
-      <td mat-cell *matCellDef="let bowling"> {{bowling.economy | number: '1.2-2'}} </td>  
+      <td mat-cell *matCellDef="let bowling"> <p *ngIf="bowling.economy != 'Infinity'">{{bowling.economy | number: '1.2-2'}} </p></td>  
     </ng-container>
 
     <ng-container matColumnDef="fours">  
@@ -72,12 +72,12 @@
 
     <ng-container matColumnDef="average">  
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Average </th>  
-      <td mat-cell *matCellDef="let bowling"> {{bowling.average | number: '1.2-2'}} </td>  
+      <td mat-cell *matCellDef="let bowling"> <p *ngIf="bowling.average != 'NA' && bowling.average != 'Infinity'">{{bowling.average | number: '1.2-2'}} </p></td>  
     </ng-container>
 
     <ng-container matColumnDef="strikeRate">  
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Strike Rate </th>  
-      <td mat-cell *matCellDef="let bowling"> {{bowling.strikeRate | number: '1.2-2'}} </td>  
+      <td mat-cell *matCellDef="let bowling"> <p *ngIf="bowling.strikeRate != 'Infinity'">{{bowling.strikeRate | number: '1.2-2'}} </p></td>  
     </ng-container>
 
     <ng-container matColumnDef="dots">  
@@ -101,3 +101,4 @@
   
   <mat-paginator [pageSizeOptions]="[10,15]"></mat-paginator>  
 </div>  
+<ngx-spinner type="timer"></ngx-spinner>
