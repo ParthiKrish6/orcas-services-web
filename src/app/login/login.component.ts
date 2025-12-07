@@ -5,6 +5,7 @@ import * as CryptoJS from 'crypto-js';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from './login.service';
 import { LoginDetails } from './login-details';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-login',
@@ -18,7 +19,7 @@ export class LoginComponent implements OnInit {
     loginDet: LoginDetails;
 
     constructor(public router: Router, private route: ActivatedRoute,private fb: FormBuilder,
-        private loginService: LoginService) {
+        private loginService: LoginService,private spinnerService: NgxSpinnerService) {
         this.myForm = this.fb.group({
             user: ['', Validators.required],
             pwd: ['', Validators.required],
@@ -34,18 +35,37 @@ export class LoginComponent implements OnInit {
     }
 
     onLoggedin() {
+        this.spinnerService.show();
         this.loginDet = new LoginDetails();
         this.loginDet.userId = this.myForm.get('user')?.value;
         this.loginDet.pwd = this.generateSha512Hash(this.myForm.get('pwd')?.value);
-        this.loginService.login(this.loginDet).subscribe(data => {
-           let loginResp : any = data;
-           if(loginResp && loginResp.userId && loginResp.pwd && loginResp.type) {
-                localStorage.setItem('authToken', 'Y');
-                localStorage.setItem('authType', loginResp.type);
-                this.router.navigate(['/dashboard']); 
-           } else {
-                this.errorMsg =  'Incorrect Login';
-           }
+        
+        this.loginService.login(this.loginDet).subscribe(
+            (response) => {
+                console.log('Data fetched:', response);
+                let loginResp : any = response;
+                if(loginResp && loginResp.userId && loginResp.pwd && loginResp.type) {
+                        localStorage.setItem('authToken', 'Y');
+                        localStorage.setItem('authType', loginResp.type);
+                        this.router.navigate(['/dashboard']); 
+                } else {
+                        this.errorMsg =  'Incorrect Login';
+                }
+                this.spinnerService.hide();
+            },
+            (error) => {
+              console.error('Error fetching data:', error);
+                this.errorMsg =  'Error fetching data:', error;
+                this.spinnerService.hide();
+            }
+          );
+        
+        this.loginService.login(this.loginDet).subscribe
+        
+        
+        
+        (data => {
+           
         });
     }
 
