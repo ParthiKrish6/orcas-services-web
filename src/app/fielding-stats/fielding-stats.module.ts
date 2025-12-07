@@ -47,6 +47,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FieldingStatsRoutingModule } from './fielding-stats-routing.module';
 import { FieldingStatsComponent } from './fielding-stats.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
   
 const modules = [
   CommonModule, 
@@ -95,6 +96,7 @@ const modules = [
   ScrollingModule,  
   FormsModule,
   ReactiveFormsModule,
+  NgxSpinnerModule
 ];
 
 @NgModule({

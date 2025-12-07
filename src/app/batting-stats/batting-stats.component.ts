@@ -9,6 +9,7 @@ import { TeamDetails } from '../team-details/team-details';
 import * as moment from 'moment';
 import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-batting-stats-list',
@@ -34,7 +35,8 @@ export class BattingStatsComponent implements OnInit {
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinnerService: NgxSpinnerService,
   ) { }
 
   ngOnInit(): void {
@@ -50,6 +52,7 @@ export class BattingStatsComponent implements OnInit {
       }); 
       return;
     }
+    this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
@@ -63,6 +66,7 @@ export class BattingStatsComponent implements OnInit {
   }
 
   filterStats(anniversary, teamId) {
+    this.spinnerService.show();
     if(anniversary == "0" && teamId == "0") {
       this.reloadData();
     } else if(anniversary != "0" && teamId == "0") {
@@ -100,6 +104,7 @@ export class BattingStatsComponent implements OnInit {
     };
     this.dataSource.paginator = this.paginator;  
     this.dataSource.sort = this.sort; 
+    this.spinnerService.hide();
   }
 
   applyFilter(filterValue: string) {  

@@ -48,6 +48,7 @@ import { CommonModule } from '@angular/common';
 import { CalendarDetailsRoutingModule } from './calendar-details-routing.module';
 import { CalendarDetailsComponent } from './calendar-details.component';
 import { ModalComponent as ModalComponent } from './calendar-details-modal.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
   
 const modules = [
   CommonModule, 
@@ -96,6 +97,7 @@ const modules = [
   ScrollingModule,  
   FormsModule,
   ReactiveFormsModule,
+  NgxSpinnerModule
 ];
 
 @NgModule({
