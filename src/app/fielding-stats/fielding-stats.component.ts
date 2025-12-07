@@ -7,6 +7,8 @@ import { CalendarDetails } from '../calendar-details/calendar-details';
 import { TeamDetailsService } from '../team-details/team-details.service';
 import { TeamDetails } from '../team-details/team-details';
 import * as moment from 'moment';
+import { AuthService } from '../login/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fielding-stats-list',
@@ -31,6 +33,8 @@ export class FieldingStatsComponent implements OnInit {
     private calendarDetailsService: CalendarDetailsService,
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +42,14 @@ export class FieldingStatsComponent implements OnInit {
   }
 
   reloadData() {
+    if('Y' !== this.authService.getToken()) {
+      this.router.navigate(['/login'],{
+        queryParams: {
+          errMsg: 'Login to Proceed'
+        },
+      }); 
+      return;
+    }
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {

@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { UploadScoreCardService } from './upload-scorecard.service';
+import { AuthService } from '../login/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-scorecard',
@@ -15,7 +17,20 @@ export class UploadScoreCardComponent {
   errorMessage: string = '';
   
   constructor(private http: HttpClient,
-    private uploadScoreCardService: UploadScoreCardService) { }
+    private uploadScoreCardService: UploadScoreCardService,
+    private authService: AuthService,
+    private router: Router) { }
+
+  ngOnInit(): void {
+    if('Y' !== this.authService.getToken()) {
+      this.router.navigate(['/login'],{
+        queryParams: {
+          errMsg: 'Login to Proceed'
+        },
+      }); 
+      return;
+    }
+  }
 
   onFileSelected(event: any): void {
     const input = event.target as HTMLInputElement;

@@ -7,42 +7,42 @@
             <span>Leaderboard</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/calendar-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/calendar-details">
             <i class="fa fa-fw fa-calendar"></i>&nbsp;
             <span>Anniversary Calendar</span>
         </a>
         
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/team-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/team-details">
             <i class="fa fa-fw fa-users"></i>&nbsp;
             <span>Team Details</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/player-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/player-details">
             <i class="fa fa-fw fa-user-circle-o"></i>&nbsp;
             <span>Player Details</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/upload-scorecard">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/upload-scorecard">
             <i class="fa fa-fw fa-upload"></i>&nbsp;
             <span>Upload Scorecard</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/match-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/match-details">
             <i class="fa fa-fw fa-users"></i>&nbsp;
             <span>Match Details</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/batting-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/batting-details">
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Batting Details</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/bowling-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/bowling-details">
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Bowling Details</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/fielding-details">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/fielding-details">
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Fielding Details</span>
         </a>
@@ -60,7 +60,11 @@
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Fielding Stats</span>
         </a>
-        
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/login">
+            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <span>Logout</span>
+        </a>
+
     </div>
     <div (click)="toggleCollapsed()" [ngClass]="{ collapsed: collapsed }" class="toggle-button">
         <i class="fa fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>&nbsp;

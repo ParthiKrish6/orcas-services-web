@@ -54,7 +54,6 @@ export class ModalComponent implements OnInit {
       this.playerDetails = data;
     });
     this.addFlag = this.data.addFlag;
-    alert(this.matchDetail);
   }
 
   closeModal() {
