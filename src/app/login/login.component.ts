@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
                 } else {
                         this.errorMsg =  'Incorrect Login';
                 }
-                this.spinnerService.hide();
             },
             (error) => {
               console.error('Error fetching data:', error);
