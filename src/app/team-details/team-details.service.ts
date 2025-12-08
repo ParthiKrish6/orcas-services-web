@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -9,27 +9,49 @@ import { environment } from '../../environments/environment';
 export class TeamDetailsService {
 
   private baseUrl = environment.apiUrl+'/api/v1/team-details';
-
-  constructor(private http: HttpClient) { }
+  private headers : HttpHeaders;
   
-
+  constructor(private http: HttpClient) { 
+    
+  }
+  
   getTeamDetails(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${id}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${id}`, { headers: this.headers });
   }
 
   addTeamDetails(teamDetails: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}`, teamDetails);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.post(`${this.baseUrl}`, teamDetails, { headers: this.headers });
   }
 
   updateTeamDetails(id: number, teamDetails: Object): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/${id}`, teamDetails);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.put(`${this.baseUrl}/${id}`, teamDetails, { headers: this.headers });
   }
 
   deleteTeamDetails(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' , headers: this.headers});
   }
 
   getTeamDetailsList(): Observable<any> {
-    return this.http.get(`${this.baseUrl}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}`, { headers: this.headers });
   }
 }

@@ -4,7 +4,6 @@ import { TeamDetails } from './team-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { ModalComponent } from './team-details-modal.component';
 import { FormGroup } from '@angular/forms';
-import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -26,7 +25,6 @@ export class TeamDetailsComponent implements OnInit {
   constructor(
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
-    private authService: AuthService,
     private router: Router,
     private spinnerService: NgxSpinnerService
   ) { }
@@ -36,19 +34,20 @@ export class TeamDetailsComponent implements OnInit {
   }
 
   reloadData() {
-    if('Y' !== this.authService.getToken()) {
+    this.spinnerService.show();
+    this.teamDetailsService
+    .getTeamDetailsList().subscribe(data => {
+      console.log(data)
+      this.setTeamDetails(data);
+    }, 
+    error => {
       this.router.navigate(['/login'],{
         queryParams: {
-          errMsg: 'Login to Proceed'
+          errMsg: error.error.message
         },
       }); 
-      return;
-    }
-    this.spinnerService.show();
-    this.teamDetailsService.getTeamDetailsList().subscribe(data =>{  
-      this.setTeamDetails(data);
-      
     });
+   
   }
 
   setTeamDetails(data) {

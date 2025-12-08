@@ -20,7 +20,6 @@ import { BowlingStatsService } from '../../bowling-stats/bowling-stats.service';
 import { FieldingStats } from '../../fielding-stats/fielding-stats';
 import { FieldingStatsService } from '../../fielding-stats/fielding-stats.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthService } from '../../login/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -61,7 +60,6 @@ export class DashboardComponent implements OnInit {
         private calendarDetailsService: CalendarDetailsService,
         private teamDetailsService: TeamDetailsService,
         private spinnerService: NgxSpinnerService,
-        private authService: AuthService,
         private router: Router) {
     }
 
@@ -70,15 +68,6 @@ export class DashboardComponent implements OnInit {
     }
 
     reloadData() {
-     
-      if('Y' !== this.authService.getToken()) {
-        this.router.navigate(['/login'],{
-          queryParams: {
-            errMsg: 'Login to Proceed'
-          },
-        }); 
-        return;
-      }
       this.spinnerService.show();
         this.teamDetailsService.getTeamDetailsList().subscribe(data => {
             this.teamOptions = data;
@@ -97,6 +86,11 @@ export class DashboardComponent implements OnInit {
                 });
                 
             });
+        },error => {
+          console.log(error);
+          this.router.navigate(['/login'], {
+            queryParams: { errMsg: error.error.message }
+          });
         });
     }
 

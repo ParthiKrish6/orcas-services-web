@@ -29,9 +29,9 @@ export class LoginComponent implements OnInit {
     errorMsg: string;
 
     ngOnInit() {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('authType');
+        localStorage.clear();
         this.errorMsg = this.route.snapshot.queryParamMap.get('errMsg');
+        this.spinnerService.hide();
     }
 
     onLoggedin() {
@@ -42,30 +42,22 @@ export class LoginComponent implements OnInit {
         
         this.loginService.login(this.loginDet).subscribe(
             (response) => {
-                console.log('Data fetched:', response);
                 let loginResp : any = response;
-                if(loginResp && loginResp.userId && loginResp.pwd && loginResp.type) {
-                        localStorage.setItem('authToken', 'Y');
-                        localStorage.setItem('authType', loginResp.type);
-                        this.router.navigate(['/dashboard']); 
+                if(loginResp && loginResp.userId && loginResp.pwd && loginResp.type && loginResp.token) {
+                    localStorage.setItem('authToken', loginResp.token);
+                    localStorage.setItem('authType', loginResp.type);
+                    this.router.navigate(['/dashboard']); 
                 } else {
-                        this.errorMsg =  'Incorrect Login';
+                    localStorage.clear();
+                    this.errorMsg =  'Incorrect Login';
                 }
             },
             (error) => {
-              console.error('Error fetching data:', error);
-                this.errorMsg =  'Error fetching data:', error;
+                localStorage.clear();
+                this.errorMsg =  'Login Failed.', error;
                 this.spinnerService.hide();
             }
           );
-        
-        this.loginService.login(this.loginDet).subscribe
-        
-        
-        
-        (data => {
-           
-        });
     }
 
     generateSha512Hash(data: string): string {

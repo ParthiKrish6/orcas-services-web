@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { UploadScoreCardService } from './upload-scorecard.service';
-import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -19,20 +18,12 @@ export class UploadScoreCardComponent {
   
   constructor(private http: HttpClient,
     private uploadScoreCardService: UploadScoreCardService,
-    private authService: AuthService,
     private spinnerService: NgxSpinnerService,
     private router: Router
     ) { }
 
   ngOnInit(): void {
-    if('Y' !== this.authService.getToken()) {
-      this.router.navigate(['/login'],{
-        queryParams: {
-          errMsg: 'Login to Proceed'
-        },
-      }); 
-      return;
-    }
+    
   }
 
   onFileSelected(event: any): void {
@@ -65,7 +56,6 @@ export class UploadScoreCardComponent {
             } else {
               this.errorMessage = error.message || 'An unknown error occurred during upload.';
             }
-           
             this.uploadSuccess = false;
           });
           this.spinnerService.hide();

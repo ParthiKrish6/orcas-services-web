@@ -7,7 +7,6 @@ import { CalendarDetails } from '../calendar-details/calendar-details';
 import { TeamDetailsService } from '../team-details/team-details.service';
 import { TeamDetails } from '../team-details/team-details';
 import * as moment from 'moment';
-import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -34,7 +33,6 @@ export class BowlingStatsComponent implements OnInit {
     private calendarDetailsService: CalendarDetailsService,
     private teamDetailsService: TeamDetailsService,
     public matDialog: MatDialog,
-    private authService: AuthService,
     private router: Router,
     private spinnerService: NgxSpinnerService
   ) { }
@@ -44,14 +42,6 @@ export class BowlingStatsComponent implements OnInit {
   }
 
   reloadData() {
-    if('Y' !== this.authService.getToken()) {
-      this.router.navigate(['/login'],{
-        queryParams: {
-          errMsg: 'Login to Proceed'
-        },
-      }); 
-      return;
-    }
     this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
@@ -61,6 +51,12 @@ export class BowlingStatsComponent implements OnInit {
         this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
           this.setBowlingStats(data);
         });
+      });
+    },error => {
+      console.log(error);
+      this.errorMsg = error.error.message;
+      this.router.navigate(['/login'], {
+        queryParams: { errMsg: error.error.message }
       });
     });
   }

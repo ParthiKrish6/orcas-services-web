@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -9,31 +9,56 @@ import { environment } from '../../environments/environment';
 export class BowlingDetailsService {
 
   private baseUrl = environment.apiUrl+'/api/v1/bowling-details';
-
+  private headers : HttpHeaders;
+  
   constructor(private http: HttpClient) { }
   
 
   getBowlingDetails(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${id}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${id}`, { headers: this.headers });
   }
 
   addBowlingDetails(bowlingDetails: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}`, bowlingDetails);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.post(`${this.baseUrl}`, bowlingDetails, { headers: this.headers });
   }
 
   updateBowlingDetails(id: number, bowlingDetails: Object): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/${id}`, bowlingDetails);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.put(`${this.baseUrl}/${id}`, bowlingDetails, { headers: this.headers });
   }
 
   deleteBowlingDetails(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' ,  headers: this.headers });
   }
 
   getBowlingDetailsList(): Observable<any> {
-    return this.http.get(`${this.baseUrl}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}`, { headers: this.headers });
   }
 
   getBowlingDetailsForMatch(matchId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/match/${matchId}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/match/${matchId}`, { headers: this.headers });
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -9,11 +9,16 @@ import { environment } from '../../environments/environment';
 export class UploadScoreCardService {
 
   private baseUrl = environment.apiUrl+'/api/v1/upload-scorecard';
-
+  private headers : HttpHeaders;
+  
   constructor(private http: HttpClient) { }
 
   uploadScoreCard(formData: FormData): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, formData);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.post(`${this.baseUrl}`, formData, { headers: this.headers });
   }
 
 }

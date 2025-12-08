@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -9,31 +9,56 @@ import { environment } from '../../environments/environment';
 export class MatchDetailsService {
 
   private baseUrl = environment.apiUrl+'/api/v1/match-details';
-
+  private headers : HttpHeaders;
+  
   constructor(private http: HttpClient) { }
   
 
   getMatchDetails(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${id}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${id}`, { headers: this.headers });
   }
 
   addMatchDetails(matchDetails: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}`, matchDetails);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.post(`${this.baseUrl}`, matchDetails, { headers: this.headers });
   }
 
   updateMatchDetails(id: number, matchDetails: Object): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/${id}`, matchDetails);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.put(`${this.baseUrl}/${id}`, matchDetails, { headers: this.headers });
   }
 
   deleteMatchDetails(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text', headers: this.headers });
   }
 
   getMatchDetailsList(): Observable<any> {
-    return this.http.get(`${this.baseUrl}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}`, { headers: this.headers });
   }
 
   getMatchDetailsForDates(fromDate: string, toDate: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${fromDate}/${toDate}`);
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${fromDate}/${toDate}`, { headers: this.headers });
   }
 }

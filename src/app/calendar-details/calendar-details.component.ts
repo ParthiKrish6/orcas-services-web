@@ -4,10 +4,8 @@ import { CalendarDetails } from './calendar-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { ModalComponent } from './calendar-details-modal.component';
 import { FormGroup } from '@angular/forms';
-import { AuthService } from '../login/auth-service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar-details-list',
@@ -23,50 +21,32 @@ export class CalendarDetailsComponent implements OnInit {
   
   myForm:FormGroup; 
   errorMsg: string;
-  private subscription: Subscription;
 
   constructor(
     private calendarDetailsService: CalendarDetailsService,
     public matDialog: MatDialog,
-    private authService: AuthService,
     private router: Router,
     private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
     this.reloadData();
-
-    this.subscription = interval(600000).subscribe(() => {
-      this.calendarDetailsService.getCalendarDetailsList().subscribe(
-        (response) => {
-          console.log('Data fetched:', response);
-        },
-        (error) => {
-          console.error('Error fetching data:', error);
-        }
-      );
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 
   reloadData() {
-    if('Y' !== this.authService.getToken()) {
+    this.spinnerService.show();
+    this.calendarDetailsService
+    .getCalendarDetailsList().subscribe(data => {
+      this.setCalendarDetails(data);
+    }, 
+    error => {
       this.router.navigate(['/login'],{
         queryParams: {
-          errMsg: 'Login to Proceed'
+          errMsg: error.error.message
         },
       }); 
-      return;
-    }
-    this.spinnerService.show();
-    this.calendarDetailsService.getCalendarDetailsList().subscribe(data =>{  
-      this.setCalendarDetails(data);
     });
+    
   }
 
   setCalendarDetails(data) {
