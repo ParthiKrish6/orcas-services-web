@@ -15,7 +15,6 @@ export class UploadScoreCardService {
 
   uploadScoreCard(formData: FormData): Observable<any> {
     this.headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       'Authorization': 'Bearer ' +localStorage.getItem('authToken')
     });
     return this.http.post(`${this.baseUrl}`, formData, { headers: this.headers });
