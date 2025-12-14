@@ -104,8 +104,14 @@ export class MatchDetailsComponent implements OnInit {
 
   filterAnniversaryMatches(anniversary) {
     this.spinnerService.show();
-    this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
-    this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
+    if(anniversary == "0") {
+      this.startDate = this.anniversaryOptions[0].startDate;
+      this.endDate = this.anniversaryOptions[0].endDate;
+    } else {
+      this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
+      this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
+    }
+    
     let filteredData;
     let teamId = this.teamDropdownElement.nativeElement.value;
     this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {

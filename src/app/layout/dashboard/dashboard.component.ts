@@ -101,31 +101,7 @@ export class DashboardComponent implements OnInit {
 
     filterStats(anniversary, teamId) {
       this.spinnerService.show();
-        if(anniversary == "0" && teamId == "0") {
-          this.reloadData();
-        } else if(anniversary != "0" && teamId == "0") {
-          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-            this.setBattingStats(data);
-          });
-          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-            this.setBowlingStats(data);
-          });
-          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-            this.setFieldingStats(data);
-            this.spinnerService.hide();
-          });
-        } else if(anniversary == "0" && teamId != "0") {
-          this.battingStatsService.getBattingStatsForTeam(teamId).subscribe(data => {
-            this.setBattingStats(data);
-          });
-          this.bowlingStatsService.getBowlingStatsForTeam(teamId).subscribe(data => {
-            this.setBowlingStats(data);
-          });
-          this.fieldingStatsService.getFieldingStatsForTeam(teamId).subscribe(data => {
-            this.setFieldingStats(data);
-            this.spinnerService.hide();
-          });
-        } else if(anniversary != "0" && teamId != "0") {
+        if(teamId != "0") {
           this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
             this.setBattingStats(data);
           });
@@ -136,12 +112,28 @@ export class DashboardComponent implements OnInit {
             this.setFieldingStats(data);
             this.spinnerService.hide();
           });
+        } else {
+          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBattingStats(data);
+          });
+          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBowlingStats(data);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setFieldingStats(data);
+            this.spinnerService.hide();
+          });
         }
       }
     
       filterAnniversaryStats(anniversary) {
-        this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
-        this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
+        if(anniversary == "0") {
+          this.startDate = this.anniversaryOptions[0].startDate;
+          this.endDate = this.anniversaryOptions[0].endDate;
+        } else {
+          this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
+          this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
+        }
         this.filterStats(anniversary, this.teamDropdownElement.nativeElement.value);
       }
     
