@@ -119,9 +119,10 @@ select {
 	display: inline-block;
 	cursor: pointer;
 	color: #FFFFFF;
-	padding: 8px 18px;
+	padding: 6px 10px;
 	text-decoration: none;
-	font: 15px Arial, Helvetica, sans-serif;
+    font: 15px Arial, Helvetica, sans-serif;
+    border-radius: 4px;
 }
 .submit-button:hover {
 	background: linear-gradient(to bottom, #2D77A2 5%, #337DA8 100%);
