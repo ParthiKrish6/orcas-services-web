@@ -3,7 +3,7 @@
     <div class="list-group">
 
         <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/dashboard">
-            <i class="fa fa-fw fa-calendar"></i>&nbsp;
+            <i class="fa fa-fw fa-list-ol"></i>&nbsp;
             <span>Leaderboard</span>
         </a>
 
@@ -27,8 +27,8 @@
             <span>Upload Scorecard</span>
         </a>
 
-        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/match-details">
-            <i class="fa fa-fw fa-users"></i>&nbsp;
+        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/match-details">
+            <i class="fa fa-fw fa-table"></i>&nbsp;
             <span>Match Details</span>
         </a>
 
@@ -47,21 +47,21 @@
             <span>Fielding Details</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/batting-stats">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/batting-stats">
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Batting Stats</span>
         </a>
 
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/bowling-stats">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/bowling-stats">
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Bowling Stats</span>
         </a>
-        <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/fielding-stats">
+        <a *ngIf=isAdmin [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/fielding-stats">
             <i class="fa fa-fw fa-trophy"></i>&nbsp;
             <span>Fielding Stats</span>
         </a>
         <a [routerLinkActive]="['router-link-active']" class="list-group-item" routerLink="/login">
-            <i class="fa fa-fw fa-trophy"></i>&nbsp;
+            <i class="fa fa-fw fa-sign-out"></i>&nbsp;
             <span>Logout</span>
         </a>
 

@@ -1,9 +1,49 @@
 <h2>Match Details</h2>  
 
+<table class='main-table'>
+  <tr>
+      <td>
+          <label for="anniversaryOption"><b>Anniversary</b></label>
+      </td>
+  </tr>
+  <tr>
+      <td>
+          <select #anniversary (change)="filterAnniversaryMatches(anniversary.value)">
+              <option value="0">All</option>
+              <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
+                  {{anniversary.anniversary}}th Year</option>
+          </select>
+      </td>
+  </tr>
+  <tr>
+      <td>
+          <input class='date_picker' type="date" id="startDate" [(ngModel)]="startDate">
+      </td>
+      <td>
+          <input class='date_picker' type="date" id="endDate" [(ngModel)]="endDate">
+      </td>
+      <td>
+          <button (click)="filterRecords()" type="submit" class="submit-button">Go</button>
+      </td>
+  </tr>
+  <tr>
+      <td>
+          <label for="teamOption"><b>Team</b></label>
+      </td>
+  </tr>
+  <tr>
+      <td>
+          <select #team (change)="filterTeamMatches(team.value)">
+              <option value="0">All</option>
+              <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+          </select>
+      </td>
+  </tr>
+</table>
+
 <table class='stats-table'>
   <thead>
     <tr>
-      <th>Team</th>
       <th>Toss</th>
       <th>Matches</th>
       <th>Wins</th>
@@ -12,7 +52,6 @@
   </thead>
   <tbody>
     <tr>
-      <td rowspan="3">{{selectedTeamName}}</td>
       <td>All</td>
       <td>{{played}}</td>
       <td>{{won}}</td>
@@ -51,23 +90,8 @@
   <input autocomplete="off" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">  
 </mat-form-field>
 
-<div style="text-align:right;margin-top: -45px;margin-right: 35px;" class="text-box-light">
-  <label for="anniversaryOption">Anniversary</label>
-  &nbsp;&nbsp;
-  <select #anniversary (change)="filterAnniversaryMatches(anniversary.value)">
-      <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">{{anniversary.anniversary}} / {{anniversary.startDate}} to {{anniversary.endDate}} </option>
-  </select>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <label for="teamOption">Team</label>
-  &nbsp;&nbsp;
-  <select #team (change)="filterTeamMatches(team.value)">
-    <option value = "0" >All</option>
-    <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
-  </select>
-</div>
-
 <div class="mat-elevation-z8">  
-  <div id="add-button">
+  <div id="add-button" *ngIf=isAdmin>
     <mat-icon [inline]="true" style="cursor: pointer;" class="material-icons" (click)="openAddUpdateMatchDetailsModal({})">add_circle</mat-icon>
   </div>
   <table mat-table [dataSource]="dataSource" matSort>  

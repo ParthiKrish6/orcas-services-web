@@ -57,6 +57,7 @@ export class UploadScoreCardComponent {
               this.errorMessage = error.message || 'An unknown error occurred during upload.';
             }
             this.uploadSuccess = false;
+            
           });
           this.spinnerService.hide();
     }

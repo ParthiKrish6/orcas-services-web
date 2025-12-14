@@ -1,26 +1,44 @@
-
 <div [@routerTransition]>
-    <div style="text-align:left;margin-right: 35px;" class="text-box-light">
-        <div>
-            <label for="anniversaryOption">Anniversary</label></div>
-        <div>
-            <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
-                <option value = "0" >All</option>
-                <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">{{anniversary.anniversary}} / {{anniversary.startDate}} to {{anniversary.endDate}}</option>
-            </select>
-        </div>
-    </div>
-    <div style="text-align:left;margin-right: 35px;" class="text-box-light">
-        <div>
-            <label for="teamOption">Team</label>
-        </div>
-        <div>
-            <select #team (change)="filterTeamStats(team.value)">
-            <option value = "0" >All</option>
-            <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
-            </select>
-        </div>
-    </div>
+    <table>
+        <tr>
+            <td>
+                <label for="anniversaryOption"><b>Anniversary</b></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
+                    <option value="0">All</option>
+                    <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
+                        {{anniversary.anniversary}}th Year</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class='date_picker' type="date" id="startDate" [(ngModel)]="startDate">
+            </td>
+            <td>
+                <input class='date_picker' type="date" id="endDate" [(ngModel)]="endDate">
+            </td>
+            <td>
+                <button (click)="filterRecords()" type="submit" class="submit-button">Go</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="teamOption"><b>Team</b></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select #team (change)="filterTeamStats(team.value)">
+                    <option value="0">All</option>
+                    <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+                </select>
+            </td>
+        </tr>
+    </table>
     &nbsp;
     <div>
         <div class="header">
@@ -30,34 +48,44 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="content-header">
-                         Runs
+                        Runs
                     </div>
                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let batting of battingStatsRuns">
-                             {{batting.player}} - <b>{{batting.runs}}</b> ({{batting.balls}})
-                        </div>
+                        <table>
+                            <tr class="text-box-light" *ngFor="let batting of battingStatsRuns">
+                                <td width="70%">{{batting.player}}</td>
+                                <td width="30%"><b>{{batting.runs | number : '2.0-0'}}</b>
+                                    ({{batting.balls | number : '2.0-0'}})</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
-                         Average (Min {{this.minBalls}} Balls)
-                     </div>
-                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let batting of battingStatsAverage">
-                            {{batting.player}} - <b>{{batting.average | number: '1.2-2'}}</b> ({{batting.runs}} runs)
-                        </div>
+                        Average (Min {{this.minBalls}} Balls)
+                    </div>
+                    <div class="content-box">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let batting of battingStatsAverage">
+                                <td width="70%">{{batting.player}}</td>
+                                <td width="30%"><b>{{batting.average | number: '1.2-2'}}</b></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
-                         Strike Rate (Min {{this.minBalls}} Balls)
-                     </div>
-                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let batting of battingStatsStrikeRate">
-                            {{batting.player}} - <b>{{batting.strikeRate | number: '1.2-2'}}</b> ({{batting.runs}} runs)
-                        </div>
+                        Strike Rate (Min {{this.minBalls}} Balls)
+                    </div>
+                    <div class="content-box">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let batting of battingStatsStrikeRate">
+                                <td width="70%">{{batting.player}}</td>
+                                <td width="30%"><b>{{batting.strikeRate | number: '1.2-2'}}</b> </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -72,45 +100,60 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="content-header">
-                         Wickets
+                        Wickets
                     </div>
                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsWickets">
-                            {{bowling.player}} - <b>{{bowling.wickets}}</b>
-                        </div>
+                        <table>
+                            <tr class="text-box-light" *ngFor="let bowling of bowlingStatsWickets">
+                                <td width="70%">{{bowling.player}}</td>
+                                <td width="30%"><b> {{bowling.wickets | number : '2.0-0'}}</b></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
-                         Average (Min {{minOvers}} Overs)
-                     </div>
-                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsAverage">
-                            {{bowling.player}} - <b>{{bowling.average | number: '1.2-2'}}</b>
-                        </div>
+                        Average (Min {{minOvers}} Overs)
+                    </div>
+                    <div class="content-box">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let bowling of bowlingStatsAverage">
+                                <td width="70%">{{bowling.player}}</td>
+                                <td width="30%" *ngIf="bowling.average != 'Infinity'">
+                                    <b>{{bowling.average | number: '1.2-2'}}</b></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header">
-                         Strike Rate (Min {{minOvers}} Overs)
-                     </div>
-                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsStrikeRate">
-                            {{bowling.player}} - <b>{{bowling.strikeRate | number: '1.2-2'}}</b>
-                        </div>
+                        Strike Rate (Min {{minOvers}} Overs)
+                    </div>
+                    <div class="content-box">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let bowling of bowlingStatsStrikeRate">
+                                <td width="70%">{{bowling.player}}</td>
+                                <td width="30%" *ngIf="bowling.strikeRate != 'Infinity'">
+                                    <b>{{bowling.strikeRate | number: '1.2-2'}}</b></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="content-header">
-                         Economy (Min {{minOvers}} Overs)
-                     </div>
-                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let bowling of bowlingStatsEconomy">
-                            {{bowling.player}} - <b> {{bowling.economy | number: '1.2-2'}} </b>
-                        </div>
+                        Economy (Min {{minOvers}} Overs)
+                    </div>
+                    <div class="content-box">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let bowling of bowlingStatsEconomy">
+                                <td width="70%">{{bowling.player}}</td>
+                                <td width="30%" *ngIf="bowling.economy != 'Infinity'">
+                                    <b>{{bowling.economy | number: '1.2-2'}} </b></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -125,45 +168,59 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="content-header">
-                         Catches
+                        Catches
                     </div>
                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsCatches">
-                            {{fielding.player}} - <b>{{fielding.catches}}</b>
-                        </div>
+
+                        <table>
+                            <tr class="text-box-light" *ngFor="let fielding of fieldingStatsCatches">
+                                <td width="70%">{{fielding.player}}</td>
+                                <td width="30%"><b> {{fielding.catches}} </b> </td>
+                            </tr>
+                        </table>
+
                     </div>
                 </div>
-				&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-				<div class="col-md-3">
+                &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                <div class="col-md-3">
                     <div class="content-header">
-                         Runs Saved
-                     </div>
-                     <div class="content-box">
-                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsRunsSaved">
-                            {{fielding.player}} - <b>{{fielding.saved}}</b>
-                        </div>
+                        Runs Saved
+                    </div>
+                    <div class="content-box">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let fielding of fieldingStatsRunsSaved">
+                                <td width="70%">{{fielding.player}}</td>
+                                <td width="30%"><b> {{fielding.saved}} </b> </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                 <div class="col-md-3">
                     <div class="content-header-red">
-                         Dropped Catches
-                     </div>
-                     <div class="content-box-red">
-                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsDroppedCatches">
-                            {{fielding.player}} - <b>{{fielding.dropped}}</b>
-                        </div>
+                        Dropped Catches
+                    </div>
+                    <div class="content-box-red">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let fielding of fieldingStatsDroppedCatches">
+                                <td width="70%">{{fielding.player}}</td>
+                                <td width="30%"><b> {{fielding.dropped}} </b> </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-                &nbsp; 
-               <div class="col-md-3" style="padding-top:20px;">
+                &nbsp;
+                <div class="col-md-3" style="padding-top:20px;">
                     <div class="content-header-red">
-                         Runs Missed
-                     </div>
-                     <div class="content-box-red">
-                        <div class="text-box-light" *ngFor="let fielding of fieldingStatsRunsMissed">
-                            {{fielding.player}} - <b>{{fielding.missed}}</b>
-                        </div>
+                        Runs Missed
+                    </div>
+                    <div class="content-box-red">
+                        <table>
+                            <tr class="text-box-light" *ngFor="let fielding of fieldingStatsRunsMissed">
+                                <td width="70%">{{fielding.player}}</td>
+                                <td width="30%"><b> {{fielding.missed}} </b> </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -171,5 +228,3 @@
     </div>
     <ngx-spinner type="timer"></ngx-spinner>
 </div>
-
-

@@ -55,6 +55,14 @@ export class ModalComponent implements OnInit {
     });
 
     this.addFlag = this.data.addFlag;
+
+    if(this.addFlag) {
+      this.fieldingDetails.catches = '0';
+      this.fieldingDetails.runOuts = '0';
+      this.fieldingDetails.runsMissed = '0';
+      this.fieldingDetails.runsSaved = '0';
+      this.fieldingDetails.catchesDropped = '0';
+    }
   }
 
   closeModal() {

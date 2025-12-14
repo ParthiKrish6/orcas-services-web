@@ -19,7 +19,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class MatchDetailsComponent implements OnInit {
 
   dataSource: MatTableDataSource<MatchDetails>;
-  displayedColumns: string[] = ['matchDate', 'team', 'teamScore', 'opponent', 'opponentScore', 'matchResult', 'batFirst', 'action'];
+  displayedColumns: string[] = ['matchDate', 'team', 'matchResult'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('anniversary') anniversaryDropdownElement!: ElementRef;
@@ -29,6 +29,10 @@ export class MatchDetailsComponent implements OnInit {
   anniversaryOptions: CalendarDetails[];
   teamOptions: TeamDetails[];
   selectedTeamName: string;
+
+  startDate: Date;
+  endDate: Date;
+  isAdmin: boolean;
 
   played: number = 0;
   won: number = 0;
@@ -51,16 +55,25 @@ export class MatchDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.reloadData();
+    this.isAdmin = localStorage.getItem('authType') == 'A';
+    if(this.isAdmin) {
+      this.displayedColumns.push('teamScore');
+      this.displayedColumns.push('opponent');
+      this.displayedColumns.push('opponentScore');
+      this.displayedColumns.push('batFirst');
+      this.displayedColumns.push('action');
+    }
   }
 
   reloadData() {
-    
     this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
         this.anniversaryOptions = data;
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
+        this.startDate = this.anniversaryOptions[this.anniversaryOptions.length-1].startDate;
+        this.endDate = this.anniversaryOptions[0].endDate;
         this.matchDetailsService.getMatchDetailsForDates(moment(this.anniversaryOptions[0].startDate).format('YYYY-MM-DD'), moment(this.anniversaryOptions[0].endDate).format('YYYY-MM-DD')).subscribe(data => {
           this.setMatchDetails(data);
         });
@@ -76,37 +89,39 @@ export class MatchDetailsComponent implements OnInit {
 
   filterTeamMatches(teamId) {
     this.spinnerService.show();
-    this.calendarDetailsService.getCalendarDetails(this.anniversaryDropdownElement.nativeElement.value).subscribe(data => {
-      this.matchDetailsService.getMatchDetailsForDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
-        let filteredData ;
-        if(teamId == 0) {
-          filteredData = data;
-        } else {
-          filteredData = data.filter(item =>
-            item.teamDetails.teamId == teamId
-          );
-        }
-        this.setMatchDetails(filteredData);
-      });
+    this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+      let filteredData ;
+      if(teamId == 0) {
+        filteredData = data;
+      } else {
+        filteredData = data.filter(item =>
+          item.teamDetails.teamId == teamId
+        );
+      }
+      this.setMatchDetails(filteredData);
     });
   }
 
   filterAnniversaryMatches(anniversary) {
     this.spinnerService.show();
+    this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
+    this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
     let filteredData;
     let teamId = this.teamDropdownElement.nativeElement.value;
-    this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
-      this.matchDetailsService.getMatchDetailsForDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
-        if(teamId == 0) {
-          filteredData = data;
-        } else {
-          filteredData = data.filter(item =>
-            item.teamDetails.teamId == teamId
-          );
-        }
-        this.setMatchDetails(filteredData);
-      });
+    this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+      if(teamId == 0) {
+        filteredData = data;
+      } else {
+        filteredData = data.filter(item =>
+          item.teamDetails.teamId == teamId
+        );
+      }
+      this.setMatchDetails(filteredData);
     });
+  }
+
+  filterRecords() {
+    this.filterTeamMatches(this.teamDropdownElement.nativeElement.value);
   }
 
   setMatchDetails(data) {
