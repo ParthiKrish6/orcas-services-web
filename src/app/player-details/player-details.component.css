@@ -27,3 +27,10 @@ table {
     font-size: 15px;
     font-family: 'Calibri', sans-serif;
 }
+circle-image {
+    width: 10px;   /* Set a fixed width */
+    height: 10px;  /* Set a fixed height (must be the same as width for a perfect circle) */
+    object-fit: cover; /* Ensures the image covers the entire area without stretching */
+    border-radius: 50%; /* The magic that makes it a circle */
+    border: 3px solid #ccc; /* Optional: Add a border */
+  }

@@ -1,11 +1,11 @@
 import {
-    Component,
-    OnInit,
-    ElementRef,
-    ViewChild
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {
-    routerTransition
+  routerTransition
 } from '../../router.animations';
 
 import * as moment from 'moment';
@@ -21,168 +21,216 @@ import { FieldingStats } from '../../fielding-stats/fielding-stats';
 import { FieldingStatsService } from '../../fielding-stats/fielding-stats.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
+import { Player } from './player';
 
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
-    animations: [routerTransition()]
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
+  animations: [routerTransition()]
 })
 export class DashboardComponent implements OnInit {
 
-    @ViewChild('anniversary') anniversaryDropdownElement!: ElementRef;
-    @ViewChild('team') teamDropdownElement!: ElementRef;
+  @ViewChild('anniversary') anniversaryDropdownElement!: ElementRef;
+  @ViewChild('team') teamDropdownElement!: ElementRef;
+  @ViewChild('department') departmentDropdownElement!: ElementRef;
+  @ViewChild('deptOptionsElement') deptOptionsDropdownElement!: ElementRef;
 
-    anniversaryOptions: CalendarDetails[];
-    teamOptions: TeamDetails[];
-    minBalls: number = 50;
-    minOvers: number = 5;
-    numberOfPlayers: number = 30;
-    typeSelected: string;
-    startDate: Date;
-    endDate: Date;
+  anniversaryOptions: CalendarDetails[];
+  teamOptions: TeamDetails[];
+  minBalls: number = 50;
+  minOvers: number = 5;
+  numberOfPlayers: number = 30;
+  typeSelected: string;
+  startDate: Date;
+  endDate: Date;
+  players = [];
+  deptOptions: string[];
+  deptSelected: string;
+  deptOptionSelected: string;
+  battingDept: string[] = ['Runs', 'Average', 'Strike Rate'];
+  bowlingDept: string[] = ['Wickets', 'Average', 'Strike Rate', 'Economy']
+  fieldingDept: string[] = ['Catches', 'Drop Catches', 'Runs Saved', 'Runs Missed']
 
-    battingStatsRuns: BattingStats[];
-    battingStatsAverage: BattingStats[];
-    battingStatsStrikeRate: BattingStats[];
+  battingStatsRuns: BattingStats[];
+  battingStatsAverage: BattingStats[];
+  battingStatsStrikeRate: BattingStats[];
 
-    bowlingStatsWickets: BowlingStats[];
-    bowlingStatsAverage: BowlingStats[];
-    bowlingStatsStrikeRate: BowlingStats[];
-    bowlingStatsEconomy: BowlingStats[];
+  bowlingStatsWickets: BowlingStats[];
+  bowlingStatsAverage: BowlingStats[];
+  bowlingStatsStrikeRate: BowlingStats[];
+  bowlingStatsEconomy: BowlingStats[];
 
-    fieldingStatsCatches: FieldingStats[];
-    fieldingStatsRunsSaved: FieldingStats[];
-    fieldingStatsDroppedCatches: FieldingStats[];
-    fieldingStatsRunsMissed: FieldingStats[];
+  fieldingStatsCatches: FieldingStats[];
+  fieldingStatsRunsSaved: FieldingStats[];
+  fieldingStatsDroppedCatches: FieldingStats[];
+  fieldingStatsRunsMissed: FieldingStats[];
 
-    constructor(
-        private battingStatsService: BattingStatsService,
-        private bowlingStatsService: BowlingStatsService,
-        private fieldingStatsService: FieldingStatsService,
-        private calendarDetailsService: CalendarDetailsService,
-        private teamDetailsService: TeamDetailsService,
-        private spinnerService: NgxSpinnerService,
-        private router: Router) {
-    }
-
-    ngOnInit(): void {
-      this.reloadData();
-    }
-
-    reloadData() {
-      this.spinnerService.show();
-        this.teamDetailsService.getTeamDetailsList().subscribe(data => {
-            this.teamOptions = data;
-            this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
-                this.anniversaryOptions = data;
-                this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
-                this.startDate = this.anniversaryOptions[this.anniversaryOptions.length-1].startDate;
-                this.endDate = this.anniversaryOptions[0].endDate;
-                this.battingStatsService.getBattingStatsList().subscribe(data => {
-                    this.setBattingStats(data);
-                });
-                this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
-                  this.setBowlingStats(data);
-                });
-                this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
-                  this.setFieldingStats(data);
-                  this.spinnerService.hide();
-                });
-                
-            });
-        },error => {
-          console.log(error);
-          this.router.navigate(['/login'], {
-            queryParams: { errMsg: error.error.message }
-          });
-        });
-    }
-
-    filterStats(anniversary, teamId) {
-      this.spinnerService.show();
-        if(teamId != "0") {
-          this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
-            this.setBattingStats(data);
-          });
-          this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
-            this.setBowlingStats(data);
-          });
-          this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
-            this.setFieldingStats(data);
-            this.spinnerService.hide();
-          });
-        } else {
-          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-            this.setBattingStats(data);
-          });
-          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-            this.setBowlingStats(data);
-          });
-          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-            this.setFieldingStats(data);
-            this.spinnerService.hide();
-          });
-        }
-      }
-    
-      filterAnniversaryStats(anniversary) {
-        if(anniversary == "0") {
-          this.startDate = this.anniversaryOptions[0].startDate;
-          this.endDate = this.anniversaryOptions[0].endDate;
-        } else {
-          this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
-          this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
-        }
-        this.filterStats(anniversary, this.teamDropdownElement.nativeElement.value);
-      }
-    
-      filterTeamStats(id) {
-        this.filterStats(this.anniversaryDropdownElement.nativeElement.value, id);
-      }
-
-      filterRecords() {
-        this.filterStats(this.anniversaryDropdownElement.nativeElement.value, this.teamDropdownElement.nativeElement.value);
-      }
-
-    setBattingStats(data) {
-        this.battingStatsRuns = data;
-        this.battingStatsRuns.sort((a, b) => parseInt(b.runs) - parseInt(a.runs));
-        this.battingStatsRuns = this.battingStatsRuns.slice(0, this.numberOfPlayers);
-
-        this.battingStatsAverage = data;
-        this.battingStatsAverage = this.battingStatsAverage.filter((obj) => parseInt(obj.balls) >= this.minBalls);
-        this.battingStatsAverage.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
-        this.battingStatsAverage = this.battingStatsAverage.slice(0, this.numberOfPlayers);
-
-        this.battingStatsStrikeRate = data;
-        this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.balls) >= this.minBalls);
-        this.battingStatsStrikeRate.sort((a, b) => parseFloat(b.strikeRate) - parseFloat(a.strikeRate));
-        this.battingStatsStrikeRate = this.battingStatsStrikeRate.slice(0, this.numberOfPlayers);
-    }
-
-    setBowlingStats(data) {
-      this.bowlingStatsWickets = data;
-      this.bowlingStatsWickets.sort((a, b) => parseInt(b.wickets) - parseInt(a.wickets));
-      this.bowlingStatsWickets = this.bowlingStatsWickets.slice(0, this.numberOfPlayers);
-
-      this.bowlingStatsAverage = data;
-      this.bowlingStatsAverage = this.bowlingStatsAverage.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
-      this.bowlingStatsAverage.sort((a, b) => parseFloat(a.average) - parseFloat(b.average));
-      this.bowlingStatsAverage = this.bowlingStatsAverage.slice(0, this.numberOfPlayers);
-
-      this.bowlingStatsStrikeRate = data;
-      this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
-      this.bowlingStatsStrikeRate.sort((a, b) => parseFloat(a.strikeRate) - parseFloat(b.strikeRate));
-      this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.slice(0, this.numberOfPlayers);
-
-      this.bowlingStatsEconomy = data;
-      this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
-      this.bowlingStatsEconomy.sort((a, b) => parseFloat(a.economy) - parseFloat(b.economy));
-      this.bowlingStatsEconomy = this.bowlingStatsEconomy.slice(0, this.numberOfPlayers);
+  constructor(
+    private battingStatsService: BattingStatsService,
+    private bowlingStatsService: BowlingStatsService,
+    private fieldingStatsService: FieldingStatsService,
+    private calendarDetailsService: CalendarDetailsService,
+    private teamDetailsService: TeamDetailsService,
+    private spinnerService: NgxSpinnerService,
+    private router: Router) {
   }
 
-  setFieldingStats(data) {
+  ngOnInit(): void {
+    this.deptOptions = this.battingDept;
+    this.deptSelected = "Batting";
+    this.deptOptionSelected = "Runs";
+    this.reloadData();
+  }
+
+  setDepartment() {
+    this.deptSelected = this.departmentDropdownElement.nativeElement.value;
+    if ('Batting' == this.deptSelected) {
+      this.deptOptions = this.battingDept;
+      this.deptOptionSelected = "Runs";
+      this.setBattingLeaderBoardContent();
+    } else if ('Bowling' == this.deptSelected) {
+      this.deptOptions = this.bowlingDept;
+      this.deptOptionSelected = "Wickets";
+      this.setBowlingLeaderBoardContent();
+    } else if ('Fielding' == this.deptSelected) {
+      this.deptOptions = this.fieldingDept;
+      this.deptOptionSelected = "Catches";
+      this.setFieldingLeaderBoardContent();
+    }
+  }
+
+  setDeptOptions() {
+    this.deptOptionSelected = this.deptOptionsDropdownElement.nativeElement.value;
+    if ('Batting' == this.deptSelected) {
+      this.setBattingLeaderBoardContent();
+    } else if ('Bowling' == this.deptSelected) {
+      this.setBowlingLeaderBoardContent();
+    } else if ('Fielding' == this.deptSelected) {
+      this.setFieldingLeaderBoardContent();
+    }
+  }
+
+  reloadData() {
+    this.spinnerService.show();
+    this.teamDetailsService.getTeamDetailsList().subscribe(data => {
+      this.teamOptions = data;
+      this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
+        this.anniversaryOptions = data;
+        this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
+        this.startDate = this.anniversaryOptions[this.anniversaryOptions.length - 1].startDate;
+        this.endDate = this.anniversaryOptions[0].endDate;
+        this.battingStatsService.getBattingStatsList().subscribe(data => {
+          this.setBattingStats(data);
+          this.spinnerService.hide();
+        });
+
+        this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
+          this.setBowlingStats(data, false);
+        });
+        this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
+          this.setFieldingStats(data, false);
+          
+        });
+      });
+    }, error => {
+      console.log(error);
+      this.router.navigate(['/login'], {
+        queryParams: { errMsg: error.error.message }
+      });
+    });
+  }
+
+  filterStats(anniversary, teamId) {
+    this.spinnerService.show();
+    if (teamId != "0") {
+      this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+        this.setBattingStats(data);
+      });
+      this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+        this.setBowlingStats(data, true);
+      });
+      this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+        this.setFieldingStats(data, true);
+        this.spinnerService.hide();
+      });
+    } else {
+      this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+        this.setBattingStats(data);
+      });
+      this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+        this.setBowlingStats(data, true);
+      });
+      this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+        this.setFieldingStats(data, true);
+        this.spinnerService.hide();
+      });
+    }
+  }
+
+  filterAnniversaryStats(anniversary) {
+    if (anniversary == "0") {
+      this.startDate = this.anniversaryOptions[0].startDate;
+      this.endDate = this.anniversaryOptions[0].endDate;
+    } else {
+      this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
+      this.endDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].endDate;
+    }
+    this.filterStats(anniversary, this.teamDropdownElement.nativeElement.value);
+  }
+
+  filterTeamStats(id) {
+    this.filterStats(this.anniversaryDropdownElement.nativeElement.value, id);
+  }
+
+  filterRecords() {
+    this.filterStats(this.anniversaryDropdownElement.nativeElement.value, this.teamDropdownElement.nativeElement.value);
+  }
+
+  setBattingStats(data) {
+    this.battingStatsRuns = data;
+    this.battingStatsRuns.sort((a, b) => parseInt(b.runs) - parseInt(a.runs));
+    this.battingStatsRuns = this.battingStatsRuns.slice(0, this.numberOfPlayers);
+
+    this.battingStatsAverage = data;
+    this.battingStatsAverage = this.battingStatsAverage.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsAverage.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
+    this.battingStatsAverage = this.battingStatsAverage.slice(0, this.numberOfPlayers);
+
+    this.battingStatsStrikeRate = data;
+    this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsStrikeRate.sort((a, b) => parseFloat(b.strikeRate) - parseFloat(a.strikeRate));
+    this.battingStatsStrikeRate = this.battingStatsStrikeRate.slice(0, this.numberOfPlayers);
+
+    this.setBattingLeaderBoardContent();
+  }
+
+  setBowlingStats(data, isRefresh) {
+    this.bowlingStatsWickets = data;
+    this.bowlingStatsWickets.sort((a, b) => parseInt(b.wickets) - parseInt(a.wickets));
+    this.bowlingStatsWickets = this.bowlingStatsWickets.slice(0, this.numberOfPlayers);
+
+    this.bowlingStatsAverage = data;
+    this.bowlingStatsAverage = this.bowlingStatsAverage.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsAverage.sort((a, b) => parseFloat(a.average) - parseFloat(b.average));
+    this.bowlingStatsAverage = this.bowlingStatsAverage.slice(0, this.numberOfPlayers);
+
+    this.bowlingStatsStrikeRate = data;
+    this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsStrikeRate.sort((a, b) => parseFloat(a.strikeRate) - parseFloat(b.strikeRate));
+    this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.slice(0, this.numberOfPlayers);
+
+    this.bowlingStatsEconomy = data;
+    this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsEconomy.sort((a, b) => parseFloat(a.economy) - parseFloat(b.economy));
+    this.bowlingStatsEconomy = this.bowlingStatsEconomy.slice(0, this.numberOfPlayers);
+    if(isRefresh) {
+      this.setBowlingLeaderBoardContent();
+    }
+    
+  }
+
+  setFieldingStats(data, isRefresh) {
     this.fieldingStatsCatches = data;
     this.fieldingStatsCatches.sort((a, b) => parseInt(b.catches) - parseInt(a.catches));
     this.fieldingStatsCatches = this.fieldingStatsCatches.slice(0, this.numberOfPlayers);
@@ -198,7 +246,216 @@ export class DashboardComponent implements OnInit {
     this.fieldingStatsRunsMissed = data;
     this.fieldingStatsRunsMissed.sort((a, b) => parseInt(b.missed) - parseInt(a.missed));
     this.fieldingStatsRunsMissed = this.fieldingStatsRunsMissed.slice(0, this.numberOfPlayers);
-}
+    
+    if(isRefresh) {
+      this.setFieldingLeaderBoardContent();
+    }
+  }
 
+  setBattingLeaderBoardContent() {
+    this.players = [];
+    if(this.deptOptionSelected == "Runs") {
+      for (let i = 0; i < this.battingStatsRuns.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.battingStatsRuns[i].player;
+        player.value = this.battingStatsRuns[i].runs;
+        player.valueLabel = "Runs";
+        player.extraValue = "Innings : "+this.battingStatsRuns[i].innings;
+        player.img = this.battingStatsRuns[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Strike Rate") {
+      for (let i = 0; i < this.battingStatsStrikeRate.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.battingStatsStrikeRate[i].player;
+        player.value = parseFloat(this.battingStatsStrikeRate[i].strikeRate).toFixed(2);
+        player.extraValue = "Runs : "+this.battingStatsStrikeRate[i].runs;
+        player.img = this.battingStatsStrikeRate[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Average") {
+      for (let i = 0; i < this.battingStatsAverage.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.battingStatsAverage[i].player;
+        player.value = parseFloat(this.battingStatsAverage[i].average).toFixed(2);
+        player.extraValue = "Runs : "+this.battingStatsAverage[i].runs;
+        player.img = this.battingStatsAverage[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    }
+  }
+
+
+  setBowlingLeaderBoardContent() {
+    this.players = [];
+    if(this.deptOptionSelected == "Wickets") {
+      for (let i = 0; i < this.bowlingStatsWickets.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.bowlingStatsWickets[i].player;
+        player.value = this.bowlingStatsWickets[i].wickets;
+        player.valueLabel = "Wickets";
+        player.extraValue = "Innings : "+this.bowlingStatsWickets[i].innings;
+        player.img = this.bowlingStatsWickets[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Strike Rate") {
+      for (let i = 0; i < this.bowlingStatsStrikeRate.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.bowlingStatsStrikeRate[i].player;
+        player.value = parseFloat(this.bowlingStatsStrikeRate[i].strikeRate).toFixed(2);
+        player.extraValue = "Wickets : "+this.bowlingStatsStrikeRate[i].wickets;
+        player.img = this.bowlingStatsStrikeRate[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Average") {
+      for (let i = 0; i < this.bowlingStatsAverage.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.bowlingStatsAverage[i].player;
+        player.value = parseFloat(this.bowlingStatsAverage[i].average).toFixed(2);
+        player.extraValue = "Wickets : "+this.bowlingStatsAverage[i].wickets;
+        player.img = this.bowlingStatsAverage[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Economy") {
+      for (let i = 0; i < this.bowlingStatsEconomy.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.bowlingStatsEconomy[i].player;
+        player.value = parseFloat(this.bowlingStatsEconomy[i].economy).toFixed(2);
+        player.extraValue = "Wickets : "+this.bowlingStatsEconomy[i].wickets;
+        player.img = this.bowlingStatsEconomy[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    }
+  }
+
+  setFieldingLeaderBoardContent() {
+    this.players = [];
+    if(this.deptOptionSelected == "Catches") {
+      for (let i = 0; i < this.fieldingStatsCatches.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.fieldingStatsCatches[i].player;
+        player.value = this.fieldingStatsCatches[i].catches;
+        player.valueLabel = "Catches";
+        player.extraValue = "Innings : "+this.fieldingStatsCatches[i].innings;
+        player.img = this.fieldingStatsCatches[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Drop Catches") {
+      for (let i = 0; i < this.fieldingStatsDroppedCatches.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.fieldingStatsDroppedCatches[i].player;
+        player.value = this.fieldingStatsDroppedCatches[i].dropped;
+        player.extraValue = "Innings : "+this.fieldingStatsDroppedCatches[i].innings;
+        player.img = this.fieldingStatsDroppedCatches[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Runs Saved") {
+      for (let i = 0; i < this.fieldingStatsRunsSaved.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.fieldingStatsRunsSaved[i].player;
+        player.value = this.fieldingStatsRunsSaved[i].saved;
+        player.extraValue = "Innings : "+this.fieldingStatsRunsSaved[i].innings;
+        player.img = this.fieldingStatsRunsSaved[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Runs Missed") {
+      for (let i = 0; i < this.fieldingStatsRunsMissed.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.fieldingStatsRunsMissed[i].player;
+        player.value = this.fieldingStatsRunsMissed[i].missed;
+        player.extraValue = "Innings : "+this.fieldingStatsRunsMissed[i].innings;
+        player.img = this.fieldingStatsRunsMissed[i].image;
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    }
+  }
 
 }

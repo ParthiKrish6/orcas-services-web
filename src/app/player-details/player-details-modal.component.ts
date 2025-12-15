@@ -15,6 +15,8 @@ export class ModalComponent implements OnInit {
   playerDetails: PlayerDetails;
   addFlag: boolean;
   errorMsg: string;
+  selectedFile: File;
+  imageSrc: string;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
@@ -32,11 +34,22 @@ export class ModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onFileSelected(event: Object) {
-    
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        // The result is the Base64 string (e.g., "data:image/jpeg;base64,...")
+        this.imageSrc = e.target.result;
+      };
+     
+      reader.readAsDataURL(this.selectedFile);
+      
+    }
   }
 
   addPlayerDetails(addPlayerObj: PlayerDetails) {
+    addPlayerObj.image = this.imageSrc;
     this.playerDetailsService
     .addPlayerDetails(addPlayerObj).subscribe(data => {
       console.log(data)
@@ -49,6 +62,7 @@ export class ModalComponent implements OnInit {
   }
 
   updatePlayerDetails(id: number, updatePlayerObj: PlayerDetails) {
+    updatePlayerObj.image = this.imageSrc;
     this.playerDetailsService
     .updatePlayerDetails(id, updatePlayerObj).subscribe(data => {
       console.log(data)

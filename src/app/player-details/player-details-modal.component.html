@@ -42,7 +42,7 @@
         <button (click)="addPlayerDetails(playerDetailsNew.value)" type="submit" class="submit-button">Add</button>
       </div>
       <div *ngIf=!addFlag>
-        <button (click)="updatePlayerDetails(playerDetails.id, playerDetailsNew.value)"
+        <button (click)="updatePlayerDetails(playerDetails.playerId, playerDetailsNew.value)"
           type="submit" class="submit-button">Update</button>
       </div>
       <br>

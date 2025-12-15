@@ -13,4 +13,5 @@ export class BowlingStats {
     economy: string;
     average: string;
     strikeRate: string;
+    image: string;
 }
