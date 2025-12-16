@@ -120,16 +120,20 @@ export class DashboardComponent implements OnInit {
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
         this.startDate = this.anniversaryOptions[this.anniversaryOptions.length - 1].startDate;
         this.endDate = this.anniversaryOptions[0].endDate;
+
         this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
           this.setFieldingStats(data);
-          this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
-            this.setBowlingStats(data);
-            this.battingStatsService.getBattingStatsList().subscribe(data => {
-              this.setBattingStats(data);
-              this.spinnerService.hide();
-            });
-          });
         });
+
+        this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
+          this.setBowlingStats(data);
+        });
+
+        this.battingStatsService.getBattingStatsList().subscribe(data => {
+          this.setBattingStats(data);
+          this.spinnerService.hide();
+        });
+        
       });
     }, error => {
       console.log(error);
