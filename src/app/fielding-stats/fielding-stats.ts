@@ -6,5 +6,5 @@ export class FieldingStats {
     dropped: string;
     saved: string;
     missed: string;
-    image: string;
+    playerId: string;
 }

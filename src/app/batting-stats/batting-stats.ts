@@ -9,5 +9,5 @@ export class BattingStats {
     average: string;
     innings: string;
     player: string;
-    image: string;
+    playerId: string;
 }

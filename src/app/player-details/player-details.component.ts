@@ -47,6 +47,9 @@ export class PlayerDetailsComponent implements OnInit {
   }
 
   setPlayerDetails(data) {
+    data.forEach(item => {
+      item.image = "assets/player_images/"+item.playerId+".png";
+    });
     this.dataSource = new MatTableDataSource(data);  
     this.dataSource.paginator = this.paginator;  
     this.dataSource.sort = this.sort; 

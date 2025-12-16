@@ -30,13 +30,6 @@
           <input  type="text" class="form-control" id="nickName" name="nickName" [(ngModel)]="playerDetails.nickName">
         </div>
       </div>
-    
-      <div class="form-row">
-        <div class="form-group col-md-10">
-          <label for="image">Image</label>
-          <input type="file" class="form-control" id="imge" name="image" (change)="onFileSelected($event)" [(ngModel)]="playerDetails.image" />
-        </div>
-      </div>
       <br>
       <div *ngIf=addFlag>
         <button (click)="addPlayerDetails(playerDetailsNew.value)" type="submit" class="submit-button">Add</button>
