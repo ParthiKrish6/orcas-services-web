@@ -122,18 +122,18 @@ export class DashboardComponent implements OnInit {
         this.endDate = this.anniversaryOptions[0].endDate;
 
         this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
-          this.setFieldingStats(data);
+          this.setFieldingStats(data, false);
         });
 
         this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
-          this.setBowlingStats(data);
+          this.setBowlingStats(data, false);
         });
 
         this.battingStatsService.getBattingStatsList().subscribe(data => {
           this.setBattingStats(data);
           this.spinnerService.hide();
         });
-        
+
       });
     }, error => {
       console.log(error);
@@ -153,12 +153,12 @@ export class DashboardComponent implements OnInit {
         });
       } else if('Bowling' == this.deptSelected) {
         this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
-          this.setBowlingStats(data);
+          this.setBowlingStats(data, true);
           this.spinnerService.hide();
         });
       } else if('Bowling' == this.deptSelected) {
         this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
-          this.setFieldingStats(data);
+          this.setFieldingStats(data, true);
           this.spinnerService.hide();
         });
       }
@@ -170,12 +170,12 @@ export class DashboardComponent implements OnInit {
         });
       } else if('Bowling' == this.deptSelected) {
         this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-          this.setBowlingStats(data);
+          this.setBowlingStats(data, true);
           this.spinnerService.hide();
         });
       } else if('Bowling' == this.deptSelected) {
         this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-          this.setFieldingStats(data);
+          this.setFieldingStats(data, true);
           this.spinnerService.hide();
         });
       }
@@ -219,7 +219,7 @@ export class DashboardComponent implements OnInit {
     this.setBattingLeaderBoardContent();
   }
 
-  setBowlingStats(data) {
+  setBowlingStats(data, isRefresh) {
     this.bowlingStatsWickets = data;
     this.bowlingStatsWickets.sort((a, b) => parseInt(b.wickets) - parseInt(a.wickets));
     this.bowlingStatsWickets = this.bowlingStatsWickets.slice(0, this.numberOfPlayers);
@@ -238,13 +238,12 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
     this.bowlingStatsEconomy.sort((a, b) => parseFloat(a.economy) - parseFloat(b.economy));
     this.bowlingStatsEconomy = this.bowlingStatsEconomy.slice(0, this.numberOfPlayers);
-   
+   if(isRefresh) {
     this.setBowlingLeaderBoardContent();
-    
-    
+   } 
   }
 
-  setFieldingStats(data) {
+  setFieldingStats(data, isRefresh) {
     this.fieldingStatsCatches = data;
     this.fieldingStatsCatches.sort((a, b) => parseInt(b.catches) - parseInt(a.catches));
     this.fieldingStatsCatches = this.fieldingStatsCatches.slice(0, this.numberOfPlayers);
@@ -260,8 +259,10 @@ export class DashboardComponent implements OnInit {
     this.fieldingStatsRunsMissed = data;
     this.fieldingStatsRunsMissed.sort((a, b) => parseInt(b.missed) - parseInt(a.missed));
     this.fieldingStatsRunsMissed = this.fieldingStatsRunsMissed.slice(0, this.numberOfPlayers);
+    if(isRefresh) {
+      this.setFieldingLeaderBoardContent();
+    }
     
-    this.setFieldingLeaderBoardContent();
 
   }
 
