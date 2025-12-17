@@ -46,10 +46,11 @@ export class LoginComponent implements OnInit {
                 if(loginResp && loginResp.userId && loginResp.pwd && loginResp.type && loginResp.token) {
                     localStorage.setItem('authToken', loginResp.token);
                     localStorage.setItem('authType', loginResp.type);
-                    this.router.navigate(['/dashboard']); 
+                    this.router.navigate(['/dashboard'],{ skipLocationChange: true }); 
                 } else {
                     localStorage.clear();
                     this.errorMsg =  'Incorrect Login';
+                    this.spinnerService.hide();
                 }
             },
             (error) => {

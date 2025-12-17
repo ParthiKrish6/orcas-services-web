@@ -56,6 +56,7 @@ export class FieldingStatsComponent implements OnInit {
       console.log(error);
       this.errorMsg = error.error.message;
       this.router.navigate(['/login'], {
+        skipLocationChange: true,
         queryParams: { errMsg: error.error.message }
       });
     });

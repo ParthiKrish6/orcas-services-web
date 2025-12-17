@@ -47,6 +47,7 @@ export class UploadScoreCardComponent {
             this.uploadSuccess = true;
             this.uploadError = false;
             this.selectedFile = null;
+            this.spinnerService.hide();
           },
           error => {
             console.log(error);
@@ -57,9 +58,8 @@ export class UploadScoreCardComponent {
               this.errorMessage = error.message || 'An unknown error occurred during upload.';
             }
             this.uploadSuccess = false;
-            
+            this.spinnerService.hide();
           });
-          this.spinnerService.hide();
     }
   }
 

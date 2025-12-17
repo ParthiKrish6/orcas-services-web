@@ -10,4 +10,5 @@ export class BattingStats {
     innings: string;
     player: string;
     playerId: string;
+    matches: string;
 }

@@ -14,4 +14,5 @@ export class BowlingStats {
     average: string;
     strikeRate: string;
     playerId: string;
+    matches: string;
 }

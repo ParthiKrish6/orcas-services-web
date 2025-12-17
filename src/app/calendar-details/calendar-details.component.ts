@@ -42,6 +42,7 @@ export class CalendarDetailsComponent implements OnInit {
     error => {
       this.router.navigate(['/login'],{
         queryParams: {
+          skipLocationChange: true,
           errMsg: error.error.message
         },
       }); 
