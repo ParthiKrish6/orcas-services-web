@@ -134,6 +134,8 @@ export class DashboardComponent implements OnInit {
             this.setBattingStats(data);
             this.spinnerService.hide();
           });
+        } else {
+          this.spinnerService.hide();
         }
         }, error => {
           console.log(error);
