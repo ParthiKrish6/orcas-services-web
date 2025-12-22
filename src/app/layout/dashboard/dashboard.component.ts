@@ -118,23 +118,30 @@ export class DashboardComponent implements OnInit {
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
         this.anniversaryOptions = data;
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
-        this.startDate = this.anniversaryOptions[this.anniversaryOptions.length - 1].startDate;
-        this.endDate = this.anniversaryOptions[0].endDate;
-
-        this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
-          this.setFieldingStats(data, false);
+        if(this.anniversaryOptions.length> 0) {
+          this.startDate = this.anniversaryOptions[this.anniversaryOptions.length - 1].startDate;
+          this.endDate = this.anniversaryOptions[0].endDate;
+  
+          this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
+            this.setFieldingStats(data, false);
+          });
+  
+          this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+  
+          this.battingStatsService.getBattingStatsList().subscribe(data => {
+            this.setBattingStats(data);
+            this.spinnerService.hide();
+          });
+        }
+        }, error => {
+          console.log(error);
+          this.router.navigate(['/login'], {
+            skipLocationChange: true,
+            queryParams: { errMsg: error.error.message }
+          });
         });
-
-        this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
-          this.setBowlingStats(data, false);
-        });
-
-        this.battingStatsService.getBattingStatsList().subscribe(data => {
-          this.setBattingStats(data);
-          this.spinnerService.hide();
-        });
-
-      });
     }, error => {
       console.log(error);
       this.router.navigate(['/login'], {
