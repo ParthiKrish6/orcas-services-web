@@ -265,7 +265,7 @@ export class DashboardComponent implements OnInit {
 
     this.battingStatsStrikeRate = data;
     this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.balls) >= this.minBalls);
-    this.battingStatsAverage.sort((a, b) => {
+    this.battingStatsStrikeRate.sort((a, b) => {
       if (parseFloat(b.strikeRate) !== parseFloat(a.strikeRate)) return parseFloat(b.strikeRate) - parseFloat(a.strikeRate);
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
     });
@@ -429,7 +429,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsStrikeRate[i].player;
         player.value = parseFloat(this.bowlingStatsStrikeRate[i].strikeRate).toFixed(2);
-        player.extraValue = "Innings : "+this.bowlingStatsStrikeRate[i].innings +" | Wickets : "+this.bowlingStatsStrikeRate[i].wickets;
+        player.extraValue = "Overs : "+this.bowlingStatsStrikeRate[i].overs +" | Wickets : "+this.bowlingStatsStrikeRate[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsStrikeRate[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -446,7 +446,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsAverage[i].player;
         player.value = parseFloat(this.bowlingStatsAverage[i].average).toFixed(2);
-        player.extraValue = "Innings : "+this.bowlingStatsAverage[i].innings +" | Wickets : "+this.bowlingStatsAverage[i].wickets;
+        player.extraValue = "Overs : "+this.bowlingStatsAverage[i].overs +" | Wickets : "+this.bowlingStatsAverage[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsAverage[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -463,7 +463,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsEconomy[i].player;
         player.value = parseFloat(this.bowlingStatsEconomy[i].economy).toFixed(2);
-        player.extraValue = "Innings : "+this.bowlingStatsEconomy[i].innings +" | Wickets : "+this.bowlingStatsEconomy[i].wickets;
+        player.extraValue = "Overs : "+this.bowlingStatsEconomy[i].overs +" | Wickets : "+this.bowlingStatsEconomy[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsEconomy[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
