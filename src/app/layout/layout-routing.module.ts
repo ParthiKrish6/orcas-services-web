@@ -21,6 +21,10 @@ const routes: Routes = [
                 loadChildren: () => import('./../upload-scorecard/upload-scorecard.module').then((m) => m.UploadScoreCardModule)
             },
             {
+                path: 'clear-cache',
+                loadChildren: () => import('./../clear-cache/clear-cache.module').then((m) => m.ClearCacheModule)
+            },
+            {
                 path: 'calendar-details',
                 loadChildren: () => import('./../calendar-details/calendar-details.module').then((m) => m.CalendarDetailsModule)
             },

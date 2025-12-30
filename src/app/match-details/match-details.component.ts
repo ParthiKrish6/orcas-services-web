@@ -72,10 +72,21 @@ export class MatchDetailsComponent implements OnInit {
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
         this.anniversaryOptions = data;
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
-        this.startDate = this.anniversaryOptions[this.anniversaryOptions.length-1].startDate;
-        this.endDate = this.anniversaryOptions[0].endDate;
-        this.matchDetailsService.getMatchDetailsForDates(moment(this.anniversaryOptions[0].startDate).format('YYYY-MM-DD'), moment(this.anniversaryOptions[0].endDate).format('YYYY-MM-DD')).subscribe(data => {
-          this.setMatchDetails(data);
+        if(this.anniversaryOptions.length > 0) {
+          this.startDate = this.anniversaryOptions[this.anniversaryOptions.length-1].startDate;
+          this.endDate = this.anniversaryOptions[0].endDate;
+          this.matchDetailsService.getMatchDetailsForDates(moment(this.anniversaryOptions[0].startDate).format('YYYY-MM-DD'), moment(this.anniversaryOptions[0].endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setMatchDetails(data);
+          });
+        } else {
+          this.spinnerService.hide();
+        }
+      },error => {
+        console.log(error);
+        this.errorMsg = error.error.message;
+        this.router.navigate(['/login'], {
+          skipLocationChange: true,
+          queryParams: { errMsg: error.error.message }
         });
       });
     },error => {
