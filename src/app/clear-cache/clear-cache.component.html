@@ -1,0 +1,14 @@
+<h2>Clear All Cache</h2>  
+
+<button (click)="clearCache()">Clear Cache</button>
+
+<div *ngIf="clearCacheSuccess" class="success message">
+    Cache Cleared successfully!
+  </div>
+  
+  <div *ngIf="clearCacheError" class="error message">
+    Error Clearing Cache : {{ errorMessage }}
+  </div>
+
+  <ngx-spinner type="timer"></ngx-spinner>
+

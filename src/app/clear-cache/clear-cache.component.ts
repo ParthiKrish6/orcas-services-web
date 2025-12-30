@@ -6,32 +6,42 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-clear-cache',
-    animations: [routerTransition()]
+    templateUrl: './clear-cache.component.html',
+    styleUrls: ['./clear-cache.component.css']
 })
 export class ClearCacheComponent implements OnInit {
 
-  
-    constructor(public router: Router, private route: ActivatedRoute,
-        private clearCacheService: ClearCacheService,private spinnerService: NgxSpinnerService) {
-       
+    clearCacheSuccess: boolean = false;
+    clearCacheError: boolean = false;
+    errorMessage: string = '';
+
+    constructor(public router: Router, 
+        private clearCacheService: ClearCacheService,
+        private spinnerService: NgxSpinnerService) {
     }
 
     ngOnInit() {
-        this.clearCache();
+       
     }
 
     clearCache() {
         this.spinnerService.show();
         this.clearCacheService.clearCache().subscribe(
             (response) => {
-                alert(response);
+                console.log(response);
+                this.clearCacheSuccess = true;
+                this.clearCacheError = false;
                 this.spinnerService.hide();
-                this.router.navigate(['/dashboard'],{ skipLocationChange: true }); 
             },
             (error) => {
-                alert(error);
+                console.log(error);
+                this.clearCacheError = true;
+                if(error.error) {
+                    this.errorMessage = error.error.message;
+                } else {
+                    this.errorMessage = error.message || 'An unknown error occurred during upload.';
+                }
                 this.spinnerService.hide();
-                this.router.navigate(['/dashboard'],{ skipLocationChange: true }); 
             }
         );
     }
