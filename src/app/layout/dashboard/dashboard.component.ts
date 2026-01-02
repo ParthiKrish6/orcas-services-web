@@ -353,7 +353,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.battingStatsRuns[i].player;
         player.value = this.battingStatsRuns[i].runs;
-        player.valueLabel = "Runs";
+        player.valueLabel = "("+this.battingStatsRuns[i].balls+")";
         player.extraValue = "Matches : "+this.battingStatsRuns[i].matches +" | Innings : "+this.battingStatsRuns[i].innings;
         player.img = "assets/player_images/"+this.battingStatsRuns[i].playerId+".png";
         if(player.rank == 1) {
@@ -411,7 +411,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsWickets[i].player;
         player.value = this.bowlingStatsWickets[i].wickets;
-        player.valueLabel = "Wickets";
+        player.valueLabel = "("+this.bowlingStatsWickets[i].overs+")";
         player.extraValue = "Matches : "+this.bowlingStatsWickets[i].matches +" | Innings : "+this.bowlingStatsWickets[i].innings;
         player.img = "assets/player_images/"+this.bowlingStatsWickets[i].playerId+".png";
         if(player.rank == 1) {
