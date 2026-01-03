@@ -178,7 +178,7 @@ export class DashboardComponent implements OnInit {
             queryParams: { errMsg: error.error.message }
           });
         });
-      } else if('Bowling' == this.deptSelected) {
+      } else if('Fielding' == this.deptSelected) {
         this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
           this.setFieldingStats(data, true);
           this.spinnerService.hide();
@@ -213,7 +213,7 @@ export class DashboardComponent implements OnInit {
             queryParams: { errMsg: error.error.message }
           });
         });
-      } else if('Bowling' == this.deptSelected) {
+      } else if('Fielding' == this.deptSelected) {
         this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
           this.setFieldingStats(data, true);
           this.spinnerService.hide();
