@@ -1,46 +1,48 @@
 <div [@routerTransition]>
     <div class="lb-container">
-        <table>
-            <tr>
-                <td>
-                    <select style="width: 130px;" #anniversary (change)="filterAnniversaryStats(anniversary.value)">
-                        <option value="0">All Years</option>
-                        <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
-                            {{anniversary.anniversary}}th Year</option>
-                    </select>
-                </td>
-                <td>
-                    <select style="width: 130px;" #team (change)="filterTeamStats(team.value)">
-                        <option value="0">All Teams</option>
-                        <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input (change)="filterRecords()" class='date_picker' type="date" id="startDate"
-                        [(ngModel)]="startDate">
-                </td>
-                <td>
-                    <input (change)="filterRecords()" class='date_picker' type="date" id="endDate"
-                        [(ngModel)]="endDate">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <select style="width: 130px;" #department (change)="setDepartment()">
+        <!-- Filters Card -->
+        <div class="card filter-card">
+            <div class="filter-row">
+                <div class="form-group">
+                    <select #anniversary (change)="filterAnniversaryStats(anniversary.value)">
+                    <option value="0">All Years</option>
+                    <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
+                        {{anniversary.anniversary}}th Year</option>
+                </select>
+                </div>
+            
+                <div class="form-group">
+                    <select #team (change)="filterTeamStats(team.value)">
+                    <option value="0">All Teams</option>
+                    <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+                </select>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="form-group">
+                    <input (change)="filterRecords()" class='date_picker' type="date" id="startDate" [(ngModel)]="startDate">
+                </div>
+            
+                <div class="form-group">
+                    <input (change)="filterRecords()" class='date_picker' type="date" id="endDate" [(ngModel)]="endDate">
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="form-group">
+                    <select #department (change)="setDepartment()">
                         <option value="Batting">Batting</option>
                         <option value="Bowling">Bowling</option>
                         <option value="Fielding">Fielding</option>
                     </select>
-                </td>
-                <td>
-                    <select style="width: 130px;" #deptOptionsElement (change)="setDeptOptions()">
+                </div>
+            
+                <div class="form-group">
+                    <select #deptOptionsElement (change)="setDeptOptions()">
                         <option *ngFor="let dept of deptOptions" [value]="dept">{{dept}}</option>
                     </select>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
 
         <div class="lb-header">
             <img class="user-avatar" src="assets/images/bat_ball.png" width="25px" />
@@ -48,26 +50,28 @@
             <span style="font-size: small;">{{deptOptionSelected}}</span>
         </div>
 
-        <div *ngFor="let p of players" class="lb-card"
-            [ngClass]="{'gold': p.rank === 1, 'silver': p.rank === 2, 'bronze': p.rank === 3}">
+        <div style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none">
+            <div *ngFor="let p of players" class="lb-card"
+                [ngClass]="{'gold': p.rank === 1, 'silver': p.rank === 2, 'bronze': p.rank === 3}">
 
-            <div class="rank" *ngIf="p.medal">
-                <img class="user-avatar" src="{{p.medal}}" width="15px" />
-            </div>
-            <div class="rank">
-                <img [src]="p.img" />
-            </div>
-
-            <div class="details">
-                <div class="name">{{ p.name }}</div>
-                <div class="stats">
-                    {{p.extraValue}}
+                <div class="rank" *ngIf="p.medal">
+                    <img class="user-avatar" src="{{p.medal}}" width="15px" />
                 </div>
-            </div>
+                <div class="rank">
+                    <img [src]="p.img" />
+                </div>
 
-            <div class="runs">
-                {{ p.value }}
-                <span>{{ p.valueLabel }}</span>
+                <div class="details">
+                    <div class="name">{{ p.name }}</div>
+                    <div class="stats">
+                        {{p.extraValue}}
+                    </div>
+                </div>
+
+                <div class="runs">
+                    {{ p.value }}
+                    <span>{{ p.valueLabel }}</span>
+                </div>
             </div>
         </div>
     </div>

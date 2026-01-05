@@ -12,4 +12,5 @@ export class MatchDetails {
     batFirst: string;
     captain: string;
     viceCaptain: string;
+    winColor: string;
 }

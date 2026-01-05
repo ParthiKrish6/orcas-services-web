@@ -142,6 +142,25 @@ export class MatchDetailsComponent implements OnInit {
     this.filterTeamMatches(this.teamDropdownElement.nativeElement.value);
   }
 
+  getWinPercentageClass(percent: number): string {
+    if (percent >= 60) {
+      return '';
+    } else if (percent >= 30) {
+      return 'low';
+    } else {
+      return 'verylow';
+    }
+  }
+
+  getWinColor(match: any): string {
+    if (match.matchResult?.includes('WON')) {
+      return '#2e7d32'; // green
+    } else if (match.matchResult?.includes('LOST')) {
+      return '#c62828'; // red
+    }
+    return '#000';
+  }
+
   setMatchDetails(data) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.filterPredicate = (data: any, filter: string) => {
@@ -162,6 +181,7 @@ export class MatchDetailsComponent implements OnInit {
       if(isNaN(this.winPercentage)) {
         this.winPercentage = 0;
       }
+      
 
       this.batPlayed =  allData.filter(item =>
         item.batFirst == 'Y'
@@ -173,12 +193,15 @@ export class MatchDetailsComponent implements OnInit {
       if(isNaN(this.batWinPercentage)) {
         this.batWinPercentage = 0;
       }
+      
+
       this.bowlPlayed =  this.played - this.batPlayed;
       this.bowlWon =  this.won - this.batWon;
       this.bowlWinPercentage = Math.floor((this.bowlWon / this.bowlPlayed) * 100);
       if(isNaN(this.bowlWinPercentage)) {
         this.bowlWinPercentage = 0;
       }
+      
     }
     if(0 == this.teamDropdownElement.nativeElement.value) {
       this.selectedTeamName = 'All';

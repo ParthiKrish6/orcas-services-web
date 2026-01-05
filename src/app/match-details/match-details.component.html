@@ -1,90 +1,83 @@
-<h2>Match Details</h2>  
+<!-- Title -->
+<h2 class="page-title">Match Details</h2>
 
-<table class='main-table'>
-  <tr>
-      <td>
-          <label for="anniversaryOption"><b>Anniversary</b></label>
-      </td>
-  </tr>
-  <tr>
-      <td>
-          <select #anniversary (change)="filterAnniversaryMatches(anniversary.value)">
-              <option value="0">All</option>
-              <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
-                  {{anniversary.anniversary}}th Year</option>
-          </select>
-      </td>
-  </tr>
-  <tr>
-      <td>
-          <input class='date_picker' type="date" id="startDate" [(ngModel)]="startDate">
-      </td>
-      <td>
-          <input class='date_picker' type="date" id="endDate" [(ngModel)]="endDate">
-      </td>
-      <td>
-          <button (click)="filterRecords()" type="submit" class="submit-button">Go</button>
-      </td>
-  </tr>
-  <tr>
-      <td>
-          <label for="teamOption"><b>Team</b></label>
-      </td>
-  </tr>
-  <tr>
-      <td>
-          <select #team (change)="filterTeamMatches(team.value)">
-              <option value="0">All</option>
-              <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
-          </select>
-      </td>
-  </tr>
-</table>
+<!-- Filters Card -->
+<div class="card filter-card">
+  <div class="filter-row">
+    <div class="form-group">
+      <select #anniversary (change)="filterAnniversaryMatches(anniversary.value)">
+        <option value="0">All Years</option>
+        <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
+            {{anniversary.anniversary}}th Year</option>
+    </select>
+    </div>
 
-<table class='stats-table'>
-  <thead>
-    <tr>
-      <th>Toss</th>
-      <th>Matches</th>
-      <th>Wins</th>
-      <th>Win Percentage</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>All</td>
-      <td>{{played}}</td>
-      <td>{{won}}</td>
-      <td>
-        <div class="progress-container">
-          <div class="progress-bar" style="--win-percent: {{winPercentage}}%;">{{winPercentage}}%</div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Bat First</td>
-      <td>{{batPlayed}}</td>
-      <td>{{batWon}}</td>
-      <td>
-       
-        <div class="progress-container">
-          <div class="progress-bar" style="--win-percent: {{batWinPercentage}}%;">{{batWinPercentage}}%</div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Bowl First</td>
-      <td>{{bowlPlayed}}</td>
-      <td>{{bowlWon}}</td>
-      <td>
-       
-        <div class="progress-container">
-          <div class="progress-bar" style="--win-percent: {{bowlWinPercentage}}%;">{{bowlWinPercentage}}%</div>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <div class="form-group">
+      <select #team (change)="filterTeamMatches(team.value)">
+        <option value="0">All Teams</option>
+        <option *ngFor="let team of teamOptions" [value]="team.teamId">{{team.teamName}}</option>
+    </select>
+    </div>
+  </div>
+  <div class="filter-row">
+    <div class="form-group">
+      <input (change)="filterRecords()" class='date_picker' type="date" id="startDate" [(ngModel)]="startDate">
+    </div>
+
+    <div class="form-group">
+      <input (change)="filterRecords()" class='date_picker' type="date" id="endDate" [(ngModel)]="endDate">
+    </div>
+  </div>
+</div>
+
+<!-- Stats Table -->
+<div class="card stats-card">
+  <div class="stats-header">
+    <span>Toss</span>
+    <span>Matches</span>
+    <span>Wins</span>
+    <span>Win %</span>
+  </div>
+
+  <div class="stats-row">
+    <span>All</span>
+    <span>{{played}}</span>
+    <span>{{won}}</span>
+    <div class="progress">
+      <div class="progress-bar"
+       [ngClass]="getWinPercentageClass(winPercentage)"
+       [ngStyle]="{ width: winPercentage + '%' }">
+       {{ winPercentage }}%
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <span>Bat First</span>
+    <span>{{batPlayed}}</span>
+    <span>{{batWon}}</span>
+    <div class="progress">
+      <div class="progress-bar"
+      [ngClass]="getWinPercentageClass(batWinPercentage)"
+      [ngStyle]="{ width: batWinPercentage + '%' }">
+      {{ batWinPercentage }}%
+     </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <span>Bowl First</span>
+    <span>{{bowlPlayed}}</span>
+    <span>{{bowlWon}}</span>
+    <div class="progress">
+      <div class="progress-bar"
+      [ngClass]="getWinPercentageClass(bowlWinPercentage)"
+      [ngStyle]="{ width: bowlWinPercentage + '%' }">
+      {{ bowlWinPercentage }}%
+     </div>
+    </div>
+  </div>
+</div>
 
 <mat-form-field>  
   <input autocomplete="off" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">  
@@ -97,7 +90,7 @@
   <table mat-table [dataSource]="dataSource" matSort>  
   
     <ng-container matColumnDef="matchDate">  
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Match Date </th>  
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date </th>  
       <td mat-cell *matCellDef="let match"> {{match.matchDate}} </td>  
     </ng-container>
     
@@ -123,7 +116,7 @@
 
     <ng-container matColumnDef="matchResult">  
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Result </th>  
-      <td mat-cell *matCellDef="let match"> {{match.matchResult}} by {{match.margin}}</td>  
+      <td mat-cell *matCellDef="let match" [ngStyle]="{ color: getWinColor(match), 'font-weight': 'bold' }"> {{match.matchResult}} by {{match.margin}}</td>  
     </ng-container>
 
     <ng-container matColumnDef="batFirst">  

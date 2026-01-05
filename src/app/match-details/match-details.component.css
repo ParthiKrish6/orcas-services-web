@@ -1,131 +1,118 @@
 table {
-    width: 100%;
+  width: 100%;
 }
 
 #error-block {
-    color: red;
+  color: red;
 }
 
 #add-button {
-    padding-top: 15px;
-    padding-right: 15px;
-    text-align: right;
-    font-size: 40px;
-    color:green;
-}
-
-#fetch-button {
-    text-align: center;
-    font-size: 15px;
-    color:white;
-    background-color: rgb(20, 107, 46);
+  padding-top: 15px;
+  padding-right: 15px;
+  text-align: right;
+  font-size: 40px;
+  color:green;
 }
 
 .mat-header-cell {
-    color: rgb(46, 13, 13);
-    font-weight: bold;
-    font-size: 15px;
-    font-family: 'Calibri', sans-serif;
+  color: rgb(46, 13, 13);
+  font-weight: bold;
+  font-size: 15px;
+  font-family: 'Calibri', sans-serif;
 }
 
-/* Style the main select box */
-select {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-  }
-  
-  /* Style the options within the dropdown */
-  select option {
-    padding: 5px;
-  }
-  
-  /* Style on hover/focus */
-  select:hover,
-  select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-
-  table {
-    width: 100%;
+/* Title */
+.page-title {
+  margin: 5px 0 5px;
+  color: #0f3d2e;
 }
 
-td {
-  padding: 5px;
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
-.date_picker {
-  padding: 5px;
+/* Filters */
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr) auto;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.form-group select,
+.form-group input {
+  padding: 8px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-  float: left;
 }
 
-.submit-button {
-	-moz-box-shadow: inset 0px 1px 0px 0px #3985B1;
-	-webkit-box-shadow: inset 0px 1px 0px 0px #3985B1;
-	box-shadow: inset 0px 1px 0px 0px #3985B1;
-	background-color: #216288;
-	border: 1px solid #17445E;
-	display: inline-block;
-	cursor: pointer;
-	color: #FFFFFF;
-	padding: 6px 10px;
-	text-decoration: none;
-    font: 15px Arial, Helvetica, sans-serif;
-    border-radius: 4px;
+.full-width {
+  margin-top: 12px;
 }
 
-.submit-button:hover {
-background: linear-gradient(to bottom, #2D77A2 5%, #337DA8 100%);
-background-color: #28739E;
+.btn-primary {
+  align-self: flex-end;
+  padding: 10px 18px;
+  background: #0f3d2e;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-  .stats-table {
-    width: 100%;
-    border-collapse: collapse; /* Collapses borders for a cleaner look */
-    
-  }
-  
-  .stats-table th, .stats-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  
-  .stats-table th {
-    background-color: #f2f2f2;
-  }
-  
-  .progress-container {
-    width: 100%;
-    background-color: #f3f3f3;
-    border-radius: 5px;
-    overflow: hidden;
-    height: 20px; /* Adjust height as needed */
-    position: relative;
-  }
-  
-  .progress-bar {
-    height: 100%;
-    background-color: #4CAF50; /* Green color for win */
-    width: var(--win-percent); /* Uses the value from the inline style */
-    text-align: right;
-    line-height: 20px; /* Center text vertically */
-    color: white;
-    padding-right: 5px;
-    box-sizing: border-box; /* Ensures padding is included in the width */
-  }
-  
-  /* Optional: Display the percentage value using an attribute and CSS content */
-  .progress-bar::after {
-    content: attr(style); /* Displays the inline style value, e.g., "--win-percent: 60%;" */
-    content: var(--win-percent); /* A modern approach to display just the value */
-    position: absolute;
-    right: 5px;
-    color: black;
-    font-size: 0.8em;
-  }
+/* Stats Table */
+.stats-header,
+.stats-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 2fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.stats-header {
+  font-weight: bold;
+  color: #0f3d2e;
+  border-bottom: 1px solid #ddd;
+}
+
+.stats-row {
+  border-bottom: 1px solid #eee;
+}
+
+/* Progress */
+.progress {
+  background: #eaeaea;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: #4caf50;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.progress-bar.low {
+  background: #ff9800;
+}
+
+.progress-bar.verylow {
+  background: #e41e1e;
+}

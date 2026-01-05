@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { UploadScoreCardService } from './upload-scorecard.service';
-import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -16,10 +14,8 @@ export class UploadScoreCardComponent {
   uploadError: boolean = false;
   errorMessage: string = '';
   
-  constructor(private http: HttpClient,
-    private uploadScoreCardService: UploadScoreCardService,
-    private spinnerService: NgxSpinnerService,
-    private router: Router
+  constructor(private uploadScoreCardService: UploadScoreCardService,
+    private spinnerService: NgxSpinnerService
     ) { }
 
   ngOnInit(): void {
