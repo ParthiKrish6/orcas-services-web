@@ -162,6 +162,16 @@ export class MatchDetailsComponent implements OnInit {
   }
 
   setMatchDetails(data) {
+    data.sort((a, b) => {
+      // Convert the date strings to Date objects for reliable comparison
+      const dateA = new Date(a.matchDate).getTime();
+      const dateB = new Date(b.matchDate).getTime();
+
+      // For descending order (newest first), subtract 'a' from 'b'
+      // For ascending order (oldest first), subtract 'b' from 'a'
+      return dateB - dateA;
+    })
+
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const searchString = filter.trim().toLowerCase();

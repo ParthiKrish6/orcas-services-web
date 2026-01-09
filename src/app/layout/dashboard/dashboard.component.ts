@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit {
   deptOptions: string[];
   deptSelected: string;
   deptOptionSelected: string;
+  deptOptionSelectedDisplay: string;
   battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR'];
   bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
@@ -80,6 +81,7 @@ export class DashboardComponent implements OnInit {
     this.deptOptions = this.battingDept;
     this.deptSelected = "Batting";
     this.deptOptionSelected = "Runs";
+    this.deptOptionSelectedDisplay = 'Runs';
     this.reloadData();
   }
 
@@ -98,6 +100,10 @@ export class DashboardComponent implements OnInit {
       this.deptOptionSelected = "Catches/RO";
       this.setFieldingLeaderBoardContent();
     }
+    this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
+    if('SR'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = 'Strike Rate';
+    }
   }
 
   setDeptOptions() {
@@ -108,6 +114,10 @@ export class DashboardComponent implements OnInit {
       this.setBowlingLeaderBoardContent();
     } else if ('Fielding' == this.deptSelected) {
       this.setFieldingLeaderBoardContent();
+    }
+    this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
+    if('SR'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = 'Strike Rate';
     }
   }
 
@@ -354,7 +364,7 @@ export class DashboardComponent implements OnInit {
         player.name = this.battingStatsRuns[i].player;
         player.value = this.battingStatsRuns[i].runs;
         player.valueLabel = "("+this.battingStatsRuns[i].balls+")";
-        player.extraValue = "Matches : "+this.battingStatsRuns[i].matches +" | Innings : "+this.battingStatsRuns[i].innings;
+        player.extraValue = "Matches : "+this.battingStatsRuns[i].matches +" | Inns :  "+this.battingStatsRuns[i].innings;
         player.img = "assets/player_images/"+this.battingStatsRuns[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -371,7 +381,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.battingStatsStrikeRate[i].player;
         player.value = parseFloat(this.battingStatsStrikeRate[i].strikeRate).toFixed(2);
-        player.extraValue = "Innings : "+this.battingStatsStrikeRate[i].innings +" | Runs : "+this.battingStatsStrikeRate[i].runs;
+        player.extraValue = "Inns :  "+this.battingStatsStrikeRate[i].innings +" | Runs : "+this.battingStatsStrikeRate[i].runs;
         player.img = "assets/player_images/"+this.battingStatsStrikeRate[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -388,7 +398,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.battingStatsAverage[i].player;
         player.value = parseFloat(this.battingStatsAverage[i].average).toFixed(2);
-        player.extraValue = "Innings : "+this.battingStatsAverage[i].innings +" | Runs : "+this.battingStatsAverage[i].runs;
+        player.extraValue = "Inns :  "+this.battingStatsAverage[i].innings +" | Runs : "+this.battingStatsAverage[i].runs;
         player.img = "assets/player_images/"+this.battingStatsAverage[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -412,7 +422,7 @@ export class DashboardComponent implements OnInit {
         player.name = this.bowlingStatsWickets[i].player;
         player.value = this.bowlingStatsWickets[i].wickets;
         player.valueLabel = "("+this.bowlingStatsWickets[i].overs+")";
-        player.extraValue = "Matches : "+this.bowlingStatsWickets[i].matches +" | Innings : "+this.bowlingStatsWickets[i].innings;
+        player.extraValue = "Matches : "+this.bowlingStatsWickets[i].matches +" | Inns :  "+this.bowlingStatsWickets[i].innings;
         player.img = "assets/player_images/"+this.bowlingStatsWickets[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -429,7 +439,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsStrikeRate[i].player;
         player.value = parseFloat(this.bowlingStatsStrikeRate[i].strikeRate).toFixed(2);
-        player.extraValue = "Overs : "+this.bowlingStatsStrikeRate[i].overs +" | Wickets : "+this.bowlingStatsStrikeRate[i].wickets;
+        player.extraValue = "Overs : "+this.bowlingStatsStrikeRate[i].overs +" | Wkts : "+this.bowlingStatsStrikeRate[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsStrikeRate[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -446,7 +456,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsAverage[i].player;
         player.value = parseFloat(this.bowlingStatsAverage[i].average).toFixed(2);
-        player.extraValue = "Overs : "+this.bowlingStatsAverage[i].overs +" | Wickets : "+this.bowlingStatsAverage[i].wickets;
+        player.extraValue = "Overs : "+this.bowlingStatsAverage[i].overs +" | Wkts : "+this.bowlingStatsAverage[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsAverage[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
@@ -463,7 +473,7 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsEconomy[i].player;
         player.value = parseFloat(this.bowlingStatsEconomy[i].economy).toFixed(2);
-        player.extraValue = "Overs : "+this.bowlingStatsEconomy[i].overs +" | Wickets : "+this.bowlingStatsEconomy[i].wickets;
+        player.extraValue = "Overs : "+this.bowlingStatsEconomy[i].overs +" | Wkts : "+this.bowlingStatsEconomy[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsEconomy[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";

@@ -46,8 +46,8 @@
 
         <div class="lb-header">
             <img class="user-avatar" src="assets/images/bat_ball.png" width="25px" />
-            {{deptSelected}} Leaderboard
-            <span style="font-size: small;">{{deptOptionSelected}}</span>
+            {{deptSelected}} Champions
+            <span style="font-size: small;">{{deptOptionSelectedDisplay}}</span>
         </div>
 
         <div style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none">
@@ -57,7 +57,7 @@
                 <div class="rank" *ngIf="p.medal">
                     <img class="user-avatar" src="{{p.medal}}" width="15px" />
                 </div>
-                <div class="rank">
+                <div class="rank-img">
                     <img [src]="p.img" />
                 </div>
 

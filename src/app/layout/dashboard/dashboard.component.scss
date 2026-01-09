@@ -172,6 +172,11 @@ select {
   
   .rank {
     font-size: 22px;
+    margin-left: -25px;
+  }
+
+  .rank-img {
+    font-size: 22px;
     margin-left: -15px;
   }
   
@@ -219,8 +224,11 @@ select {
   background: #fff;
   border-radius: 14px;
   padding: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  border: 2px solid #066e6e;
+  padding-bottom: 1px;
+  padding-right: 1px;
 }
 
   /* Filters */
@@ -243,9 +251,11 @@ select {
 
 .form-group select,
 .form-group input {
-  padding: 8px;
+  padding: 5px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  background: linear-gradient(135deg, #71b5e2, #5fa596);
+  border-color: #066e6e;
 }
 
 .full-width {
@@ -261,7 +271,3 @@ select {
   border-radius: 10px;
   cursor: pointer;
 }
-
-
-
-
