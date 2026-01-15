@@ -26,8 +26,10 @@
 
 /* Scrollable body */
 .stats-body {
-  max-height: 350px;     /* 👈 adjust height */
+  max-height: 380px;     /* 👈 adjust height */
   overflow-y: auto;
+  overscroll-behavior: contain; /* 🔥 KEY LINE */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Rows */
