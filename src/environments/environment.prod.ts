@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://orcas-services.onrender.com'
+    apiUrl: 'https://orcas-services-sg.onrender.com'
 };
