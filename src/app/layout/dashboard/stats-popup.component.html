@@ -7,26 +7,48 @@
     </button>
 </div>
 
-<div class="stats-table">
+<div class="table-wrapper">
 
-    <!-- Header -->
-    <div class="stats-header">
-      <div>{{header1}}</div>
-      <div>{{header2}}</div>
-      <div>{{header3}}</div>
-      <div>{{header4}}</div>
-      <div>{{header5}}</div>
-    </div>
-  
-    <!-- Rows -->
-    <div class="stats-body">
-        <div class="stats-row" *ngFor="let item of matchStats">
-            <div>{{ item.column1 | date:'dd-MMM-yy' }}</div>
-            <div class="runs">{{ item.column2 }}</div>
-            <div>{{ item.column3 }}</div>
-            <div>{{ item.column4 }}</div>
-            <div>{{ item.column5 }}</div>
-        </div>
-    </div>
-  
-  </div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+    <ng-container matColumnDef="{{header1}}">
+      <th mat-header-cell *matHeaderCellDef>{{header1}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.column1 | date:'dd-MMM-yy'}}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="{{header2}}">
+      <th mat-header-cell *matHeaderCellDef>{{header2}}</th>
+      <td mat-cell *matCellDef="let row"><b>{{ row.column2 }}</b></td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="{{header3}}">
+      <th mat-header-cell *matHeaderCellDef>{{header3}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.column3 }}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="{{header4}}">
+      <th mat-header-cell *matHeaderCellDef>{{header4}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.column4 }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{header5}}">
+      <th mat-header-cell *matHeaderCellDef>{{header5}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.column5 }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[10]"
+    [pageSize]="10"
+    showFirstLastButtons>
+  </mat-paginator>
+
+</div>
+

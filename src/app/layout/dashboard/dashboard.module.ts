@@ -7,19 +7,26 @@ import { DashboardComponent } from './dashboard.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
 import { StatsPopupComponent } from './stats-popup.component';
-import { MatDialogModule, MatTableModule, MatButtonModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material';
 
 @NgModule({
     imports: [
-        FormsModule, 
-        CommonModule, 
-        NgbCarouselModule, 
-        NgbAlertModule, 
-        DashboardRoutingModule, 
+        FormsModule,
+        CommonModule,
+        NgbCarouselModule,
+        NgbAlertModule,
+        DashboardRoutingModule,
         NgxSpinnerModule,
-        MatDialogModule,
         MatTableModule,
-        MatButtonModule],
+        MatPaginatorModule,
+        MatSortModule,
+        MatButtonModule,
+        MatDialogModule
+    ],
     declarations: [DashboardComponent, StatsPopupComponent]
 })
 export class DashboardModule { }

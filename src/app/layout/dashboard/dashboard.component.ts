@@ -644,7 +644,7 @@ export class DashboardComponent implements OnInit {
           column4: m.runs !== 'DNB' ? m.fours : '-',
           column5: m.runs !== 'DNB' ? m.sixes : '-'
         }));
-        this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4\'s','6\'s');
+        this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s','6s');
       });
       } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
@@ -679,7 +679,7 @@ export class DashboardComponent implements OnInit {
             column4: m.runs !== 'DNB' ? m.fours : '-',
             column5: m.runs !== 'DNB' ? m.sixes : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4\'s', '6\'s');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s', '6s');
         });
        } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
@@ -717,6 +717,7 @@ export class DashboardComponent implements OnInit {
     const dialogRef = this.dialog.open(StatsPopupComponent, {
       width: '950px',
       maxWidth: '95vw',
+      position: { top: '70px' },
       data: {
         matchStats : matchStats,
         header1: header1,

@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, ViewChild, Optional } from '@angular/core';
+import { MatTableDataSource, MatPaginator, MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { MatchStats } from './match-stats';
 
 @Component({
   selector: 'app-stats-popup',
@@ -8,20 +9,26 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class StatsPopupComponent {
 
-  displayedColumns : string[];
+  displayedColumns: string[];
+  dataSource = new MatTableDataSource<MatchStats>();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
   playerimage: string;
   header1: string;
   header2: string;
   header3: string;
   header4: string;
   header5: string;
-  matchStats: any[];
+  column1: string;
+  column2: string;
+  column3: string;
+  column4: string;
+  column5: string;
   team: string;
   from: string;
   to: string;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.matchStats = data.matchStats;
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,) {
     this.header1 = data.header1;
     this.header2 = data.header2;
     this.header3 = data.header3;
@@ -30,7 +37,17 @@ export class StatsPopupComponent {
     this.team = data.team;
     this.from = data.from;
     this.to = data.to;
-    this.displayedColumns = [data.column1, data.column2, data.column3, data.column4];
+    this.displayedColumns = [data.header1, data.header2, data.header3, data.header4, data.header5];
+    this.column1 = data.header1;
+    this.column2 = data.header2;
+    this.column3 = data.header3;
+    this.column4 = data.header4;
+    this.column5 = data.header5;
     this.playerimage = data.playerimage;
+    this.dataSource = new MatTableDataSource(data.matchStats); 
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 }
