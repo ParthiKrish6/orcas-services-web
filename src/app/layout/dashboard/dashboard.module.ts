@@ -6,9 +6,20 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
+import { StatsPopupComponent } from './stats-popup.component';
+import { MatDialogModule, MatTableModule, MatButtonModule } from '@angular/material';
 
 @NgModule({
-    imports: [FormsModule , CommonModule, NgbCarouselModule, NgbAlertModule, DashboardRoutingModule,  NgxSpinnerModule],
-    declarations: [DashboardComponent]
+    imports: [
+        FormsModule, 
+        CommonModule, 
+        NgbCarouselModule, 
+        NgbAlertModule, 
+        DashboardRoutingModule, 
+        NgxSpinnerModule,
+        MatDialogModule,
+        MatTableModule,
+        MatButtonModule],
+    declarations: [DashboardComponent, StatsPopupComponent]
 })
-export class DashboardModule {}
+export class DashboardModule { }

@@ -61,4 +61,20 @@ export class BowlingDetailsService {
     });
     return this.http.get(`${this.baseUrl}/match/${matchId}`, { headers: this.headers });
   }
+
+  getBowlingDetailsForPlayer(fromDate: string, toDate: string,playerId: number): Observable<any> {
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${fromDate}/${toDate}/${playerId}`, { headers: this.headers });
+  }
+
+  getBowlingDetailsForPlayerTeam(fromDate: string, toDate: string,playerId: number, teamId: number): Observable<any> {
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${fromDate}/${toDate}/${playerId}/${teamId}`, { headers: this.headers });
+  }
 }

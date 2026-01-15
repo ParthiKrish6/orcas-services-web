@@ -1,0 +1,33 @@
+<div class="dialog-header">
+    <p style="padding-left: 80px;font-weight: bold;font-size: small;">Team : {{team}} <br> {{from}} to {{to}}</p>
+    <img class="round-img" src="{{playerimage}}" />
+    <button mat-icon-button class="close-btn" mat-dialog-close>
+      ✕
+    </button>
+</div>
+
+<mat-dialog-content>
+  <table mat-table [dataSource]="matchStats" class="mat-elevation-z8 full-width">
+    <ng-container matColumnDef="{{ column1 }}">
+      <th mat-header-cell *matHeaderCellDef>{{header1}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.column1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="{{ column2 }}">
+      <th mat-header-cell *matHeaderCellDef>{{header2}}</th>
+      <td mat-cell *matCellDef="let row">
+        <strong>{{ row.column2 }}</strong>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="{{ column3 }}">
+      <th mat-header-cell *matHeaderCellDef>{{header3}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.column3 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="{{ column4 }}">
+        <th mat-header-cell *matHeaderCellDef>{{header4}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.column4 }}</td>
+      </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+

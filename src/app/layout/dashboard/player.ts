@@ -6,4 +6,5 @@ export class Player {
     extraValue: string;
     value: string;
     valueLabel: string;
+    id: string;
 }

@@ -51,7 +51,7 @@
         </div>
 
         <div style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none">
-            <div *ngFor="let p of players" class="lb-card"
+            <div *ngFor="let p of players" class="lb-card" (click)="openPopup(p)"
                 [ngClass]="{'gold': p.rank === 1, 'silver': p.rank === 2, 'bronze': p.rank === 3}">
 
                 <div class="rank" *ngIf="p.medal">

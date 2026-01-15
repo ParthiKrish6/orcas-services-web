@@ -22,6 +22,12 @@ import { FieldingStatsService } from '../../fielding-stats/fielding-stats.servic
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { Player } from './player';
+import { StatsPopupComponent } from './stats-popup.component';
+import { MatDialog } from '@angular/material';
+import { BattingDetailsService } from '../../batting-details/batting-details.service';
+import { BowlingDetailsService } from '../../bowling-details/bowling-details.service';
+import { FieldingDetailsService } from '../../fielding-details/fielding-details.service';
+import { MatchStats } from './match-stats';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,7 +45,7 @@ export class DashboardComponent implements OnInit {
   anniversaryOptions: CalendarDetails[];
   teamOptions: TeamDetails[];
   minBalls: number = 50;
-  minOvers: number = 5;
+  minOvers: number = 10;
   numberOfPlayers: number = 30;
   typeSelected: string;
   startDate: Date;
@@ -52,6 +58,7 @@ export class DashboardComponent implements OnInit {
   battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR'];
   bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
+  showPopup = false;
 
   battingStatsRuns: BattingStats[];
   battingStatsAverage: BattingStats[];
@@ -71,10 +78,14 @@ export class DashboardComponent implements OnInit {
     private battingStatsService: BattingStatsService,
     private bowlingStatsService: BowlingStatsService,
     private fieldingStatsService: FieldingStatsService,
+    private battingDetailsService: BattingDetailsService,
+    private bowlingDetailsService: BowlingDetailsService,
+    private fieldingDetailsService: FieldingDetailsService,
     private calendarDetailsService: CalendarDetailsService,
     private teamDetailsService: TeamDetailsService,
     private spinnerService: NgxSpinnerService,
-    private router: Router) {
+    private router: Router,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -141,7 +152,7 @@ export class DashboardComponent implements OnInit {
           });
   
           this.battingStatsService.getBattingStatsList().subscribe(data => {
-            this.setBattingStats(data);
+            this.setBattingStats(data, true);
             this.spinnerService.hide();
           });
         } else {
@@ -168,8 +179,14 @@ export class DashboardComponent implements OnInit {
     if (teamId != "0") {
       if('Batting' == this.deptSelected) {
         this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
-          this.setBattingStats(data);
+          this.setBattingStats(data, true);
           this.spinnerService.hide();
+          this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setFieldingStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -181,6 +198,13 @@ export class DashboardComponent implements OnInit {
         this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
           this.setBowlingStats(data, true);
           this.spinnerService.hide();
+          this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setBattingStats(data, false);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setFieldingStats(data, false);
+          });
+
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -192,6 +216,13 @@ export class DashboardComponent implements OnInit {
         this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
           this.setFieldingStats(data, true);
           this.spinnerService.hide();
+          this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setBattingStats(data, false);
+          });
+          this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -203,8 +234,15 @@ export class DashboardComponent implements OnInit {
     } else {
       if('Batting' == this.deptSelected) {
         this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
-          this.setBattingStats(data);
+          this.setBattingStats(data,true);
           this.spinnerService.hide();
+
+          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setFieldingStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -216,6 +254,13 @@ export class DashboardComponent implements OnInit {
         this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
           this.setBowlingStats(data, true);
           this.spinnerService.hide();
+
+          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBattingStats(data, false);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setFieldingStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -227,6 +272,14 @@ export class DashboardComponent implements OnInit {
         this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
           this.setFieldingStats(data, true);
           this.spinnerService.hide();
+
+          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBattingStats(data, false);
+          });
+          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -257,7 +310,7 @@ export class DashboardComponent implements OnInit {
     this.filterStats(this.teamDropdownElement.nativeElement.value);
   }
 
-  setBattingStats(data) {
+  setBattingStats(data, isRefresh) {
     this.battingStatsRuns = data;
     this.battingStatsRuns.sort((a, b) => {
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
@@ -280,8 +333,9 @@ export class DashboardComponent implements OnInit {
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
     });
     this.battingStatsStrikeRate = this.battingStatsStrikeRate.slice(0, this.numberOfPlayers);
-
-    this.setBattingLeaderBoardContent();
+    if(isRefresh) {
+      this.setBattingLeaderBoardContent();
+    } 
   }
 
   setBowlingStats(data, isRefresh) {
@@ -362,6 +416,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.battingStatsRuns[i].player;
+        player.id = this.battingStatsRuns[i].playerId;
         player.value = this.battingStatsRuns[i].runs;
         player.valueLabel = "("+this.battingStatsRuns[i].balls+")";
         player.extraValue = "Matches : "+this.battingStatsRuns[i].matches +" | Inns :  "+this.battingStatsRuns[i].innings;
@@ -380,6 +435,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.battingStatsStrikeRate[i].player;
+        player.id = this.battingStatsStrikeRate[i].playerId;
         player.value = parseFloat(this.battingStatsStrikeRate[i].strikeRate).toFixed(2);
         player.extraValue = "Inns :  "+this.battingStatsStrikeRate[i].innings +" | Runs : "+this.battingStatsStrikeRate[i].runs;
         player.img = "assets/player_images/"+this.battingStatsStrikeRate[i].playerId+".png";
@@ -397,6 +453,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.battingStatsAverage[i].player;
+        player.id = this.battingStatsAverage[i].playerId;
         player.value = parseFloat(this.battingStatsAverage[i].average).toFixed(2);
         player.extraValue = "Inns :  "+this.battingStatsAverage[i].innings +" | Runs : "+this.battingStatsAverage[i].runs;
         player.img = "assets/player_images/"+this.battingStatsAverage[i].playerId+".png";
@@ -420,6 +477,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.bowlingStatsWickets[i].player;
+        player.id = this.bowlingStatsWickets[i].playerId;
         player.value = this.bowlingStatsWickets[i].wickets;
         player.valueLabel = "("+this.bowlingStatsWickets[i].overs+")";
         player.extraValue = "Matches : "+this.bowlingStatsWickets[i].matches +" | Inns :  "+this.bowlingStatsWickets[i].innings;
@@ -438,6 +496,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.bowlingStatsStrikeRate[i].player;
+        player.id = this.bowlingStatsStrikeRate[i].playerId;
         player.value = parseFloat(this.bowlingStatsStrikeRate[i].strikeRate).toFixed(2);
         player.extraValue = "Overs : "+this.bowlingStatsStrikeRate[i].overs +" | Wkts : "+this.bowlingStatsStrikeRate[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsStrikeRate[i].playerId+".png";
@@ -455,6 +514,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.bowlingStatsAverage[i].player;
+        player.id = this.bowlingStatsAverage[i].playerId;
         player.value = parseFloat(this.bowlingStatsAverage[i].average).toFixed(2);
         player.extraValue = "Overs : "+this.bowlingStatsAverage[i].overs +" | Wkts : "+this.bowlingStatsAverage[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsAverage[i].playerId+".png";
@@ -472,6 +532,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.bowlingStatsEconomy[i].player;
+        player.id = this.bowlingStatsEconomy[i].playerId;
         player.value = parseFloat(this.bowlingStatsEconomy[i].economy).toFixed(2);
         player.extraValue = "Overs : "+this.bowlingStatsEconomy[i].overs +" | Wkts : "+this.bowlingStatsEconomy[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsEconomy[i].playerId+".png";
@@ -494,6 +555,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.fieldingStatsCatches[i].player;
+        player.id = this.fieldingStatsCatches[i].playerId;
         player.value = this.fieldingStatsCatches[i].catches +"/"+this.fieldingStatsCatches[i].runOuts;
         player.valueLabel = "Catches/RO";
         player.extraValue = "Matches : "+this.fieldingStatsCatches[i].innings;
@@ -512,6 +574,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.fieldingStatsDroppedCatches[i].player;
+        player.id = this.fieldingStatsDroppedCatches[i].playerId;
         player.value = this.fieldingStatsDroppedCatches[i].dropped;
         player.extraValue = "Matches : "+this.fieldingStatsDroppedCatches[i].innings;
         player.img = "assets/player_images/"+this.fieldingStatsDroppedCatches[i].playerId+".png";
@@ -529,6 +592,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.fieldingStatsRunsSaved[i].player;
+        player.id = this.fieldingStatsRunsSaved[i].playerId;
         player.value = this.fieldingStatsRunsSaved[i].saved;
         player.extraValue = "Matches : "+this.fieldingStatsRunsSaved[i].innings;
         player.img = "assets/player_images/"+this.fieldingStatsRunsSaved[i].playerId+".png";
@@ -546,6 +610,7 @@ export class DashboardComponent implements OnInit {
         let player = new Player(); 
         player.rank = i+1;
         player.name = this.fieldingStatsRunsMissed[i].player;
+        player.id = this.fieldingStatsRunsMissed[i].playerId;
         player.value = this.fieldingStatsRunsMissed[i].missed;
         player.extraValue = "Matches : "+this.fieldingStatsRunsMissed[i].innings;
         player.img = "assets/player_images/"+this.fieldingStatsRunsMissed[i].playerId+".png";
@@ -561,4 +626,106 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  openPopup(player: Player) {
+    this.spinnerService.show();
+    const id: number = Number(player.id);
+    let team = "All Teams";
+    if(this.teamOptions.find(t => t.teamId+'' === this.teamDropdownElement.nativeElement.value+'')) {
+        team = this.teamOptions.find(t => t.teamId+'' === this.teamDropdownElement.nativeElement.value+'').teamName;
+    }
+    let matchStats : MatchStats[];
+    if(team == 'All Teams') {
+      if ('Batting' == this.deptSelected) {
+       this.battingDetailsService.getBattingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
+        matchStats = data.map(m => ({
+          column1: m.matchDetails.matchDate,
+          column2: m.runs,
+          column3: m.balls,
+          column4: m.strikeRate
+        }));
+        this.openPopUp(matchStats, team, player.img, 'date', 'runs', 'balls', 'strikerate', 'Date', 'Runs', 'Balls', 'SR');
+      });
+      } else if ('Bowling' == this.deptSelected) {
+        this.bowlingDetailsService.getBowlingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
+          matchStats = data.map(m => ({
+            column1: m.matchDetails.matchDate,
+            column2: m.wickets,
+            column3: m.overs,
+            column4: m.economy
+          }));
+          this.openPopUp(matchStats, team, player.img, 'date', 'wickets', 'overs', 'economy', 'Date', 'Wickts', 'Overs', 'Eco');
+        });
+      } else if ('Fielding' == this.deptSelected) {
+        this.fieldingDetailsService.getFieldingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
+          matchStats = data.map(m => ({
+            column1: m.matchDetails.matchDate,
+            column2: m.catches,
+            column3: m.runOuts,
+            column4: m.runsSaved
+          }));
+          this.openPopUp(matchStats, team, player.img, 'date', 'catches', 'runOuts', 'runsSaved', 'Date', 'Catches', 'RO', 'Saved');
+        });
+      }
+    } else {
+      if ('Batting' == this.deptSelected) {
+        this.battingDetailsService.getBattingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id, this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
+          matchStats = data.map(m => ({
+            column1: m.matchDetails.matchDate,
+            column2: m.runs,
+            column3: m.balls,
+            column4: m.strikeRate
+          }));
+          this.openPopUp(matchStats, team, player.img, 'date', 'runs', 'balls', 'strikerate', 'Date', 'Runs', 'Balls', 'SR');
+        });
+       } else if ('Bowling' == this.deptSelected) {
+        this.bowlingDetailsService.getBowlingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
+          matchStats = data.map(m => ({
+            column1: m.matchDetails.matchDate,
+            column2: m.wickets,
+            column3: m.overs,
+            column4: m.economy
+          }));
+          this.openPopUp(matchStats, team, player.img, 'date', 'wickets', 'overs', 'economy', 'Date', 'Wickts', 'Overs', 'Eco');
+        });
+       } else if ('Fielding' == this.deptSelected) {
+        this.fieldingDetailsService.getFieldingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
+          matchStats = data.map(m => ({
+            column1: m.matchDetails.matchDate,
+            column2: m.catches,
+            column3: m.runOuts,
+            column4: m.runsSaved
+          }));
+          this.openPopUp(matchStats, team, player.img, 'date', 'catches', 'runOuts', 'runsSaved', 'Date', 'Catches', 'RO', 'Saved');
+        });
+       }
+    }
+  }
+
+  openPopUp(matchStats, team, playerImg,column1,column2,column3,column4,header1,header2,header3,header4) {
+    matchStats.sort((a, b) => {
+      const dateA = new Date(a.column1).getTime();
+      const dateB = new Date(b.column1).getTime();
+      return dateB - dateA;
+    })
+    this.dialog.open(StatsPopupComponent, {
+      width: '900px',
+      maxWidth: '90vw',
+      data: {
+        matchStats : matchStats,
+        column1: column1,
+        column2: column2,
+        column3: column3,
+        column4: column4,
+        header1: header1,
+        header2: header2,
+        header3: header3,
+        header4: header4,
+        team: team,
+        from: this.startDate,
+        to: this.endDate,
+        playerimage: playerImg
+      },
+    });
+    this.spinnerService.hide();
+  }
 }
