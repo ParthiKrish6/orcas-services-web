@@ -639,31 +639,34 @@ export class DashboardComponent implements OnInit {
        this.battingDetailsService.getBattingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
         matchStats = data.map(m => ({
           column1: m.matchDetails.matchDate,
-          column2: m.runs,
-          column3: m.balls,
-          column4: m.strikeRate
+          column2: m.runs !== 'DNB' ? (m.runs + (m.notOut === 'Y' ? "*": "") + '('+m.balls+')') : '-',
+          column3: m.runs !== 'DNB' ? (m.strikeRate) : '-',
+          column4: m.runs !== 'DNB' ? m.fours : '-',
+          column5: m.runs !== 'DNB' ? m.sixes : '-'
         }));
-        this.openPopUp(matchStats, team, player.img, 'date', 'runs', 'balls', 'strikerate', 'Date', 'Runs', 'Balls', 'SR');
+        this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s','6s');
       });
       } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
           matchStats = data.map(m => ({
             column1: m.matchDetails.matchDate,
-            column2: m.wickets,
-            column3: m.overs,
-            column4: m.economy
+            column2: m.overs !== 'DNB' ?  (m.overs+'-'+m.maidens+'-'+m.runs+'-'+m.wickets) : '-',
+            column3: m.overs !== 'DNB' ? (m.economy) : '-',
+            column4: m.overs !== 'DNB' ? (m.dots) : '-',
+            column5: m.overs !== 'DNB' ? (m.wides+'/'+ m.noballs) : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'date', 'wickets', 'overs', 'economy', 'Date', 'Wickts', 'Overs', 'Eco');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'O-M-R-W', 'Eco', 'Dots', 'Wd/Nb');
         });
       } else if ('Fielding' == this.deptSelected) {
         this.fieldingDetailsService.getFieldingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
           matchStats = data.map(m => ({
             column1: m.matchDetails.matchDate,
-            column2: m.catches,
-            column3: m.runOuts,
-            column4: m.runsSaved
+            column2: m.catches +'/'+m.runOuts,
+            column3: m.runsSaved,
+            column4: m.catchesDropped,
+            column5: m.runsMissed,
           }));
-          this.openPopUp(matchStats, team, player.img, 'date', 'catches', 'runOuts', 'runsSaved', 'Date', 'Catches', 'RO', 'Saved');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Save', 'Drop', 'Miss');
         });
       }
     } else {
@@ -671,55 +674,55 @@ export class DashboardComponent implements OnInit {
         this.battingDetailsService.getBattingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id, this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
           matchStats = data.map(m => ({
             column1: m.matchDetails.matchDate,
-            column2: m.runs,
-            column3: m.balls,
-            column4: m.strikeRate
+            column2: m.runs !== 'DNB' ? (m.runs + (m.notOut === 'Y' ? "*": "") + '('+m.balls+')') : '-',
+            column3: m.runs !== 'DNB' ? (m.strikeRate) : '-',
+            column4: m.runs !== 'DNB' ? m.fours : '-',
+            column5: m.runs !== 'DNB' ? m.sixes : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'date', 'runs', 'balls', 'strikerate', 'Date', 'Runs', 'Balls', 'SR');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s', '6s');
         });
        } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
           matchStats = data.map(m => ({
             column1: m.matchDetails.matchDate,
-            column2: m.wickets,
-            column3: m.overs,
-            column4: m.economy
+            column2: m.overs !== 'DNB' ?  (m.overs+'-'+m.maidens+'-'+m.runs+'-'+m.wickets) : '-',
+            column3: m.overs !== 'DNB' ? (m.economy) : '-',
+            column4: m.overs !== 'DNB' ? (m.dots) : '-',
+            column5: m.overs !== 'DNB' ? (m.wides+'/'+ m.noballs) : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'date', 'wickets', 'overs', 'economy', 'Date', 'Wickts', 'Overs', 'Eco');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'O-M-R-W', 'Eco', 'Dots', 'Wd/Nb');
         });
        } else if ('Fielding' == this.deptSelected) {
         this.fieldingDetailsService.getFieldingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
           matchStats = data.map(m => ({
             column1: m.matchDetails.matchDate,
-            column2: m.catches,
-            column3: m.runOuts,
-            column4: m.runsSaved
+            column2: m.catches +'/'+m.runOuts,
+            column3: m.runsSaved,
+            column4: m.catchesDropped,
+            column5: m.runsMissed,
           }));
-          this.openPopUp(matchStats, team, player.img, 'date', 'catches', 'runOuts', 'runsSaved', 'Date', 'Catches', 'RO', 'Saved');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Save', 'Drop', 'Miss');
         });
        }
     }
   }
 
-  openPopUp(matchStats, team, playerImg,column1,column2,column3,column4,header1,header2,header3,header4) {
+  openPopUp(matchStats, team, playerImg,header1,header2,header3,header4, header5) {
     matchStats.sort((a, b) => {
       const dateA = new Date(a.column1).getTime();
       const dateB = new Date(b.column1).getTime();
       return dateB - dateA;
     })
     this.dialog.open(StatsPopupComponent, {
-      width: '990px',
-      maxWidth: '99vw',
+      width: '950px',
+      maxWidth: '95vw',
       data: {
         matchStats : matchStats,
-        column1: column1,
-        column2: column2,
-        column3: column3,
-        column4: column4,
         header1: header1,
         header2: header2,
         header3: header3,
         header4: header4,
+        header5: header5,
         team: team,
         from: this.startDate,
         to: this.endDate,

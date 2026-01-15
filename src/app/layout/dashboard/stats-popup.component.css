@@ -1,45 +1,62 @@
-.full-width {
-    width: 100%;
-  }
-  table {
-    width: 100%;  
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  th {
-    background: #203a43;
-    color: #eee;
-    font-weight: bold;
+.stats-table {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  font-family: Arial, sans-serif;
+}
 
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
+/* Grid layout */
+.stats-header,
+.stats-row {
+  display: grid;
+  grid-template-columns: 1.0fr 0.8fr 0.8fr 0.5fr 0.6fr;
+  align-items: center;
+}
 
-  table th:first-child {
-    border-top-left-radius: 8px;
-  }
-  table th:last-child {
-    border-top-right-radius: 8px;
-  }
-  
-  .my-table {
-    border-collapse: separate;   /* 👈 REQUIRED */
-    border-spacing: 0;
-  }
+/* Header */
+.stats-header {
+  background: #1f3b44;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 12px;
+}
 
-  tr.mat-header-row {
-    height: 36px;
- }
+/* Scrollable body */
+.stats-body {
+  max-height: 350px;     /* 👈 adjust height */
+  overflow-y: auto;
+}
 
- th.mat-header-cell {
+/* Rows */
+.stats-row {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+.stats-row:last-child {
+  border-bottom: none;
+}
+
+/* Center numeric columns */
+.stats-header div:nth-child(n+2),
+.stats-row div:nth-child(n+2) {
   text-align: center;
 }
-  
-  td {
-    padding: 8px;
-    text-align: center;
-  }
+
+/* Runs highlight */
+.runs {
+  font-weight: 600;
+}
+
+/* Optional hover */
+.stats-row:hover {
+  background: #f7f9fa;
+}
+
   .dialog-header {
     position: relative;   /* 👈 IMPORTANT */
     padding: 5px 10px 5px 5px;
