@@ -644,7 +644,7 @@ export class DashboardComponent implements OnInit {
           column4: m.runs !== 'DNB' ? m.fours : '-',
           column5: m.runs !== 'DNB' ? m.sixes : '-'
         }));
-        this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s','6s');
+        this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4\'s','6\'s');
       });
       } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
@@ -679,7 +679,7 @@ export class DashboardComponent implements OnInit {
             column4: m.runs !== 'DNB' ? m.fours : '-',
             column5: m.runs !== 'DNB' ? m.sixes : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s', '6s');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4\'s', '6\'s');
         });
        } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
@@ -708,12 +708,13 @@ export class DashboardComponent implements OnInit {
   }
 
   openPopUp(matchStats, team, playerImg,header1,header2,header3,header4, header5) {
+    document.body.classList.add('no-scroll');
     matchStats.sort((a, b) => {
       const dateA = new Date(a.column1).getTime();
       const dateB = new Date(b.column1).getTime();
       return dateB - dateA;
     })
-    this.dialog.open(StatsPopupComponent, {
+    const dialogRef = this.dialog.open(StatsPopupComponent, {
       width: '950px',
       maxWidth: '95vw',
       data: {
@@ -729,6 +730,11 @@ export class DashboardComponent implements OnInit {
         playerimage: playerImg
       },
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      document.body.classList.remove('no-scroll');
+    });
+
     this.spinnerService.hide();
   }
 }
