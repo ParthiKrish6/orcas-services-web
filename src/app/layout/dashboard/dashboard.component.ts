@@ -708,8 +708,8 @@ export class DashboardComponent implements OnInit {
       return dateB - dateA;
     })
     this.dialog.open(StatsPopupComponent, {
-      width: '900px',
-      maxWidth: '90vw',
+      width: '990px',
+      maxWidth: '99vw',
       data: {
         matchStats : matchStats,
         column1: column1,
