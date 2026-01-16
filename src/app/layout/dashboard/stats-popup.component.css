@@ -98,8 +98,8 @@ tr.mat-footer-row, tr.mat-row {
   font-size: small; 
 }
 
-.mat-column-Date { width: 29%; }
-.mat-column-O-M-R-W { width: 29%; }
+.mat-column-Date { width: 25%; }
+.mat-column-O-M-R-W { width: 25%; }
 
 .outlined-table {
   border: 1px solid #a1a4a7;

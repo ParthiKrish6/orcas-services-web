@@ -666,7 +666,7 @@ export class DashboardComponent implements OnInit {
             column4: m.catchesDropped,
             column5: m.runsMissed,
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Save', 'Drop', 'Miss');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Saved', 'Dropped', 'Missed');
         });
       }
     } else {
@@ -701,7 +701,7 @@ export class DashboardComponent implements OnInit {
             column4: m.catchesDropped,
             column5: m.runsMissed,
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Save', 'Drop', 'Miss');
+          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Saved', 'Dropped', 'Missed');
         });
        }
     }
