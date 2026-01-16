@@ -644,7 +644,7 @@ export class DashboardComponent implements OnInit {
           column4: m.runs !== 'DNB' ? m.fours : '-',
           column5: m.runs !== 'DNB' ? m.sixes : '-'
         }));
-        this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s','6s');
+        this.openPopUp(matchStats, team, player, 'Date', 'Score', 'SR', '4s','6s');
       });
       } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
@@ -655,7 +655,7 @@ export class DashboardComponent implements OnInit {
             column4: m.overs !== 'DNB' ? (m.dots) : '-',
             column5: m.overs !== 'DNB' ? (m.wides+'/'+ m.noballs) : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'O-M-R-W', 'Eco', 'Dots', 'Wd/Nb');
+          this.openPopUp(matchStats, team, player, 'Date', 'O-M-R-W', 'Eco', 'Dots', 'Wd/Nb');
         });
       } else if ('Fielding' == this.deptSelected) {
         this.fieldingDetailsService.getFieldingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
@@ -666,7 +666,7 @@ export class DashboardComponent implements OnInit {
             column4: m.catchesDropped,
             column5: m.runsMissed,
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Saved', 'Dropped', 'Missed');
+          this.openPopUp(matchStats, team, player, 'Date', 'C/RO', 'Saved', 'Dropped', 'Missed');
         });
       }
     } else {
@@ -679,7 +679,7 @@ export class DashboardComponent implements OnInit {
             column4: m.runs !== 'DNB' ? m.fours : '-',
             column5: m.runs !== 'DNB' ? m.sixes : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'Score', 'SR', '4s', '6s');
+          this.openPopUp(matchStats, team, player, 'Date', 'Score', 'SR', '4s', '6s');
         });
        } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
@@ -690,7 +690,7 @@ export class DashboardComponent implements OnInit {
             column4: m.overs !== 'DNB' ? (m.dots) : '-',
             column5: m.overs !== 'DNB' ? (m.wides+'/'+ m.noballs) : '-'
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'O-M-R-W', 'Eco', 'Dots', 'Wd/Nb');
+          this.openPopUp(matchStats, team, player, 'Date', 'O-M-R-W', 'Eco', 'Dots', 'Wd/Nb');
         });
        } else if ('Fielding' == this.deptSelected) {
         this.fieldingDetailsService.getFieldingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  
@@ -701,13 +701,13 @@ export class DashboardComponent implements OnInit {
             column4: m.catchesDropped,
             column5: m.runsMissed,
           }));
-          this.openPopUp(matchStats, team, player.img, 'Date', 'C/RO', 'Saved', 'Dropped', 'Missed');
+          this.openPopUp(matchStats, team, player, 'Date', 'C/RO', 'Saved', 'Dropped', 'Missed');
         });
        }
     }
   }
 
-  openPopUp(matchStats, team, playerImg,header1,header2,header3,header4, header5) {
+  openPopUp(matchStats, team, player,header1,header2,header3,header4, header5) {
     matchStats.sort((a, b) => {
       const dateA = new Date(a.column1).getTime();
       const dateB = new Date(b.column1).getTime();
@@ -727,7 +727,8 @@ export class DashboardComponent implements OnInit {
         team: team,
         from: this.startDate,
         to: this.endDate,
-        playerimage: playerImg
+        playerimage: player.img,
+        playerName: player.name
       },
     });
 

@@ -24,6 +24,7 @@ export class StatsPopupComponent {
   column3: string;
   column4: string;
   column5: string;
+  name: string;
   team: string;
   from: string;
   to: string;
@@ -35,6 +36,7 @@ export class StatsPopupComponent {
     this.header4 = data.header4;
     this.header5 = data.header5;
     this.team = data.team;
+    this.name = data.playerName;
     this.from = data.from;
     this.to = data.to;
     this.displayedColumns = [data.header1, data.header2, data.header3, data.header4, data.header5];

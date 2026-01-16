@@ -83,6 +83,9 @@
 
 .table-wrapper mat-paginator {
   border-top: 1px solid #a1a4a7;
+  margin-left: -10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
