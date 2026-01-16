@@ -708,7 +708,6 @@ export class DashboardComponent implements OnInit {
   }
 
   openPopUp(matchStats, team, playerImg,header1,header2,header3,header4, header5) {
-    document.body.classList.add('no-scroll');
     matchStats.sort((a, b) => {
       const dateA = new Date(a.column1).getTime();
       const dateB = new Date(b.column1).getTime();
@@ -730,10 +729,6 @@ export class DashboardComponent implements OnInit {
         to: this.endDate,
         playerimage: playerImg
       },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      document.body.classList.remove('no-scroll');
     });
 
     this.spinnerService.hide();
