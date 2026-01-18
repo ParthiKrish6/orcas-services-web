@@ -116,10 +116,8 @@ export class DashboardComponent implements OnInit {
     this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
     if('SR'==this.deptOptionSelectedDisplay) {
       this.deptOptionSelectedDisplay = 'Strike Rate';
-    } else if('Dots'==this.deptOptionSelectedDisplay) {
-      this.deptOptionSelectedDisplay = 'Dots %';
-    } else if('Extras'==this.deptOptionSelectedDisplay) {
-      this.deptOptionSelectedDisplay = 'Wds/NBs';
+    } else if('Dots'==this.deptOptionSelectedDisplay || 'Extras'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = this.deptOptionSelectedDisplay + ' %';
     }
   }
 
@@ -135,10 +133,8 @@ export class DashboardComponent implements OnInit {
     this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
     if('SR'==this.deptOptionSelectedDisplay) {
       this.deptOptionSelectedDisplay = 'Strike Rate';
-    } else if('Dots'==this.deptOptionSelectedDisplay) {
-      this.deptOptionSelectedDisplay = 'Dots %';
-    } else if('Extras'==this.deptOptionSelectedDisplay) {
-      this.deptOptionSelectedDisplay = 'Wds/NBs';
+    } else if('Dots'==this.deptOptionSelectedDisplay || 'Extras'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = this.deptOptionSelectedDisplay + ' %';
     }
   }
 
@@ -397,8 +393,18 @@ export class DashboardComponent implements OnInit {
 
     this.bowlingStatsExtras = data;
     this.bowlingStatsExtras = this.bowlingStatsExtras.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsExtras.forEach(item => {
+      let extras = parseInt(item.wides)+parseInt(item.noBalls);
+      const wholeOvers = Math.floor(parseInt(item.overs));
+      const balls = Math.round((parseInt(item.overs) - wholeOvers) * 10); // decimal part = balls
+      const noOfBalls = (wholeOvers * 6) + balls;
+      item.balls = noOfBalls;
+      item.extrasPercentage = extras
+        ? +(extras / noOfBalls * 100).toFixed(2)
+        : 0;
+    });
     this.bowlingStatsExtras.sort((a, b) => {
-      if (parseInt(a.wides)+parseInt(a.noBalls) !== parseInt(b.wides)+parseInt(b.noBalls)) return (parseInt(a.wides)+parseInt(a.noBalls)) - (parseInt(b.wides)+parseInt(b.noBalls));
+      if (a.extrasPercentage !== b.extrasPercentage) return (a.extrasPercentage - b.extrasPercentage);
       if (parseInt(b.overs) !== parseInt(a.overs)) return parseInt(a.overs) - parseInt(b.overs);
     });
     this.bowlingStatsExtras = this.bowlingStatsExtras.slice(0, this.numberOfPlayers);
@@ -602,8 +608,8 @@ export class DashboardComponent implements OnInit {
         player.rank = i+1;
         player.name = this.bowlingStatsExtras[i].player;
         player.id = this.bowlingStatsExtras[i].playerId;
-        player.value = this.bowlingStatsExtras[i].wides +"/"+this.bowlingStatsExtras[i].noBalls;
-        player.extraValue = "Overs : "+this.bowlingStatsExtras[i].overs +" | Wkts : "+this.bowlingStatsExtras[i].wickets;
+        player.value = this.bowlingStatsExtras[i].extrasPercentage +"%";
+        player.extraValue = "Balls : "+this.bowlingStatsExtras[i].balls +" | Wds : "+this.bowlingStatsExtras[i].wides+" | NBs : "+this.bowlingStatsExtras[i].noBalls;
         player.img = "assets/player_images/"+this.bowlingStatsExtras[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
