@@ -11,4 +11,6 @@ export class BattingStats {
     player: string;
     playerId: string;
     matches: string;
+    dots: string;
+    dotsPercentage: number;
 }

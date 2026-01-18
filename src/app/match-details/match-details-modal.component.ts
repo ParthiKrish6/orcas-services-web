@@ -5,6 +5,7 @@ import { MatchDetails } from './match-details';
 import { MatchDetailsService } from './match-details.service';
 import { TeamDetailsService } from '../team-details/team-details.service';
 import { TeamDetails } from '../team-details/team-details';
+import { PlayerDetailsService } from '../player-details/player-details.service';
 
 @Component({
   selector: 'app-modal',
@@ -17,15 +18,19 @@ export class ModalComponent implements OnInit {
   matchDetails: MatchDetails;
   teamDetails: TeamDetails[];
   teamDetail: TeamDetails;
+  playerDetails: TeamDetails;
   addFlag: boolean;
   errorMsg: string;
   selectedValue: number;
+  selectedCaptain: string;
+  selectedViceCaptain: string;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private matchDetailsService: MatchDetailsService,
-    private teamDetailsService: TeamDetailsService
+    private teamDetailsService: TeamDetailsService,
+    private playerDetailsService: PlayerDetailsService
   ) { 
   }
 
@@ -36,8 +41,14 @@ export class ModalComponent implements OnInit {
       this.setTeam();
     }
 
+    this.selectedCaptain = this.matchDetails.captain;
+    this.selectedViceCaptain = this.matchDetails.viceCaptain;
+
     this.teamDetailsService.getTeamDetailsList().subscribe(data =>{  
       this.teamDetails = data;
+    });
+    this.playerDetailsService.getPlayerDetailsList().subscribe(data =>{  
+      this.playerDetails = data;
     });
     this.addFlag = this.data.addFlag;
   }
@@ -54,6 +65,8 @@ export class ModalComponent implements OnInit {
 
   addMatchDetails(addMatchObj: MatchDetails) {
     addMatchObj.teamDetails = this.teamDetail;
+    addMatchObj.captain = this.selectedCaptain;
+    addMatchObj.viceCaptain = this.selectedViceCaptain;
     this.matchDetailsService
     .addMatchDetails(addMatchObj).subscribe(data => {
       console.log(data)
@@ -67,6 +80,8 @@ export class ModalComponent implements OnInit {
 
   updateMatchDetails(id: number, updateMatchObj: MatchDetails) {
     updateMatchObj.teamDetails = this.teamDetail;
+    updateMatchObj.captain = this.selectedCaptain;
+    updateMatchObj.viceCaptain = this.selectedViceCaptain
     this.matchDetailsService
     .updateMatchDetails(id, updateMatchObj).subscribe(data => {
       console.log(data)

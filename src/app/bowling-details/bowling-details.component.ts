@@ -24,9 +24,6 @@ export class BowlingDetailsComponent implements OnInit {
   displayedColumns: string[] = ['playerName','overs','runs','maidens', 'fours','sixes','wickets','dots', 'wides','noballs','economy','action'];  
   @ViewChild(MatPaginator) paginator: MatPaginator;  
   @ViewChild(MatSort) sort: MatSort; 
-  @ViewChild('anniversary') anniversaryDropdownElement!: ElementRef;
-  @ViewChild('team') teamDropdownElement!: ElementRef;
-  @ViewChild('match') matchDropdownElement!: ElementRef;
   
   errorMsg: string;
   anniversaryOptions: CalendarDetails[];
@@ -35,6 +32,10 @@ export class BowlingDetailsComponent implements OnInit {
   selectedTeam: number;
   selectedAnniversary: number;
   selectedMatch: number;
+
+  selectedTeamAddUpdate: number;
+  selectedAnniversaryAddUpdate: number;
+  selectedMatchAddUpdate: number;
   
   constructor(
     private bowlingDetailsService: BowlingDetailsService,
@@ -55,19 +56,22 @@ export class BowlingDetailsComponent implements OnInit {
     this.spinnerService.show();
     this.teamDetailsService.getTeamDetailsList().subscribe(data => {
       this.teamOptions = data;
-      this.selectedTeam = this.teamOptions[0].teamId;
+      this.selectedTeam = this.selectedTeamAddUpdate ? this.selectedTeamAddUpdate : this.teamOptions[0].teamId;
       this.calendarDetailsService.getCalendarDetailsList().subscribe(data => {
         this.anniversaryOptions = data;
-        this.selectedAnniversary = this.anniversaryOptions[0].anniversary;
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
-        this.matchDetailsService.getMatchDetailsForDates(moment(this.anniversaryOptions[0].startDate).format('YYYY-MM-DD'), moment(this.anniversaryOptions[0].endDate).format('YYYY-MM-DD')).subscribe(data => {
+        this.selectedAnniversary = this.selectedAnniversaryAddUpdate ? this.selectedAnniversaryAddUpdate : this.anniversaryOptions[0].anniversary;
+        let anniversary = this.anniversaryOptions.filter(item =>
+          item.anniversary == this.selectedAnniversary
+        );
+        this.matchDetailsService.getMatchDetailsForDates(moment(anniversary[0].startDate).format('YYYY-MM-DD'), moment(anniversary[0].endDate).format('YYYY-MM-DD')).subscribe(data => {
           this.matchOptions = data.filter(item =>
-            item.teamDetails.teamId == this.teamOptions[0].teamId
+            item.teamDetails.teamId == this.selectedTeam
           );
           if(this.matchOptions.length > 0) {
             this.matchOptions.sort((a, b) => b.matchId - a.matchId);
-            this.selectedMatch = this.matchOptions[0].matchId;
-            this.bowlingDetailsService.getBowlingDetailsForMatch(this.matchOptions[0].matchId).subscribe(data =>{  
+            this.selectedMatch = this.selectedMatchAddUpdate ? this.selectedMatchAddUpdate : this.matchOptions[0].matchId;
+            this.bowlingDetailsService.getBowlingDetailsForMatch(this.selectedMatch).subscribe(data =>{  
               this.setBowlingDetails(data);
             });
           } else {
@@ -96,7 +100,7 @@ export class BowlingDetailsComponent implements OnInit {
 
   filterTeamMatches(teamId) {
     this.spinnerService.show();
-    this.calendarDetailsService.getCalendarDetails(this.anniversaryDropdownElement.nativeElement.value).subscribe(data => {
+    this.calendarDetailsService.getCalendarDetails(this.selectedAnniversary).subscribe(data => {
       this.matchDetailsService.getMatchDetailsForDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
         let filteredData ;
         filteredData = data.filter(item =>
@@ -120,7 +124,7 @@ export class BowlingDetailsComponent implements OnInit {
   filterAnniversaryMatches(anniversary) {
     this.spinnerService.show();
     let filteredData 
-    let teamId = this.teamDropdownElement.nativeElement.value;
+    let teamId = this.selectedTeam;
     this.calendarDetailsService.getCalendarDetails(anniversary).subscribe(data => {
       this.matchDetailsService.getMatchDetailsForDates(moment(data.startDate).format('YYYY-MM-DD'), moment(data.endDate).format('YYYY-MM-DD')).subscribe(data => {
         filteredData = data.filter(item =>
@@ -161,6 +165,10 @@ export class BowlingDetailsComponent implements OnInit {
   }  
 
   openAddUpdateBowlingDetailsModal(bowlingDetails : BowlingDetails): void {
+    let isUpdate = bowlingDetails.id !== undefined;
+    this.selectedTeamAddUpdate = this.selectedTeam;
+    this.selectedAnniversaryAddUpdate = this.selectedAnniversary;
+    this.selectedMatchAddUpdate = this.selectedMatch;
     const dialogRef = this.matDialog.open(ModalComponent, {
       disableClose: true,
       width: '650px',
@@ -168,9 +176,9 @@ export class BowlingDetailsComponent implements OnInit {
       backdropClass: 'custom-dialog-backdrop-class',
       panelClass: 'custom-dialog-panel-class',
       data: { 
-        addFlag: bowlingDetails.id !== undefined ? false : true,
+        addFlag: !isUpdate,
         bowlingDetails: bowlingDetails,
-        selectedMatch: this.matchDropdownElement.nativeElement.value
+        selectedMatch: this.selectedMatch
       }
     });
 
@@ -180,6 +188,9 @@ export class BowlingDetailsComponent implements OnInit {
   }
 
   deleteBowlingDetails(id: number) {
+    this.selectedTeamAddUpdate = this.selectedTeam;
+    this.selectedAnniversaryAddUpdate = this.selectedAnniversary;
+    this.selectedMatchAddUpdate = this.selectedMatch;
     this.bowlingDetailsService
     .deleteBowlingDetails(id).subscribe(data => {
       console.log(data)

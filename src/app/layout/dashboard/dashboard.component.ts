@@ -55,19 +55,21 @@ export class DashboardComponent implements OnInit {
   deptSelected: string;
   deptOptionSelected: string;
   deptOptionSelectedDisplay: string;
-  battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR'];
-  bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy']
+  battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR', 'Batting Dots'];
+  bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy', 'Extras']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
   showPopup = false;
 
   battingStatsRuns: BattingStats[];
   battingStatsAverage: BattingStats[];
   battingStatsStrikeRate: BattingStats[];
+  battingStatsDots: BattingStats[];
 
   bowlingStatsWickets: BowlingStats[];
   bowlingStatsAverage: BowlingStats[];
   bowlingStatsStrikeRate: BowlingStats[];
   bowlingStatsEconomy: BowlingStats[];
+  bowlingStatsExtras: BowlingStats[];
 
   fieldingStatsCatches: FieldingStats[];
   fieldingStatsRunsSaved: FieldingStats[];
@@ -114,6 +116,10 @@ export class DashboardComponent implements OnInit {
     this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
     if('SR'==this.deptOptionSelectedDisplay) {
       this.deptOptionSelectedDisplay = 'Strike Rate';
+    } else if('Dots'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = 'Dots %';
+    } else if('Extras'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = 'Wds/NBs';
     }
   }
 
@@ -129,6 +135,10 @@ export class DashboardComponent implements OnInit {
     this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
     if('SR'==this.deptOptionSelectedDisplay) {
       this.deptOptionSelectedDisplay = 'Strike Rate';
+    } else if('Dots'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = 'Dots %';
+    } else if('Extras'==this.deptOptionSelectedDisplay) {
+      this.deptOptionSelectedDisplay = 'Wds/NBs';
     }
   }
 
@@ -143,15 +153,15 @@ export class DashboardComponent implements OnInit {
           this.startDate = this.anniversaryOptions[this.anniversaryOptions.length - 1].startDate;
           this.endDate = this.anniversaryOptions[0].endDate;
   
-          this.fieldingStatsService.getFieldingStatsList().subscribe(data => {
+          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setFieldingStats(data, false);
           });
   
-          this.bowlingStatsService.getBowlingStatsList().subscribe(data => {
+          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setBowlingStats(data, false);
           });
   
-          this.battingStatsService.getBattingStatsList().subscribe(data => {
+          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setBattingStats(data, true);
             this.spinnerService.hide();
           });
@@ -293,7 +303,7 @@ export class DashboardComponent implements OnInit {
 
   filterAnniversaryStats(anniversary) {
     if (anniversary == "0") {
-      this.startDate = this.anniversaryOptions[0].startDate;
+      this.startDate = this.anniversaryOptions[this.anniversaryOptions.length-1].startDate;
       this.endDate = this.anniversaryOptions[0].endDate;
     } else {
       this.startDate = this.anniversaryOptions.filter((obj) => (obj.anniversary) == anniversary)[0].startDate;
@@ -333,6 +343,21 @@ export class DashboardComponent implements OnInit {
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
     });
     this.battingStatsStrikeRate = this.battingStatsStrikeRate.slice(0, this.numberOfPlayers);
+
+    this.battingStatsDots = data;
+    this.battingStatsDots = this.battingStatsDots.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsDots.forEach(item => {
+      item.dotsPercentage = item.balls != undefined && item.balls != 'DNB' && item.balls != '' && item.dots != undefined && item.dots != 'DNB' && item.dots != ''
+        ? +((parseInt(item.dots) / parseInt(item.balls)) * 100).toFixed(2)
+        : 0;
+    });
+
+    this.battingStatsDots.sort((a, b) => {
+      if (a.dotsPercentage !== b.dotsPercentage) return a.dotsPercentage - b.dotsPercentage;
+      if (parseInt(b.balls) !== parseInt(a.balls)) return parseInt(a.balls) - parseInt(b.balls);
+    });
+    this.battingStatsDots = this.battingStatsDots.slice(0, this.numberOfPlayers);
+
     if(isRefresh) {
       this.setBattingLeaderBoardContent();
     } 
@@ -369,6 +394,14 @@ export class DashboardComponent implements OnInit {
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
     });
     this.bowlingStatsEconomy = this.bowlingStatsEconomy.slice(0, this.numberOfPlayers);
+
+    this.bowlingStatsExtras = data;
+    this.bowlingStatsExtras = this.bowlingStatsExtras.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsExtras.sort((a, b) => {
+      if (parseInt(a.wides)+parseInt(a.noBalls) !== parseInt(b.wides)+parseInt(b.noBalls)) return (parseInt(a.wides)+parseInt(a.noBalls)) - (parseInt(b.wides)+parseInt(b.noBalls));
+      if (parseInt(b.overs) !== parseInt(a.overs)) return parseInt(a.overs) - parseInt(b.overs);
+    });
+    this.bowlingStatsExtras = this.bowlingStatsExtras.slice(0, this.numberOfPlayers);
    if(isRefresh) {
     this.setBowlingLeaderBoardContent();
    } 
@@ -466,6 +499,24 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+    } else if(this.deptOptionSelected == "Batting Dots") {
+      for (let i = 0; i < this.battingStatsDots.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.battingStatsDots[i].player;
+        player.id = this.battingStatsDots[i].playerId;
+        player.value = this.battingStatsDots[i].dotsPercentage+"%";
+        player.extraValue = "Balls : "+this.battingStatsDots[i].balls +" | Dots :  "+this.battingStatsDots[i].dots;
+        player.img = "assets/player_images/"+this.battingStatsDots[i].playerId+".png";
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
     }
   }
 
@@ -536,6 +587,24 @@ export class DashboardComponent implements OnInit {
         player.value = parseFloat(this.bowlingStatsEconomy[i].economy).toFixed(2);
         player.extraValue = "Overs : "+this.bowlingStatsEconomy[i].overs +" | Wkts : "+this.bowlingStatsEconomy[i].wickets;
         player.img = "assets/player_images/"+this.bowlingStatsEconomy[i].playerId+".png";
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+    } else if(this.deptOptionSelected == "Extras") {
+      for (let i = 0; i < this.bowlingStatsExtras.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.bowlingStatsExtras[i].player;
+        player.id = this.bowlingStatsExtras[i].playerId;
+        player.value = this.bowlingStatsExtras[i].wides +"/"+this.bowlingStatsExtras[i].noBalls;
+        player.extraValue = "Overs : "+this.bowlingStatsExtras[i].overs +" | Wkts : "+this.bowlingStatsExtras[i].wickets;
+        player.img = "assets/player_images/"+this.bowlingStatsExtras[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
         } else if(player.rank == 2) {
@@ -641,10 +710,10 @@ export class DashboardComponent implements OnInit {
           column1: m.matchDetails.matchDate,
           column2: m.runs !== 'DNB' ? (m.runs + (m.notOut === 'Y' ? "*": "") + '('+m.balls+')') : '-',
           column3: m.runs !== 'DNB' ? (m.strikeRate) : '-',
-          column4: m.runs !== 'DNB' ? m.fours : '-',
-          column5: m.runs !== 'DNB' ? m.sixes : '-'
+          column4: m.runs !== 'DNB' ? m.fours+'/'+m.sixes : '-',
+          column5: m.runs !== 'DNB' ? m.dots : '-'
         }));
-        this.openPopUp(matchStats, team, player, 'Date', 'Score', 'SR', '4s','6s');
+        this.openPopUp(matchStats, team, player, 'Date', 'Score', 'SR', '4s/6s','Dots');
       });
       } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayer(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id).subscribe(data =>{  
@@ -676,10 +745,10 @@ export class DashboardComponent implements OnInit {
             column1: m.matchDetails.matchDate,
             column2: m.runs !== 'DNB' ? (m.runs + (m.notOut === 'Y' ? "*": "") + '('+m.balls+')') : '-',
             column3: m.runs !== 'DNB' ? (m.strikeRate) : '-',
-            column4: m.runs !== 'DNB' ? m.fours : '-',
-            column5: m.runs !== 'DNB' ? m.sixes : '-'
+            column4: m.runs !== 'DNB' ? m.fours+'/'+m.sixes : '-',
+            column5: m.runs !== 'DNB' ? m.dots : '-'
           }));
-          this.openPopUp(matchStats, team, player, 'Date', 'Score', 'SR', '4s', '6s');
+          this.openPopUp(matchStats, team, player, 'Date', 'Score', 'SR', '4s/6s', 'Dots');
         });
        } else if ('Bowling' == this.deptSelected) {
         this.bowlingDetailsService.getBowlingDetailsForPlayerTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'),id,this.teamDropdownElement.nativeElement.value).subscribe(data =>{  

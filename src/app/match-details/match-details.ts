@@ -13,4 +13,5 @@ export class MatchDetails {
     captain: string;
     viceCaptain: string;
     winColor: string;
+    overs: string;
 }

@@ -69,13 +69,21 @@
       </div>
      
       <div class="form-row">
-        <div class="form-group col-md-5">
-          <label for="matchName">Captain</label>
-          <input  type="text" class="form-control" id="captain" name="captain" [(ngModel)]="matchDetails.captain">
+        <div class="form-group col-md-4">
+          <label for="captain">Captain</label>
+          <select required class="form-control" [(ngModel)]="selectedCaptain" [ngModelOptions]="{standalone: true}">
+            <option *ngFor="let player of playerDetails" [ngValue]="player.playerName">{{player.playerName}}</option>
+          </select>
         </div>
-        <div class="form-group col-md-5">
-          <label for="matchName">Vice Captain</label>
-          <input  type="text" class="form-control" id="viceCaptain" name="viceCaptain" [(ngModel)]="matchDetails.viceCaptain">
+        <div class="form-group col-md-4">
+          <label for="viceCaptain">Vice Captain</label>
+          <select required class="form-control" [(ngModel)]="selectedViceCaptain" [ngModelOptions]="{standalone: true}">
+            <option *ngFor="let player of playerDetails" [ngValue]="player.playerName">{{player.playerName}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="overs">Overs</label>
+          <input  type="text" class="form-control" id="overs" name="overs" [(ngModel)]="matchDetails.overs">
         </div>
       </div>
      

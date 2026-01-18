@@ -12,4 +12,5 @@ export class BattingDetails {
     sixes: string;
     strikeRate: string;
     notOut: string;
+    dots: string;
 }
