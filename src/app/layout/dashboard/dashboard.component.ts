@@ -55,7 +55,8 @@ export class DashboardComponent implements OnInit {
   deptSelected: string;
   deptOptionSelected: string;
   deptOptionSelectedDisplay: string;
-  battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR', 'Batting Dots'];
+  deptOptionSelectedSubDisplay: string;
+  battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR', 'Batting Dots', 'Dots/SR Ratio'];
   bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy', 'Extras']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
   showPopup = false;
@@ -64,6 +65,8 @@ export class DashboardComponent implements OnInit {
   battingStatsAverage: BattingStats[];
   battingStatsStrikeRate: BattingStats[];
   battingStatsDots: BattingStats[];
+  battingStatsDotsSRRatio: BattingStats[];
+  
 
   bowlingStatsWickets: BowlingStats[];
   bowlingStatsAverage: BowlingStats[];
@@ -354,6 +357,22 @@ export class DashboardComponent implements OnInit {
     });
     this.battingStatsDots = this.battingStatsDots.slice(0, this.numberOfPlayers);
 
+    
+    this.battingStatsDotsSRRatio = data;
+    this.battingStatsDotsSRRatio = this.battingStatsDotsSRRatio.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsDotsSRRatio.forEach(item => {
+      item.dotsPercentage = item.balls != undefined && item.balls != 'DNB' && item.balls != '' && item.dots != undefined && item.dots != 'DNB' && item.dots != ''
+        ? +((parseInt(item.dots) / parseInt(item.balls)) * 100).toFixed(2)
+        : 0;
+      item.dotsSRRatio = this.calculateDASR(parseInt(item.strikeRate), item.dotsPercentage);
+    });
+
+    this.battingStatsDotsSRRatio.sort((a, b) => {
+      if (b.dotsSRRatio !== a.dotsSRRatio) return b.dotsSRRatio - a.dotsSRRatio;
+      if (parseInt(b.balls) !== parseInt(a.balls)) return parseInt(a.balls) - parseInt(b.balls);
+    });
+    this.battingStatsDotsSRRatio = this.battingStatsDotsSRRatio.slice(0, this.numberOfPlayers);
+
     if(isRefresh) {
       this.setBattingLeaderBoardContent();
     } 
@@ -469,6 +488,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '';
     } else if(this.deptOptionSelected == "Batting SR") {
       for (let i = 0; i < this.battingStatsStrikeRate.length; i++) {
         let player = new Player(); 
@@ -487,6 +507,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
     } else if(this.deptOptionSelected == "Batting Average") {
       for (let i = 0; i < this.battingStatsAverage.length; i++) {
         let player = new Player(); 
@@ -505,7 +526,9 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-    } else if(this.deptOptionSelected == "Batting Dots") {
+      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
+    } 
+    else if(this.deptOptionSelected == "Batting Dots") {
       for (let i = 0; i < this.battingStatsDots.length; i++) {
         let player = new Player(); 
         player.rank = i+1;
@@ -523,7 +546,29 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
     }
+    else if(this.deptOptionSelected == "Dots/SR Ratio") {
+      for (let i = 0; i < this.battingStatsDotsSRRatio.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.battingStatsDotsSRRatio[i].player;
+        player.id = this.battingStatsDotsSRRatio[i].playerId;
+        player.value = this.battingStatsDotsSRRatio[i].dotsSRRatio+"";
+        player.extraValue = "Dots : "+this.battingStatsDotsSRRatio[i].dotsPercentage+"%" +" | SR :  "+parseFloat(this.battingStatsDotsSRRatio[i].strikeRate).toFixed(2);
+        player.img = "assets/player_images/"+this.battingStatsDotsSRRatio[i].playerId+".png";
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
+    }
+    
   }
 
 
@@ -548,6 +593,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '';
     } else if(this.deptOptionSelected == "Bowling SR") {
       for (let i = 0; i < this.bowlingStatsStrikeRate.length; i++) {
         let player = new Player(); 
@@ -566,6 +612,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
     } else if(this.deptOptionSelected == "Bowling Average") {
       for (let i = 0; i < this.bowlingStatsAverage.length; i++) {
         let player = new Player(); 
@@ -584,6 +631,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
     } else if(this.deptOptionSelected == "Economy") {
       for (let i = 0; i < this.bowlingStatsEconomy.length; i++) {
         let player = new Player(); 
@@ -602,6 +650,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
     } else if(this.deptOptionSelected == "Extras") {
       for (let i = 0; i < this.bowlingStatsExtras.length; i++) {
         let player = new Player(); 
@@ -620,6 +669,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
+      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
     }
   }
 
@@ -699,6 +749,7 @@ export class DashboardComponent implements OnInit {
         this.players.push(player);
       }
     }
+    this.deptOptionSelectedSubDisplay = '';
   }
 
   openPopup(player: Player) {
@@ -808,5 +859,25 @@ export class DashboardComponent implements OnInit {
     });
 
     this.spinnerService.hide();
+  }
+  
+  calculateDASR(sr: number, dotPercent: number): number {
+    // Guard conditions
+    if (sr <= 0) {
+      return 0;
+    }
+  
+    if (dotPercent <= 0) {
+      return +sr.toFixed(2);
+    }
+  
+    if (dotPercent >= 100) {
+      return 0;
+    }
+  
+    const dotFactor = Math.sqrt(dotPercent / 100);
+    const dasr = sr * (1 - dotFactor);
+  
+    return +dasr.toFixed(2); // round to 2 decimals
   }
 }

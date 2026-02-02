@@ -29,7 +29,20 @@ export class LoginComponent implements OnInit {
     errorMsg: string;
 
     ngOnInit() {
-        localStorage.clear();
+        this.route.queryParams.subscribe(params => {
+            if(params['logout']) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('authType');
+            }
+        });
+        const savedUserId = localStorage.getItem('userId');
+        if (savedUserId) {
+            this.myForm.patchValue({ user: savedUserId });
+        }
+        const savedPwd = localStorage.getItem('pwd');
+        if (savedPwd) {
+            this.myForm.patchValue({ pwd: savedPwd });
+        }
         this.errorMsg = this.route.snapshot.queryParamMap.get('errMsg');
         this.spinnerService.hide();
     }
@@ -46,6 +59,8 @@ export class LoginComponent implements OnInit {
                 if(loginResp && loginResp.userId && loginResp.pwd && loginResp.type && loginResp.token) {
                     localStorage.setItem('authToken', loginResp.token);
                     localStorage.setItem('authType', loginResp.type);
+                    localStorage.setItem('userId', this.myForm.get('user')?.value);
+                    localStorage.setItem('pwd', this.myForm.get('pwd')?.value);
                     this.router.navigate(['/dashboard'],{ skipLocationChange: true }); 
                 } else {
                     localStorage.clear();

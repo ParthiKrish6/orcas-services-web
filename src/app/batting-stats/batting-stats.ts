@@ -13,4 +13,5 @@ export class BattingStats {
     matches: string;
     dots: string;
     dotsPercentage: number;
+    dotsSRRatio: number;
 }
