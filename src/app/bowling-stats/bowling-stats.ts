@@ -16,5 +16,6 @@ export class BowlingStats {
     playerId: string;
     matches: string;
     extrasPercentage: number;
+    dotsPercentage: number;
     balls: number
 }

@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
   deptOptionSelectedDisplay: string;
   deptOptionSelectedSubDisplay: string;
   battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR', 'Batting Dots', 'Dots/SR Ratio'];
-  bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy', 'Extras']
+  bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy', 'Extras', 'Bowling Dots']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
   showPopup = false;
 
@@ -73,6 +73,7 @@ export class DashboardComponent implements OnInit {
   bowlingStatsStrikeRate: BowlingStats[];
   bowlingStatsEconomy: BowlingStats[];
   bowlingStatsExtras: BowlingStats[];
+  bowlingStatsDots: BowlingStats[];
 
   fieldingStatsCatches: FieldingStats[];
   fieldingStatsRunsSaved: FieldingStats[];
@@ -427,9 +428,28 @@ export class DashboardComponent implements OnInit {
       if (parseInt(b.overs) !== parseInt(a.overs)) return parseInt(a.overs) - parseInt(b.overs);
     });
     this.bowlingStatsExtras = this.bowlingStatsExtras.slice(0, this.numberOfPlayers);
-   if(isRefresh) {
-    this.setBowlingLeaderBoardContent();
-   } 
+
+    this.bowlingStatsDots = data;
+    this.bowlingStatsDots = this.bowlingStatsDots.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsDots.forEach(item => {
+      let dots = parseInt(item.dots);
+      const wholeOvers = Math.floor(parseInt(item.overs));
+      const balls = Math.round((parseInt(item.overs) - wholeOvers) * 10); // decimal part = balls
+      const noOfBalls = (wholeOvers * 6) + balls;
+      item.balls = noOfBalls;
+      item.dotsPercentage = dots
+        ? +(dots / noOfBalls * 100).toFixed(2)
+        : 0;
+    });
+    this.bowlingStatsDots.sort((a, b) => {
+      if (b.dotsPercentage !== a.dotsPercentage) return (b.dotsPercentage - a.dotsPercentage);
+      if (parseInt(b.overs) !== parseInt(a.overs)) return parseInt(a.overs) - parseInt(b.overs);
+    });
+    this.bowlingStatsDots = this.bowlingStatsDots.slice(0, this.numberOfPlayers);
+
+    if(isRefresh) {
+      this.setBowlingLeaderBoardContent();
+    } 
   }
 
   setFieldingStats(data, isRefresh) {
@@ -660,6 +680,25 @@ export class DashboardComponent implements OnInit {
         player.value = this.bowlingStatsExtras[i].extrasPercentage +"%";
         player.extraValue = "Balls : "+this.bowlingStatsExtras[i].balls +" | Wds : "+this.bowlingStatsExtras[i].wides+" | NBs : "+this.bowlingStatsExtras[i].noBalls;
         player.img = "assets/player_images/"+this.bowlingStatsExtras[i].playerId+".png";
+        if(player.rank == 1) {
+          player.medal = "assets/images/gold-medal.png";
+        } else if(player.rank == 2) {
+          player.medal = "assets/images/silver-medal.png";
+        } else if(player.rank == 3) {
+          player.medal = "assets/images/bronze-medal.png";
+        }
+        this.players.push(player);
+      }
+      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
+    } else if(this.deptOptionSelected == "Bowling Dots") {
+      for (let i = 0; i < this.bowlingStatsDots.length; i++) {
+        let player = new Player(); 
+        player.rank = i+1;
+        player.name = this.bowlingStatsDots[i].player;
+        player.id = this.bowlingStatsDots[i].playerId;
+        player.value = this.bowlingStatsDots[i].dotsPercentage +"%";
+        player.extraValue = "Balls : "+this.bowlingStatsDots[i].balls +" | Dots : "+this.bowlingStatsDots[i].dots;
+        player.img = "assets/player_images/"+this.bowlingStatsDots[i].playerId+".png";
         if(player.rank == 1) {
           player.medal = "assets/images/gold-medal.png";
         } else if(player.rank == 2) {
