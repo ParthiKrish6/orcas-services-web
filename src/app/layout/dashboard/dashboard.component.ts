@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   teamOptions: TeamDetails[];
   minBalls: number = 50;
   minOvers: number = 10;
-  numberOfPlayers: number = 30;
+  numberOfPlayers: number = 50;
   typeSelected: string;
   startDate: Date;
   endDate: Date;
