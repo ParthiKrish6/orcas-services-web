@@ -42,6 +42,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild('department') departmentDropdownElement!: ElementRef;
   @ViewChild('deptOptionsElement') deptOptionsDropdownElement!: ElementRef;
 
+  
   anniversaryOptions: CalendarDetails[];
   teamOptions: TeamDetails[];
   minBalls: number = 50;
@@ -56,6 +57,7 @@ export class DashboardComponent implements OnInit {
   deptOptionSelected: string;
   deptOptionSelectedDisplay: string;
   deptOptionSelectedSubDisplay: string;
+  selectedAnniversary: number;
   battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR', 'Batting Dots', 'Dots/SR Ratio'];
   bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy', 'Extras', 'Bowling Dots']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
@@ -150,9 +152,10 @@ export class DashboardComponent implements OnInit {
         this.anniversaryOptions = data;
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
         if(this.anniversaryOptions.length> 0) {
-          this.startDate = this.anniversaryOptions[this.anniversaryOptions.length - 1].startDate;
+          this.startDate = this.anniversaryOptions[0].startDate;
           this.endDate = this.anniversaryOptions[0].endDate;
-  
+          this.selectedAnniversary = this.anniversaryOptions[0].anniversary;
+
           this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setFieldingStats(data, false);
           });

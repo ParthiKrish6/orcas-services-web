@@ -5,10 +5,10 @@
 <div class="card filter-card">
   <div class="filter-row">
     <div class="form-group">
-      <select #anniversary (change)="filterAnniversaryMatches(anniversary.value)">
-        <option value="0">All Years</option>
+      <select #anniversary (change)="filterAnniversaryMatches(anniversary.value)" [value]="selectedAnniversary">
         <option *ngFor="let anniversary of anniversaryOptions" [value]="anniversary.anniversary">
             {{anniversary.anniversary}}th Year</option>
+        <option value="0">All Years</option>
     </select>
     </div>
 

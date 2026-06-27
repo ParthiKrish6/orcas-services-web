@@ -29,6 +29,7 @@ export class MatchDetailsComponent implements OnInit {
   anniversaryOptions: CalendarDetails[];
   teamOptions: TeamDetails[];
   selectedTeamName: string;
+  selectedAnniversary: number;
 
   startDate: Date;
   endDate: Date;
@@ -73,8 +74,9 @@ export class MatchDetailsComponent implements OnInit {
         this.anniversaryOptions = data;
         this.anniversaryOptions.sort((a, b) => b.anniversary - a.anniversary);
         if(this.anniversaryOptions.length > 0) {
-          this.startDate = this.anniversaryOptions[this.anniversaryOptions.length-1].startDate;
+          this.startDate = this.anniversaryOptions[0].startDate;
           this.endDate = this.anniversaryOptions[0].endDate;
+          this.selectedAnniversary = this.anniversaryOptions[0].anniversary;
           this.matchDetailsService.getMatchDetailsForDates(moment(this.anniversaryOptions[0].startDate).format('YYYY-MM-DD'), moment(this.anniversaryOptions[0].endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setMatchDetails(data);
           });
