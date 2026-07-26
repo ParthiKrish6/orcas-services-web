@@ -423,7 +423,7 @@ export class DashboardComponent implements OnInit {
     this.battingStatsRuns = this.battingStatsRuns.slice(0, this.numberOfPlayers);
 
     this.battingStatsAverage = data;
-    this.battingStatsAverage = this.battingStatsAverage.filter((obj) => parseInt(obj.balls) >= this.minRuns);
+    this.battingStatsAverage = this.battingStatsAverage.filter((obj) => parseInt(obj.runs) >= this.minRuns);
     this.battingStatsAverage.sort((a, b) => {
       if (parseFloat(b.average) !== parseFloat(a.average)) return parseFloat(b.average) - parseFloat(a.average);
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
@@ -431,7 +431,7 @@ export class DashboardComponent implements OnInit {
     this.battingStatsAverage = this.battingStatsAverage.slice(0, this.numberOfPlayers);
 
     this.battingStatsStrikeRate = data;
-    this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.balls) >= this.minRuns);
+    this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.runs) >= this.minRuns);
     this.battingStatsStrikeRate.sort((a, b) => {
       if (parseFloat(b.strikeRate) !== parseFloat(a.strikeRate)) return parseFloat(b.strikeRate) - parseFloat(a.strikeRate);
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
@@ -439,7 +439,7 @@ export class DashboardComponent implements OnInit {
     this.battingStatsStrikeRate = this.battingStatsStrikeRate.slice(0, this.numberOfPlayers);
 
     this.battingStatsDots = data;
-    this.battingStatsDots = this.battingStatsDots.filter((obj) => parseInt(obj.balls) >= this.minRuns);
+    this.battingStatsDots = this.battingStatsDots.filter((obj) => parseInt(obj.runs) >= this.minRuns);
     this.battingStatsDots.forEach(item => {
       item.dotsPercentage = item.balls != undefined && item.balls != 'DNB' && item.balls != '' && item.dots != undefined && item.dots != 'DNB' && item.dots != ''
         ? +((parseInt(item.dots) / parseInt(item.balls)) * 100).toFixed(2)
@@ -454,7 +454,7 @@ export class DashboardComponent implements OnInit {
 
     
     this.battingStatsDotsSRRatio = data;
-    this.battingStatsDotsSRRatio = this.battingStatsDotsSRRatio.filter((obj) => parseInt(obj.balls) >= this.minRuns);
+    this.battingStatsDotsSRRatio = this.battingStatsDotsSRRatio.filter((obj) => parseInt(obj.runs) >= this.minRuns);
     this.battingStatsDotsSRRatio.forEach(item => {
       item.dotsPercentage = item.balls != undefined && item.balls != 'DNB' && item.balls != '' && item.dots != undefined && item.dots != 'DNB' && item.dots != ''
         ? +((parseInt(item.dots) / parseInt(item.balls)) * 100).toFixed(2)
@@ -489,7 +489,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsWickets = this.bowlingStatsWickets.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsAverage = data;
-    this.bowlingStatsAverage = this.bowlingStatsAverage.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
+    this.bowlingStatsAverage = this.bowlingStatsAverage.filter((obj) => parseFloat(obj.wickets) >= this.minWickets);
     this.bowlingStatsAverage.sort((a, b) => {
       if (parseFloat(b.average) !== parseFloat(a.average)) return parseFloat(a.average) - parseFloat(b.average);
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
@@ -497,7 +497,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsAverage = this.bowlingStatsAverage.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsStrikeRate = data;
-    this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
+    this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.filter((obj) => parseFloat(obj.wickets) >= this.minWickets);
     this.bowlingStatsStrikeRate.sort((a, b) => {
       if (parseFloat(b.strikeRate) !== parseFloat(a.strikeRate)) return parseFloat(a.strikeRate) - parseFloat(b.strikeRate);
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
@@ -505,7 +505,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsEconomy = data;
-    this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
+    this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.wickets) >= this.minWickets);
     this.bowlingStatsEconomy.sort((a, b) => {
       if (parseFloat(b.economy) !== parseFloat(a.economy)) return parseFloat(a.economy) - parseFloat(b.economy);
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
@@ -513,7 +513,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsEconomy = this.bowlingStatsEconomy.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsExtras = data;
-    this.bowlingStatsExtras = this.bowlingStatsExtras.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
+    this.bowlingStatsExtras = this.bowlingStatsExtras.filter((obj) => parseFloat(obj.wickets) >= this.minWickets);
     this.bowlingStatsExtras.forEach(item => {
       let extras = parseInt(item.wides)+parseInt(item.noBalls);
       const wholeOvers = Math.floor(parseInt(item.overs));
@@ -531,7 +531,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsExtras = this.bowlingStatsExtras.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsDots = data;
-    this.bowlingStatsDots = this.bowlingStatsDots.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
+    this.bowlingStatsDots = this.bowlingStatsDots.filter((obj) => parseFloat(obj.wickets) >= this.minWickets);
     this.bowlingStatsDots.forEach(item => {
       let dots = parseInt(item.dots);
       const wholeOvers = Math.floor(parseInt(item.overs));

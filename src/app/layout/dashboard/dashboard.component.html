@@ -1,7 +1,7 @@
 <div [@routerTransition]>
-<div class="lb-container">
+<div class="lb-container" style="height: 100vh; display: flex; flex-direction: column;">
    <!-- Filters Card -->
-   <div class="card filter-card">
+   <div class="card filter-card" style="flex: 0 0 auto; background: #f5f5f5;">
       <div class="filter-row">
          <div class="form-group">
             <select #anniversary (change)="filterAnniversaryStats(anniversary.value)" [value]="selectedAnniversary">  
@@ -49,96 +49,86 @@
          <span class="content-title">{{deptOptionSelectedSubDisplay}}</span>
       </div>
    </div>
-
-  <div *ngIf="!isCaptainStatsVisible" style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none">
-          <div *ngFor="let p of players" class="lb-card" (click)="openPopup(p)"
-              [ngClass]="{'gold': p.rank === 1, 'silver': p.rank === 2, 'bronze': p.rank === 3}">
-      
-              <div class="rank" *ngIf="p.medal">
-                  <img class="user-avatar" src="{{p.medal}}" width="15px" />
-              </div>
-              <div class="rank-img">
-                  <img [src]="p.img" />
-              </div>
-      
-              <div class="details">
-                  <div class="name">{{ p.name }}</div>
-                  <div class="stats">
-                      {{p.extraValue}}
-                  </div>
-              </div>
-      
-              <div class="runs">
-                  {{ p.value }}
-                  <span>{{ p.valueLabel }}</span>
-              </div>
-          </div>
-   </div>    
-
-   <div *ngIf="isCaptainStatsVisible" style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none">
-      <div *ngFor="let p of captainStats" class="lb-card" style="padding: 0px;">
-         <div class="rank-img-captain">
-            <div class="stats">
-               <img  style="margin: 0 4px;" [src]="p.captainImg" />
-            </div>
+   <div *ngIf="!isCaptainStatsVisible" style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none;flex: 1; overflow-y: auto; padding: 5px;">
+      <div *ngFor="let p of players" class="lb-card" (click)="openPopup(p)"
+      [ngClass]="{'gold': p.rank === 1, 'silver': p.rank === 2, 'bronze': p.rank === 3}">
+      <div class="rank" *ngIf="p.medal">
+         <img class="user-avatar" src="{{p.medal}}" width="15px" />
+      </div>
+      <div class="rank-img">
+         <img [src]="p.img" />
+      </div>
+      <div class="details">
+         <div class="name">{{ p.name }}</div>
+         <div class="stats">
+            {{p.extraValue}}
          </div>
-         <div class="details">
+      </div>
+      <div class="runs">
+         {{ p.value }}
+         <span>{{ p.valueLabel }}</span>
+      </div>
+   </div>
+</div>
+<div *ngIf="isCaptainStatsVisible" style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none;flex: 1; overflow-y: auto; padding: 5px;">
+   <div *ngFor="let p of captainStats" class="lb-card" style="padding: 0px;">
+      <div class="rank-img-captain">
+         <div class="stats">
+            <img  style="margin: 0 4px;" [src]="p.captainImg" />
+         </div>
+      </div>
+      <div class="details">
          <!-- Winning Bar -->
-
          <div class="stats-progress mt-4">
-               <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-semibold text-success">
-                  Winning %
-                  </span>
-                  <span class="fw-bold">
-                  {{p.winPercentage}}%
-                  </span>
-               </div>
-               <div class="progress">
-                  <div class="progress-bar"
-                     role="progressbar"
-                     [style.width.%]="p.winPercentage"
-                     [ngClass]="{
-                     'bg-success': p.winPercentage>=75,
-                     'bg-primary': p.winPercentage>=60 && p.winPercentage<75,
-                     'bg-warning': p.winPercentage>=40 && p.winPercentage<60,
-                     'bg-danger': p.winPercentage<40
-                     }">
-                  </div>
+            <div class="d-flex justify-content-between mb-1">
+               <span class="fw-semibold text-success">
+               Winning %
+               </span>
+               <span class="fw-bold">
+               {{p.winPercentage}}%
+               </span>
             </div>
-         </div>
-            
-         <!-- Bottom Stats -->
-         <div class="row text-center mt-4">
-
-            <div class="col">
-               <h5>{{p.matches}}</h5>
-               <small class="text-muted">
-               Matches
-               </small>
-            </div>
-
-            <div class="col">
-               <h5>{{p.wins}}</h5>
-               <small class="text-muted">
-               Wins
-               </small>
-            </div>
-            
-            <div class="col">
-               <h5>{{p.losses}}</h5>
-               <small class="text-muted">
-               Losses
-               </small>
+            <div class="progress">
+               <div class="progress-bar"
+               role="progressbar"
+               [style.width.%]="p.winPercentage"
+               [ngClass]="{
+               'bg-success': p.winPercentage>=75,
+               'bg-primary': p.winPercentage>=60 && p.winPercentage<75,
+               'bg-warning': p.winPercentage>=40 && p.winPercentage<60,
+               'bg-danger': p.winPercentage<40
+               }">
             </div>
          </div>
       </div>
-      <div class="rank-img-captain">
-         <div class="stats">
-            <img  style="margin: 0 4px;" [src]="p.viceCaptainImg" />
+      <!-- Bottom Stats -->
+      <div class="row text-center mt-4">
+         <div class="col">
+            <h5>{{p.matches}}</h5>
+            <small class="text-muted">
+            Matches
+            </small>
+         </div>
+         <div class="col">
+            <h5>{{p.wins}}</h5>
+            <small class="text-muted">
+            Wins
+            </small>
+         </div>
+         <div class="col">
+            <h5>{{p.losses}}</h5>
+            <small class="text-muted">
+            Losses
+            </small>
          </div>
       </div>
    </div>
+   <div class="rank-img-captain">
+      <div class="stats">
+         <img  style="margin: 0 4px;" [src]="p.viceCaptainImg" />
+      </div>
+   </div>
+</div>
 </div>
 </div>
 <ngx-spinner type="timer"></ngx-spinner>
