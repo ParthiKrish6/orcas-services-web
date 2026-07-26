@@ -61,4 +61,12 @@ export class MatchDetailsService {
     });
     return this.http.get(`${this.baseUrl}/${fromDate}/${toDate}`, { headers: this.headers });
   }
+
+   getMatchDetailsForDatesForTeam(fromDate: string, toDate: string, teamId: number): Observable<any> {
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('authToken')
+    });
+    return this.http.get(`${this.baseUrl}/${fromDate}/${toDate}/${teamId}`, { headers: this.headers });
+  }
 }

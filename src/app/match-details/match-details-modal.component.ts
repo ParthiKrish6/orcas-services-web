@@ -22,8 +22,8 @@ export class ModalComponent implements OnInit {
   addFlag: boolean;
   errorMsg: string;
   selectedValue: number;
-  selectedCaptain: string;
-  selectedViceCaptain: string;
+  selectedCaptain: number;
+  selectedViceCaptain: number;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
@@ -41,8 +41,8 @@ export class ModalComponent implements OnInit {
       this.setTeam();
     }
 
-    this.selectedCaptain = this.matchDetails.captain;
-    this.selectedViceCaptain = this.matchDetails.viceCaptain;
+    this.selectedCaptain = Number(this.matchDetails.captain);
+    this.selectedViceCaptain = Number(this.matchDetails.viceCaptain);
 
     this.teamDetailsService.getTeamDetailsList().subscribe(data =>{  
       this.teamDetails = data;
@@ -65,8 +65,8 @@ export class ModalComponent implements OnInit {
 
   addMatchDetails(addMatchObj: MatchDetails) {
     addMatchObj.teamDetails = this.teamDetail;
-    addMatchObj.captain = this.selectedCaptain;
-    addMatchObj.viceCaptain = this.selectedViceCaptain;
+    addMatchObj.captain = this.selectedCaptain+"";
+    addMatchObj.viceCaptain = this.selectedViceCaptain+"";
     this.matchDetailsService
     .addMatchDetails(addMatchObj).subscribe(data => {
       console.log(data)
@@ -80,8 +80,8 @@ export class ModalComponent implements OnInit {
 
   updateMatchDetails(id: number, updateMatchObj: MatchDetails) {
     updateMatchObj.teamDetails = this.teamDetail;
-    updateMatchObj.captain = this.selectedCaptain;
-    updateMatchObj.viceCaptain = this.selectedViceCaptain
+    updateMatchObj.captain = this.selectedCaptain+"";
+    updateMatchObj.viceCaptain = this.selectedViceCaptain+"";
     this.matchDetailsService
     .updateMatchDetails(id, updateMatchObj).subscribe(data => {
       console.log(data)

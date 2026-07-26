@@ -236,7 +236,7 @@ export class MatchDetailsComponent implements OnInit {
     const dialogRef = this.matDialog.open(ModalComponent, {
       disableClose: true,
       width: '650px',
-      height: '450px',
+      height: '630px',
       backdropClass: 'custom-dialog-backdrop-class',
       panelClass: 'custom-dialog-panel-class',
       data: {

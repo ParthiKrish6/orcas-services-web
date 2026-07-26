@@ -72,13 +72,13 @@
         <div class="form-group col-md-4">
           <label for="captain">Captain</label>
           <select required class="form-control" [(ngModel)]="selectedCaptain" [ngModelOptions]="{standalone: true}">
-            <option *ngFor="let player of playerDetails" [ngValue]="player.playerName">{{player.playerName}}</option>
+            <option *ngFor="let player of playerDetails" [ngValue]="player.playerId">{{player.playerName}}</option>
           </select>
         </div>
         <div class="form-group col-md-4">
           <label for="viceCaptain">Vice Captain</label>
           <select required class="form-control" [(ngModel)]="selectedViceCaptain" [ngModelOptions]="{standalone: true}">
-            <option *ngFor="let player of playerDetails" [ngValue]="player.playerName">{{player.playerName}}</option>
+            <option *ngFor="let player of playerDetails" [ngValue]="player.playerId">{{player.playerName}}</option>
           </select>
         </div>
         <div class="form-group col-md-2">

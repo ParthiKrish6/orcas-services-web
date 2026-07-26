@@ -28,6 +28,9 @@ import { BattingDetailsService } from '../../batting-details/batting-details.ser
 import { BowlingDetailsService } from '../../bowling-details/bowling-details.service';
 import { FieldingDetailsService } from '../../fielding-details/fielding-details.service';
 import { MatchStats } from './match-stats';
+import { CaptainStats } from '../../match-details/captain-stats';
+import { MatchDetailsService } from '../../match-details/match-details.service';
+import { MatchDetails } from '../../match-details/match-details';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,13 +48,14 @@ export class DashboardComponent implements OnInit {
   
   anniversaryOptions: CalendarDetails[];
   teamOptions: TeamDetails[];
-  minBalls: number = 50;
-  minOvers: number = 10;
+  minRuns: number = 200;
+  minWickets: number = 20;
   numberOfPlayers: number = 50;
   typeSelected: string;
   startDate: Date;
   endDate: Date;
   players = [];
+  captainStats = [];
   deptOptions: string[];
   deptSelected: string;
   deptOptionSelected: string;
@@ -61,7 +65,9 @@ export class DashboardComponent implements OnInit {
   battingDept: string[] = ['Runs', 'Batting Average', 'Batting SR', 'Batting Dots', 'Dots/SR Ratio'];
   bowlingDept: string[] = ['Wickets', 'Bowling Average', 'Bowling SR', 'Economy', 'Extras', 'Bowling Dots']
   fieldingDept: string[] = ['Catches/RO', 'Drop Catches', 'Runs Saved', 'Runs Missed']
+  captainDept: string[] = ['Win %']
   showPopup = false;
+  isCaptainStatsVisible = false;
 
   battingStatsRuns: BattingStats[];
   battingStatsAverage: BattingStats[];
@@ -82,9 +88,12 @@ export class DashboardComponent implements OnInit {
   fieldingStatsDroppedCatches: FieldingStats[];
   fieldingStatsRunsMissed: FieldingStats[];
 
+  captainStatsWinPercentage: MatchDetails[];
+
   constructor(
     private battingStatsService: BattingStatsService,
     private bowlingStatsService: BowlingStatsService,
+    private matchDetailsService: MatchDetailsService,
     private fieldingStatsService: FieldingStatsService,
     private battingDetailsService: BattingDetailsService,
     private bowlingDetailsService: BowlingDetailsService,
@@ -107,17 +116,25 @@ export class DashboardComponent implements OnInit {
   setDepartment() {
     this.deptSelected = this.departmentDropdownElement.nativeElement.value;
     if ('Batting' == this.deptSelected) {
+      this.isCaptainStatsVisible = false;
       this.deptOptions = this.battingDept;
       this.deptOptionSelected = "Runs";
       this.setBattingLeaderBoardContent();
     } else if ('Bowling' == this.deptSelected) {
+      this.isCaptainStatsVisible = false;
       this.deptOptions = this.bowlingDept;
       this.deptOptionSelected = "Wickets";
       this.setBowlingLeaderBoardContent();
     } else if ('Fielding' == this.deptSelected) {
+      this.isCaptainStatsVisible = false;
       this.deptOptions = this.fieldingDept;
       this.deptOptionSelected = "Catches/RO";
       this.setFieldingLeaderBoardContent();
+    } else if ('Captain' == this.deptSelected) {
+      this.isCaptainStatsVisible = true;
+      this.deptOptions = this.captainDept;
+      this.deptOptionSelected = "Win %";
+      this.setCaptainLeaderBoardContent();
     }
     this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
     if('SR'==this.deptOptionSelectedDisplay) {
@@ -130,11 +147,17 @@ export class DashboardComponent implements OnInit {
   setDeptOptions() {
     this.deptOptionSelected = this.deptOptionsDropdownElement.nativeElement.value;
     if ('Batting' == this.deptSelected) {
+      this.isCaptainStatsVisible = false;
       this.setBattingLeaderBoardContent();
     } else if ('Bowling' == this.deptSelected) {
+      this.isCaptainStatsVisible = false;
       this.setBowlingLeaderBoardContent();
     } else if ('Fielding' == this.deptSelected) {
+      this.isCaptainStatsVisible = false;
       this.setFieldingLeaderBoardContent();
+    } else if ('Captain' == this.deptSelected) {
+      this.isCaptainStatsVisible = true;
+      this.setCaptainLeaderBoardContent();
     }
     this.deptOptionSelectedDisplay = this.deptOptionSelected.replace('Batting ','').replace('Bowling ','');
     if('SR'==this.deptOptionSelectedDisplay) {
@@ -155,6 +178,14 @@ export class DashboardComponent implements OnInit {
           this.startDate = this.anniversaryOptions[0].startDate;
           this.endDate = this.anniversaryOptions[0].endDate;
           this.selectedAnniversary = this.anniversaryOptions[0].anniversary;
+
+          this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
+
+          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
 
           this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setFieldingStats(data, false);
@@ -200,6 +231,9 @@ export class DashboardComponent implements OnInit {
           this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
             this.setFieldingStats(data, false);
           });
+          this.matchDetailsService.getMatchDetailsForDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -217,7 +251,9 @@ export class DashboardComponent implements OnInit {
           this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
             this.setFieldingStats(data, false);
           });
-
+          this.matchDetailsService.getMatchDetailsForDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -234,6 +270,30 @@ export class DashboardComponent implements OnInit {
           });
           this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
             this.setBowlingStats(data, false);
+          });
+          this.matchDetailsService.getMatchDetailsForDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
+        }, error => {
+          console.log(error);
+          this.router.navigate(['/login'], {
+            skipLocationChange: true,
+            queryParams: { errMsg: error.error.message }
+          });
+        });
+      } else if('Captain' == this.deptSelected) {
+        this.matchDetailsService.getMatchDetailsForDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+          this.setCaptainStats(data, true);
+          this.spinnerService.hide();
+
+          this.battingStatsService.getBattingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setBattingStats(data, false);
+          });
+          this.bowlingStatsService.getBowlingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDatesForTeam(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), teamId).subscribe(data => {
+            this.setFieldingStats(data, false);
           });
 
         }, error => {
@@ -256,6 +316,9 @@ export class DashboardComponent implements OnInit {
           this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setFieldingStats(data, false);
           });
+          this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -274,6 +337,9 @@ export class DashboardComponent implements OnInit {
           this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setFieldingStats(data, false);
           });
+          this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
         }, error => {
           console.log(error);
           this.router.navigate(['/login'], {
@@ -291,6 +357,31 @@ export class DashboardComponent implements OnInit {
           });
           this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
             this.setBowlingStats(data, false);
+          });
+          this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setCaptainStats(data, false);
+          });
+
+        }, error => {
+          console.log(error);
+          this.router.navigate(['/login'], {
+            skipLocationChange: true,
+            queryParams: { errMsg: error.error.message }
+          });
+        });
+      } else if('Captain' == this.deptSelected) {
+        this.matchDetailsService.getMatchDetailsForDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+          this.setCaptainStats(data, true);
+          this.spinnerService.hide();
+
+          this.battingStatsService.getBattingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBattingStats(data, false);
+          });
+          this.bowlingStatsService.getBowlingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setBowlingStats(data, false);
+          });
+          this.fieldingStatsService.getFieldingStatsBetweenDates(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD')).subscribe(data => {
+            this.setFieldingStats(data, false);
           });
 
         }, error => {
@@ -332,7 +423,7 @@ export class DashboardComponent implements OnInit {
     this.battingStatsRuns = this.battingStatsRuns.slice(0, this.numberOfPlayers);
 
     this.battingStatsAverage = data;
-    this.battingStatsAverage = this.battingStatsAverage.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsAverage = this.battingStatsAverage.filter((obj) => parseInt(obj.balls) >= this.minRuns);
     this.battingStatsAverage.sort((a, b) => {
       if (parseFloat(b.average) !== parseFloat(a.average)) return parseFloat(b.average) - parseFloat(a.average);
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
@@ -340,7 +431,7 @@ export class DashboardComponent implements OnInit {
     this.battingStatsAverage = this.battingStatsAverage.slice(0, this.numberOfPlayers);
 
     this.battingStatsStrikeRate = data;
-    this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsStrikeRate = this.battingStatsStrikeRate.filter((obj) => parseInt(obj.balls) >= this.minRuns);
     this.battingStatsStrikeRate.sort((a, b) => {
       if (parseFloat(b.strikeRate) !== parseFloat(a.strikeRate)) return parseFloat(b.strikeRate) - parseFloat(a.strikeRate);
       if (parseInt(b.runs) !== parseInt(a.runs)) return parseInt(b.runs) - parseInt(a.runs);
@@ -348,7 +439,7 @@ export class DashboardComponent implements OnInit {
     this.battingStatsStrikeRate = this.battingStatsStrikeRate.slice(0, this.numberOfPlayers);
 
     this.battingStatsDots = data;
-    this.battingStatsDots = this.battingStatsDots.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsDots = this.battingStatsDots.filter((obj) => parseInt(obj.balls) >= this.minRuns);
     this.battingStatsDots.forEach(item => {
       item.dotsPercentage = item.balls != undefined && item.balls != 'DNB' && item.balls != '' && item.dots != undefined && item.dots != 'DNB' && item.dots != ''
         ? +((parseInt(item.dots) / parseInt(item.balls)) * 100).toFixed(2)
@@ -363,7 +454,7 @@ export class DashboardComponent implements OnInit {
 
     
     this.battingStatsDotsSRRatio = data;
-    this.battingStatsDotsSRRatio = this.battingStatsDotsSRRatio.filter((obj) => parseInt(obj.balls) >= this.minBalls);
+    this.battingStatsDotsSRRatio = this.battingStatsDotsSRRatio.filter((obj) => parseInt(obj.balls) >= this.minRuns);
     this.battingStatsDotsSRRatio.forEach(item => {
       item.dotsPercentage = item.balls != undefined && item.balls != 'DNB' && item.balls != '' && item.dots != undefined && item.dots != 'DNB' && item.dots != ''
         ? +((parseInt(item.dots) / parseInt(item.balls)) * 100).toFixed(2)
@@ -382,6 +473,13 @@ export class DashboardComponent implements OnInit {
     } 
   }
 
+  setCaptainStats(data, isRefresh) {
+    this.captainStatsWinPercentage = data;
+    if(isRefresh) {
+      this.setCaptainLeaderBoardContent();
+    } 
+  }
+
   setBowlingStats(data, isRefresh) {
     this.bowlingStatsWickets = data;
     this.bowlingStatsWickets.sort((a, b) => {
@@ -391,7 +489,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsWickets = this.bowlingStatsWickets.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsAverage = data;
-    this.bowlingStatsAverage = this.bowlingStatsAverage.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsAverage = this.bowlingStatsAverage.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
     this.bowlingStatsAverage.sort((a, b) => {
       if (parseFloat(b.average) !== parseFloat(a.average)) return parseFloat(a.average) - parseFloat(b.average);
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
@@ -399,7 +497,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsAverage = this.bowlingStatsAverage.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsStrikeRate = data;
-    this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
     this.bowlingStatsStrikeRate.sort((a, b) => {
       if (parseFloat(b.strikeRate) !== parseFloat(a.strikeRate)) return parseFloat(a.strikeRate) - parseFloat(b.strikeRate);
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
@@ -407,7 +505,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsStrikeRate = this.bowlingStatsStrikeRate.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsEconomy = data;
-    this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsEconomy = this.bowlingStatsEconomy.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
     this.bowlingStatsEconomy.sort((a, b) => {
       if (parseFloat(b.economy) !== parseFloat(a.economy)) return parseFloat(a.economy) - parseFloat(b.economy);
       if (parseInt(b.wickets) !== parseInt(a.wickets)) return parseInt(b.wickets) - parseInt(a.wickets);
@@ -415,7 +513,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsEconomy = this.bowlingStatsEconomy.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsExtras = data;
-    this.bowlingStatsExtras = this.bowlingStatsExtras.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsExtras = this.bowlingStatsExtras.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
     this.bowlingStatsExtras.forEach(item => {
       let extras = parseInt(item.wides)+parseInt(item.noBalls);
       const wholeOvers = Math.floor(parseInt(item.overs));
@@ -433,7 +531,7 @@ export class DashboardComponent implements OnInit {
     this.bowlingStatsExtras = this.bowlingStatsExtras.slice(0, this.numberOfPlayers);
 
     this.bowlingStatsDots = data;
-    this.bowlingStatsDots = this.bowlingStatsDots.filter((obj) => parseFloat(obj.overs) >= this.minOvers);
+    this.bowlingStatsDots = this.bowlingStatsDots.filter((obj) => parseFloat(obj.overs) >= this.minWickets);
     this.bowlingStatsDots.forEach(item => {
       let dots = parseInt(item.dots);
       const wholeOvers = Math.floor(parseInt(item.overs));
@@ -486,9 +584,54 @@ export class DashboardComponent implements OnInit {
     if(isRefresh) {
       this.setFieldingLeaderBoardContent();
     }
-    
-
   }
+
+  setCaptainLeaderBoardContent() {
+    this.captainStats = this.getCaptainStats(this.captainStatsWinPercentage);
+    this.deptOptionSelectedSubDisplay = '';
+  } 
+  
+
+  getCaptainStats(matches: MatchDetails[]): CaptainStats[] {
+    const statsMap = new Map<string, CaptainStats>();
+
+    matches.forEach(match => {
+        const key = `${match.captain}-${match.viceCaptain}`;
+
+        if (!statsMap.has(key)) {
+            statsMap.set(key, {
+                captain: Number(match.captain),
+                viceCaptain: Number(match.viceCaptain),
+                captainImg: `assets/player_images/${match.captain}.png`,
+                viceCaptainImg: `assets/player_images/${match.viceCaptain}.png`,
+                matches: '0',
+                wins: '0',
+                losses: '0',
+                winPercentage: '0'
+            });
+        }
+
+        const stat = statsMap.get(key)!;
+
+        stat.matches = (parseInt(stat.matches, 10) + 1).toString();
+
+        if (match.matchResult === 'WON') {
+            stat.wins = (parseInt(stat.wins, 10) + 1).toString();
+        } else {
+            stat.losses = (parseInt(stat.losses, 10) + 1).toString();
+        }
+    });
+
+    // Convert Map values to an array
+    return Array.from(statsMap.values())
+    .map(stat => ({
+        ...stat,
+        winPercentage: (
+            (parseInt(stat.wins, 10) / parseInt(stat.matches, 10)) * 100
+        ).toFixed(2)
+    }))
+    .sort((a, b) => Number(b.winPercentage) - Number(a.winPercentage));
+}
 
   setBattingLeaderBoardContent() {
     this.players = [];
@@ -530,7 +673,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
+      this.deptOptionSelectedSubDisplay = '(Min Runs : '+this.minRuns+')';
     } else if(this.deptOptionSelected == "Batting Average") {
       for (let i = 0; i < this.battingStatsAverage.length; i++) {
         let player = new Player(); 
@@ -549,7 +692,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
+      this.deptOptionSelectedSubDisplay = '(Min Runs : '+this.minRuns+')';
     } 
     else if(this.deptOptionSelected == "Batting Dots") {
       for (let i = 0; i < this.battingStatsDots.length; i++) {
@@ -569,7 +712,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
+      this.deptOptionSelectedSubDisplay = '(Min Runs : '+this.minRuns+')';
     }
     else if(this.deptOptionSelected == "Dots/SR Ratio") {
       for (let i = 0; i < this.battingStatsDotsSRRatio.length; i++) {
@@ -589,7 +732,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Balls : '+this.minBalls+')';
+      this.deptOptionSelectedSubDisplay = '(Min Runs : '+this.minRuns+')';
     }
     
   }
@@ -635,7 +778,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
+      this.deptOptionSelectedSubDisplay = '(Min Wickets : '+this.minWickets+')';
     } else if(this.deptOptionSelected == "Bowling Average") {
       for (let i = 0; i < this.bowlingStatsAverage.length; i++) {
         let player = new Player(); 
@@ -654,7 +797,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
+      this.deptOptionSelectedSubDisplay = '(Min Wickets : '+this.minWickets+')';
     } else if(this.deptOptionSelected == "Economy") {
       for (let i = 0; i < this.bowlingStatsEconomy.length; i++) {
         let player = new Player(); 
@@ -673,7 +816,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
+      this.deptOptionSelectedSubDisplay = '(Min Wickets : '+this.minWickets+')';
     } else if(this.deptOptionSelected == "Extras") {
       for (let i = 0; i < this.bowlingStatsExtras.length; i++) {
         let player = new Player(); 
@@ -692,7 +835,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
+      this.deptOptionSelectedSubDisplay = '(Min Wickets : '+this.minWickets+')';
     } else if(this.deptOptionSelected == "Bowling Dots") {
       for (let i = 0; i < this.bowlingStatsDots.length; i++) {
         let player = new Player(); 
@@ -711,7 +854,7 @@ export class DashboardComponent implements OnInit {
         }
         this.players.push(player);
       }
-      this.deptOptionSelectedSubDisplay = '(Min Overs : '+this.minOvers+')';
+      this.deptOptionSelectedSubDisplay = '(Min Wickets : '+this.minWickets+')';
     }
   }
 

@@ -179,6 +179,10 @@ select {
     font-size: 22px;
     margin-left: -15px;
   }
+
+  .rank-img-captain {
+    font-size: 22px;
+  }
   
   .lb-card img {
     width: 48px;
@@ -298,19 +302,28 @@ select {
   border-radius: 6px;
 }
 
-.stat-header {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
+
+.progress{
+    height:12px;
+    border-radius:20px;
+    background:#ececec;
 }
 
-.stat-header .title {
-  font-size: small;
-  text-align: center;
+.progress-bar{
+    border-radius:20px;
 }
 
-.stat-header .sub-title {
-  font-size: x-small;
-  color: rgb(255, 255, 255);
-  text-align: center;
+.stats-progress{
+    padding:10px;
+    background:#f8f9fa;
+    border-radius:15px;
+}
+
+h5{
+    margin-bottom:2px;
+    font-weight:700;
+}
+
+small{
+    font-size:13px;
 }
