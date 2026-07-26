@@ -76,10 +76,10 @@
    </div>    
 
    <div *ngIf="isCaptainStatsVisible" style="border: 2px solid #0f2027;padding-bottom: 1px;padding-top: 1px;border-top-style: none">
-      <div *ngFor="let p of captainStats" class="lb-card" >
+      <div *ngFor="let p of captainStats" class="lb-card" style="padding: 0px;">
          <div class="rank-img-captain">
             <div class="stats">
-               <img [src]="p.captainImg" />
+               <img  style="margin: 0 4px;" [src]="p.captainImg" />
             </div>
          </div>
          <div class="details">
@@ -135,7 +135,7 @@
       </div>
       <div class="rank-img-captain">
          <div class="stats">
-            <img [src]="p.viceCaptainImg" />
+            <img  style="margin: 0 4px;" [src]="p.viceCaptainImg" />
          </div>
       </div>
    </div>
