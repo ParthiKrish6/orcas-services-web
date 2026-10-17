@@ -596,7 +596,7 @@ export class DashboardComponent implements OnInit {
     const statsMap = new Map<string, CaptainStats>();
 
     matches.forEach(match => {
-        const key = `${match.captain}-${match.viceCaptain}`;
+        const key = `${match.captain}`;
 
         if (!statsMap.has(key)) {
             statsMap.set(key, {
